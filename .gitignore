@@ -3,3 +3,8 @@
 
 #exclude .vs
 /.vs/*
+
+#exclude bin
+/Clockwork_Core/bin/*
+#exclude bin
+/Clockwork_Test/bin/*
