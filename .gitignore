@@ -6,5 +6,6 @@
 
 #exclude .vs
 .vs/
+
 #exclude bin
 bin/
