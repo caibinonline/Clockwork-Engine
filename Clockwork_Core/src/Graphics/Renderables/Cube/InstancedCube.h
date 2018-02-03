@@ -130,26 +130,48 @@ namespace clockwork {
 			void clearBufferData() noexcept;
 
 			/*removes the instancedcube from the cubemanager in the instancedrender | the last instancedcube in the list of the cubemanager will swap positions with this instancedcube and then this instancedcube(then the last instancedcube in the list) will be removed from the list
-			dont call the remove function again if the instancedcube is already removed | you have to call add first | the destructor will also call remove*/
+			dont call the remove function again if the instancedcube is already removed | you have to call add first | the destructor will also call remove
+			use add()/remove() for few changes with many models to hide/show objects/instances and use setVisible(true/false) for many changes with few models*/
 			void remove() noexcept;
 
 			/*adds the instancedcube to the cubemanager in the instancedrender | the instancedcube will be added to the end of the list
-			dont call the add function again if the instancedcube is already added | you have to call remove first | some constructors will automaticly call add*/
+			dont call the add function again if the instancedcube is already added | you have to call remove first | some constructors will automaticly call add
+			use add()/remove() for few changes with many models to hide/show objects/instances and use setVisible(true/false) for many changes with few models*/
 			void add() noexcept;
 
 			/*changes the modelmatrix of this instancedcube and automaticly updates the buffer(gpu side) in the cubemanager*/
 			void setModelMatrix(const maths::Mat4f& mat) noexcept;
 
 			/*changes the modelmatrix of this instancedcube and automaticly updates the buffer(gpu side) in the cubemanager
-			calculates the modelmatrix of the */
+			calculates the modelmatrix from the 3 vectors by first applying scaling, then rotation and then translation to the modelmatrix 
+			@param[scaling] the scale of the size of the model
+			@param[rotation] the rotation of the model around each axis in degrees
+			@param[translation] the position of the model
+			the modelmatrix of the instance/object will be created out of the 3 vectors and will transform the model into the world*/
 			void setModelMatrix(const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation) noexcept;
 
+			/*changes the texture of this instancedcube and automaticly updates the buffer(gpu side) in the cubemanager
+			dont use this method, if the count of textures/images in the texturearray2d of the cubemanager is equal or less than the textureID, because it will give an error
+			@param[textureId] the id of the texture in the texturearray2d of the cubemanager that will be used for this model
+			every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures*/
 			void setTexture(int textureId) noexcept;
 
+			/*changes the texture of this instancedcube and automaticly updates the buffer(gpu side) in the cubemanager
+			@param[imagePath] the path of a texture/image that will be used for this model
+			the textureId will be equal to the position of the image in the texturearray2d of the cubemanager and if the image is not already in the texturearray2d, it will be added to it
+			every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures
+			every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures*/
 			void setTexture(const std::string& imagePath) noexcept;
 
+			/*changes the texture of this instancedcube and automaticly updates the buffer(gpu side) in the cubemanager
+			@param[image] the texture/image that will be used for this model
+			the textureId will be equal to the position of the image in the texturearray2d of the cubemanager and if the image is not already in the texturearray2d, it will be added to it
+			every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures
+			every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures*/
 			void setTexture(const utils::Image& image) noexcept;
 
+			/*hides, or shows the instance/object of the model, by setting its modelmatrix and textureid in the buffer(gpu side) of the cubemanager to the actual modelmatrix and textureid of the instancedcube for true
+			or setting them to 0 in the buffer for false | use add()/remove() for few changes with many models to hide/show objects/instances and use setVisible(true/false) for many changes with few models*/
 			void setVisible(bool visible) noexcept;
 
 		};

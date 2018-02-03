@@ -8,7 +8,11 @@ d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debu
 d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\intermediates\internalcopybuffer.obj
 d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\intermediates\vertexbuffer.obj
 d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\intermediates\openglstuff.obj
-d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\intermediates\cube.obj
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\intermediates\cubemanager.obj
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\intermediates\instancedcube.obj
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\intermediates\normalcube.obj
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\intermediates\instancedrenderer.obj
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\intermediates\normalrenderer.obj
 d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\intermediates\testgame.obj
 d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\intermediates\loading.obj
 d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\intermediates\state.obj
@@ -16,11 +20,6 @@ d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debu
 d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\intermediates\file.obj
 d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\intermediates\image.obj
 d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\intermediates\glad.obj
-d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\intermediates\cubemanager.obj
-d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\intermediates\instancedcube.obj
-d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\intermediates\normalcube.obj
-d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\intermediates\instancedrenderer.obj
-d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\intermediates\normalrenderer.obj
 d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\clockwork_core.exe
 d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\clockwork_core.ilk
 d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\bin\win32\debug\clockwork_core.pdb

@@ -10,9 +10,9 @@
 * arising from the use of this software.
 * You can use this software under the following License: https://github.com/Clock-work/Clockwork-Engine/blob/master/LICENSE
 *************************************************************************/
-#include "TestGame.h"
 #include "glad\glad.h"
 #include "glfw\glfw3.h"
+#include "TestGame.h"
 #include "src\Core\Window.h"
 #include "src\Graphics\Renderer\Shader.h"
 #include "src\Graphics\Buffers\IndexBuffer.h"
@@ -56,20 +56,20 @@ namespace clockwork {
 
 			m_currentCamera = new Camera({ 0,10,5 });
 
-			m_instancedRenderer = new InstancedRenderer(new graphics::Shader("res/Shaders/Testing/Instancing.vs", "res/Shaders/Testing/Instancing.fs"), &m_currentCamera, &m_perspectiveProjection);
+			//m_instancedRenderer = new InstancedRenderer(new graphics::Shader("res/Shaders/Testing/Instancing.vs", "res/Shaders/Testing/Instancing.fs"), &m_currentCamera, &m_perspectiveProjection);
 			m_normalRenderer = new NormalRenderer(new graphics::Shader("res/Shaders/Testing/Normal.vs", "res/Shaders/Testing/Normal.fs"), &m_currentCamera, &m_perspectiveProjection);
 
 		
 			if ( engine->getWindow()->getWidth() != 0 && engine->getWindow()->getHeight() != 0 )
 			{
 				m_perspectiveProjection = maths::Mat4x4<float>::perspective(maths::toRadians<float>(fov), static_cast<double>( engine->getWindow()->getWidth() ) / static_cast<double>( engine->getWindow()->getHeight() ), 0.1f, 1000.0f);//projection matrix for the scene to transform world coordinates into screen coordinates | has to be set once per update of the window size
-				m_instancedRenderer->updateProjection();
+				//m_instancedRenderer->updateProjection();
 				m_normalRenderer->updateProjection();
 			}
 			
 
 
-			m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/brick.jpg").load());
+			/*m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/brick.jpg").load());
 			m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/stone.jpg").load());
 			m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/granite.jpg").load());
 			m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/moss.jpg").load());
@@ -79,7 +79,7 @@ namespace clockwork {
 			m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/grass.jpg").load());
 			m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/blue.jpg").load());
 			m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/red.jpg").load());
-			m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/purple.jpg").load());
+			m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/purple.jpg").load());*/
 
 
 			std::srand(engine->getWindow()->getTimer() * 10);
@@ -88,7 +88,7 @@ namespace clockwork {
 			{
 				maths::Mat4x4<float> modelMatrix = modelMatrix = maths::Mat4x4<float>::scaling(1, 1, 1);
 				modelMatrix.translate(-( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10);
-				new InstancedCube(rand() % 11, modelMatrix, m_instancedRenderer);
+				//new InstancedCube(rand() % 11, modelMatrix, m_instancedRenderer);
 			}
 
 
@@ -133,7 +133,7 @@ namespace clockwork {
 
 		void TestGame::render() noexcept
 		{
-			m_instancedRenderer->render();
+			//m_instancedRenderer->render();
 			m_normalRenderer->render();
 		}
 
@@ -143,7 +143,7 @@ namespace clockwork {
 			if ( width != 0 && height != 0 )
 			{
 				m_perspectiveProjection = maths::Mat4x4<float>::perspective(maths::toRadians<float>(fov), static_cast<double>( width ) / static_cast<double>( height ), 0.1f, 1000.0f);//projection matrix for the scene to transform world coordinates into screen coordinates | has to be set once per update of the window size
-				m_instancedRenderer->updateProjection();
+				//m_instancedRenderer->updateProjection();
 				m_normalRenderer->updateProjection();
 			}
 		}
@@ -168,11 +168,11 @@ namespace clockwork {
 					maths::Vec3f pos = m_currentCamera->getPosition() + m_currentCamera->getDirection() * 2;
 					maths::Mat4x4<float> modelMatrix = modelMatrix = maths::Mat4x4<float>::scaling(1, 1, 1);
 					modelMatrix.translate(pos.x, pos.y, pos.z);
-					new graphics::InstancedCube(rand() % 11, modelMatrix, m_instancedRenderer);
+					//new graphics::InstancedCube(rand() % 11, modelMatrix, m_instancedRenderer);
 				}
 				else if ( button == CLOCKWORK_MOUSE_BUTTON_2 )
 				{
-					m_instancedRenderer->cubeManager.removeLast();
+					//m_instancedRenderer->cubeManager.removeLast();
 				}
 			}
 
@@ -194,7 +194,7 @@ namespace clockwork {
 			if ( engine->getWindow()->getWidth() != 0 && engine->getWindow()->getHeight() != 0 )
 			{
 				m_perspectiveProjection = maths::Mat4x4<float>::perspective(maths::toRadians<float>(fov), static_cast<double>( engine->getWindow()->getWidth() ) / static_cast<double>( engine->getWindow()->getHeight() ), 0.1f, 1000.0f);//projection matrix for the scene to transform world coordinates into screen coordinates | has to be set once per update of the window size
-				m_instancedRenderer->updateProjection();
+				//m_instancedRenderer->updateProjection();
 				m_normalRenderer->updateProjection();
 			}
 

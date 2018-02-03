@@ -11,9 +11,9 @@
 * arising from the use of this software.
 * You can use this software under the following License: https://github.com/Clock-work/Clockwork-Engine/blob/master/LICENSE
 *************************************************************************/
+#include "glad\glad.h"
 #include <unordered_map>
 #include <string>
-#include "glad\glad.h"
 #include "src\Utils\Helper.h"
 #include "src\Utils\File.h"
 #include "src\Maths\Vec2.h"

@@ -11,8 +11,8 @@
 * arising from the use of this software.
 * You can use this software under the following License: https://github.com/Clock-work/Clockwork-Engine/blob/master/LICENSE
 *************************************************************************/
-#include "src\Graphics\OpenglStuff.h"
 #include "glad\glad.h"
+#include "src\Graphics\OpenglStuff.h"
 #include "src\Utils\Helper.h"
 #if CLOCKWORK_DEBUG
 #include <vector>

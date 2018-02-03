@@ -1,19 +1,6 @@
 ﻿  Engine.cpp
 d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\core\Window.h(190): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
 d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\core\Window.h(193): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
-  ExampleGame.cpp
-D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Core\Window.h(190): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
-D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Core\Window.h(193): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
-  Main.cpp
-  Window.cpp
-d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\core\Window.h(190): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
-d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\core\Window.h(193): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
-src\Core\Window.cpp(163): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-src\Core\Window.cpp(319): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-  CopyBuffer.cpp
-  InternalCopyBuffer.cpp
-  VertexBuffer.cpp
-  OpenglStuff.cpp
   CubeManager.cpp
   InstancedCube.cpp
 D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(712): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
@@ -93,9 +80,7 @@ d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\Math
           [
               type=float
           ]
-  NormalCube.cpp
   InstancedRenderer.cpp
-  NormalRenderer.cpp
   TestGame.cpp
 D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Core\Window.h(190): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
 D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Core\Window.h(193): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
@@ -111,15 +96,8 @@ src\Logics\States\Game\TestGame.cpp(129): warning C4244: 'argument': conversion 
 src\Logics\States\Game\TestGame.cpp(145): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 src\Logics\States\Game\TestGame.cpp(183): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 src\Logics\States\Game\TestGame.cpp(196): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  Loading.cpp
-  State.cpp
-D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Core\Window.h(190): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
-D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Core\Window.h(193): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
-  MathFunctions.cpp
-  File.cpp
-  Image.cpp
   Generating code
-  3 of 823 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
+  0 of 823 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
