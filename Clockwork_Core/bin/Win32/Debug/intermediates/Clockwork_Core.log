@@ -1,0 +1,170 @@
+﻿  TestGame.cpp
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\graphics\textures\texturearray2d.h(253): warning C4018: '<=': signed/unsigned mismatch
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\graphics\textures\texturearray2d.h(325): warning C4018: '<=': signed/unsigned mismatch
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\core\window.h(178): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\core\window.h(181): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\logics\states\game\testgame.cpp(53): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\logics\states\game\testgame.cpp(73): warning C4244: 'argument': conversion from 'double' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\logics\states\game\testgame.cpp(78): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\logics\states\game\testgame.cpp(97): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\logics\states\game\testgame.cpp(101): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\logics\states\game\testgame.cpp(105): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\logics\states\game\testgame.cpp(109): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\logics\states\game\testgame.cpp(113): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\logics\states\game\testgame.cpp(117): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\logics\states\game\testgame.cpp(133): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\logics\states\game\testgame.cpp(171): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\logics\states\game\testgame.cpp(184): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mathfunctions.h(78): warning C4305: 'initializing': truncation from 'double' to 'const float'
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mathfunctions.h(78): note: see reference to variable template 'const float pi<float>' being compiled
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\logics\camera\camera.h(103): note: see reference to function template instantiation 'type clockwork::maths::toRadians<float>(type) noexcept' being compiled
+          with
+          [
+              type=float
+          ]
+  NormalRenderer.cpp
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mathfunctions.h(78): warning C4305: 'initializing': truncation from 'double' to 'const float'
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mathfunctions.h(78): note: see reference to variable template 'const float pi<float>' being compiled
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\logics\camera\camera.h(103): note: see reference to function template instantiation 'type clockwork::maths::toRadians<float>(type) noexcept' being compiled
+          with
+          [
+              type=float
+          ]
+  InstancedRenderer.cpp
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\graphics\textures\texturearray2d.h(253): warning C4018: '<=': signed/unsigned mismatch
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\graphics\textures\texturearray2d.h(325): warning C4018: '<=': signed/unsigned mismatch
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mathfunctions.h(78): warning C4305: 'initializing': truncation from 'double' to 'const float'
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mathfunctions.h(78): note: see reference to variable template 'const float pi<float>' being compiled
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\logics\camera\camera.h(103): note: see reference to function template instantiation 'type clockwork::maths::toRadians<float>(type) noexcept' being compiled
+          with
+          [
+              type=float
+          ]
+  InstancedCube.cpp
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\graphics\textures\texturearray2d.h(253): warning C4018: '<=': signed/unsigned mismatch
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\graphics\textures\texturearray2d.h(325): warning C4018: '<=': signed/unsigned mismatch
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\graphics\renderables\cube\instancedcube.cpp(16): warning C4018: '<=': signed/unsigned mismatch
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\graphics\renderables\cube\instancedcube.cpp(38): warning C4018: '<=': signed/unsigned mismatch
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\graphics\renderables\cube\instancedcube.cpp(165): warning C4018: '<=': signed/unsigned mismatch
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(700): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(699): note: while compiling class template member function 'clockwork::maths::Mat4x4<float> &clockwork::maths::Mat4x4<float>::rotateZD(type) noexcept'
+          with
+          [
+              type=float
+          ]
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\graphics\renderables\cube\instancedcube.cpp(35): note: see reference to function template instantiation 'clockwork::maths::Mat4x4<float> &clockwork::maths::Mat4x4<float>::rotateZD(type) noexcept' being compiled
+          with
+          [
+              type=float
+          ]
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\graphics\renderables\cube\instancedcube.h(27): note: see reference to class template instantiation 'clockwork::maths::Mat4x4<float>' being compiled
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(701): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(703): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(704): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(706): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(707): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(709): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(710): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(599): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(598): note: while compiling class template member function 'clockwork::maths::Mat4x4<float> &clockwork::maths::Mat4x4<float>::rotateYD(type) noexcept'
+          with
+          [
+              type=float
+          ]
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\graphics\renderables\cube\instancedcube.cpp(35): note: see reference to function template instantiation 'clockwork::maths::Mat4x4<float> &clockwork::maths::Mat4x4<float>::rotateYD(type) noexcept' being compiled
+          with
+          [
+              type=float
+          ]
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(600): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(602): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(603): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(605): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(606): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(608): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(609): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(499): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(498): note: while compiling class template member function 'clockwork::maths::Mat4x4<float> &clockwork::maths::Mat4x4<float>::rotateXD(type) noexcept'
+          with
+          [
+              type=float
+          ]
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\graphics\renderables\cube\instancedcube.cpp(35): note: see reference to function template instantiation 'clockwork::maths::Mat4x4<float> &clockwork::maths::Mat4x4<float>::rotateXD(type) noexcept' being compiled
+          with
+          [
+              type=float
+          ]
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(500): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(502): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(503): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(505): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(506): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(508): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(509): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mathfunctions.h(78): warning C4305: 'initializing': truncation from 'double' to 'const float'
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mathfunctions.h(78): note: see reference to variable template 'const float pi<float>' being compiled
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\logics\camera\camera.h(103): note: see reference to function template instantiation 'type clockwork::maths::toRadians<float>(type) noexcept' being compiled
+          with
+          [
+              type=float
+          ]
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mathfunctions.h(130): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(700): note: see reference to function template instantiation 'type clockwork::maths::cosD<float>(unsigned int) noexcept' being compiled
+          with
+          [
+              type=float
+          ]
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(699): note: while compiling class template member function 'clockwork::maths::Mat4x4<float> &clockwork::maths::Mat4x4<float>::rotateZD(type) noexcept'
+          with
+          [
+              type=float
+          ]
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\graphics\renderables\cube\instancedcube.cpp(35): note: see reference to function template instantiation 'clockwork::maths::Mat4x4<float> &clockwork::maths::Mat4x4<float>::rotateZD(type) noexcept' being compiled
+          with
+          [
+              type=float
+          ]
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mathfunctions.h(125): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mat4x4.h(700): note: see reference to function template instantiation 'type clockwork::maths::sinD<float>(unsigned int) noexcept' being compiled
+          with
+          [
+              type=float
+          ]
+  CubeManager.cpp
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\graphics\textures\texturearray2d.h(253): warning C4018: '<=': signed/unsigned mismatch
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\graphics\textures\texturearray2d.h(325): warning C4018: '<=': signed/unsigned mismatch
+  VertexBuffer.cpp
+  Engine.cpp
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\core\window.h(178): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\core\window.h(181): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\graphics\textures\texturearray2d.h(253): warning C4018: '<=': signed/unsigned mismatch
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\graphics\textures\texturearray2d.h(325): warning C4018: '<=': signed/unsigned mismatch
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mathfunctions.h(78): warning C4305: 'initializing': truncation from 'double' to 'const float'
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\mathfunctions.h(78): note: see reference to variable template 'const float pi<float>' being compiled
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\logics\camera\camera.h(103): note: see reference to function template instantiation 'type clockwork::maths::toRadians<float>(type) noexcept' being compiled
+          with
+          [
+              type=float
+          ]
+  Generating Code...
+  Compiling...
+  State.cpp
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\core\window.h(178): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\core\window.h(181): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
+  Loading.cpp
+  Generating Code...
+glfw3.lib(context.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(context.obj)' or at 'D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\bin\Win32\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(init.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(init.obj)' or at 'D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\bin\Win32\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(input.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(input.obj)' or at 'D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\bin\Win32\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(monitor.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(monitor.obj)' or at 'D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\bin\Win32\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(vulkan.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(vulkan.obj)' or at 'D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\bin\Win32\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(window.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(window.obj)' or at 'D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\bin\Win32\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(win32_init.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(win32_init.obj)' or at 'D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\bin\Win32\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(win32_joystick.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(win32_joystick.obj)' or at 'D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\bin\Win32\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(win32_monitor.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(win32_monitor.obj)' or at 'D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\bin\Win32\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(win32_time.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(win32_time.obj)' or at 'D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\bin\Win32\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(win32_tls.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(win32_tls.obj)' or at 'D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\bin\Win32\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(win32_window.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(win32_window.obj)' or at 'D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\bin\Win32\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(wgl_context.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(wgl_context.obj)' or at 'D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\bin\Win32\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(egl_context.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(egl_context.obj)' or at 'D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\bin\Win32\Debug\glfw.pdb'; linking object as if no debug info
+  Clockwork_Core.vcxproj -> D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\bin\Win32\Debug\Clockwork_Core.exe

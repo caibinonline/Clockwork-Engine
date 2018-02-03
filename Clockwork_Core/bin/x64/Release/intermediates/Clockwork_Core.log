@@ -1,0 +1,179 @@
+﻿cl : Command line warning D9002: ignoring unknown option '/arch:SSE2'
+  Engine.cpp
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\core\Window.h(190): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\core\Window.h(193): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\SpriteSheet.h(66): warning C4267: 'return': conversion from 'size_t' to 'const unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(151): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(157): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(184): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(190): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(218): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(253): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(344): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Buffers\VertexBuffer.h(194): warning C4312: 'reinterpret_cast': conversion from 'GLuint' to 'void *' of greater size
+  D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Renderables\BadTerrainTest.h(114): note: see reference to function template instantiation 'void clockwork::graphics::VertexBuffer::connectToVao<float>(GLint,GLboolean,GLuint,GLuint) noexcept const' being compiled
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Buffers\VertexBuffer.h(196): warning C4312: 'reinterpret_cast': conversion from 'GLuint' to 'void *' of greater size
+  ExampleGame.cpp
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Core\Window.h(190): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Core\Window.h(193): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
+  Main.cpp
+  Window.cpp
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\core\Window.h(190): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\core\Window.h(193): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
+src\Core\Window.cpp(163): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+src\Core\Window.cpp(319): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+  CopyBuffer.cpp
+  InternalCopyBuffer.cpp
+  VertexBuffer.cpp
+  OpenglStuff.cpp
+  CubeManager.cpp
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\SpriteSheet.h(66): warning C4267: 'return': conversion from 'size_t' to 'const unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(151): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(157): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(184): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(190): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(218): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(253): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(344): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Buffers\VertexBuffer.h(194): warning C4312: 'reinterpret_cast': conversion from 'GLuint' to 'void *' of greater size
+  src\Graphics\Renderables\Cube\CubeManager.cpp(81): note: see reference to function template instantiation 'void clockwork::graphics::VertexBuffer::connectToVao<float>(GLint,GLboolean,GLuint,GLuint) noexcept const' being compiled
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Buffers\VertexBuffer.h(196): warning C4312: 'reinterpret_cast': conversion from 'GLuint' to 'void *' of greater size
+  InstancedCube.cpp
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\SpriteSheet.h(66): warning C4267: 'return': conversion from 'size_t' to 'const unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(151): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(157): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(184): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(190): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(218): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(253): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(344): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(712): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+  D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(711): note: while compiling class template member function 'clockwork::maths::Mat4x4<float> &clockwork::maths::Mat4x4<float>::rotateZD(type) noexcept'
+          with
+          [
+              type=float
+          ]
+  src\Graphics\Renderables\Cube\InstancedCube.cpp(47): note: see reference to function template instantiation 'clockwork::maths::Mat4x4<float> &clockwork::maths::Mat4x4<float>::rotateZD(type) noexcept' being compiled
+          with
+          [
+              type=float
+          ]
+  d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\graphics\renderables\cube\InstancedCube.h(39): note: see reference to class template instantiation 'clockwork::maths::Mat4x4<float>' being compiled
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(713): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(715): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(716): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(718): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(719): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(721): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(722): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(611): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+  D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(610): note: while compiling class template member function 'clockwork::maths::Mat4x4<float> &clockwork::maths::Mat4x4<float>::rotateYD(type) noexcept'
+          with
+          [
+              type=float
+          ]
+  src\Graphics\Renderables\Cube\InstancedCube.cpp(47): note: see reference to function template instantiation 'clockwork::maths::Mat4x4<float> &clockwork::maths::Mat4x4<float>::rotateYD(type) noexcept' being compiled
+          with
+          [
+              type=float
+          ]
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(612): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(614): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(615): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(617): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(618): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(620): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(621): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(511): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+  D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(510): note: while compiling class template member function 'clockwork::maths::Mat4x4<float> &clockwork::maths::Mat4x4<float>::rotateXD(type) noexcept'
+          with
+          [
+              type=float
+          ]
+  src\Graphics\Renderables\Cube\InstancedCube.cpp(47): note: see reference to function template instantiation 'clockwork::maths::Mat4x4<float> &clockwork::maths::Mat4x4<float>::rotateXD(type) noexcept' being compiled
+          with
+          [
+              type=float
+          ]
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(512): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(514): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(515): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(517): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(518): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(520): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(521): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\MathFunctions.h(142): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(712): note: see reference to function template instantiation 'type clockwork::maths::cosD<float>(unsigned int) noexcept' being compiled
+          with
+          [
+              type=float
+          ]
+  D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(711): note: while compiling class template member function 'clockwork::maths::Mat4x4<float> &clockwork::maths::Mat4x4<float>::rotateZD(type) noexcept'
+          with
+          [
+              type=float
+          ]
+  src\Graphics\Renderables\Cube\InstancedCube.cpp(47): note: see reference to function template instantiation 'clockwork::maths::Mat4x4<float> &clockwork::maths::Mat4x4<float>::rotateZD(type) noexcept' being compiled
+          with
+          [
+              type=float
+          ]
+d:\programmieren\visual_studio\workspace\clockwork\clockwork_core\src\maths\MathFunctions.h(137): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Maths\Mat4x4.h(712): note: see reference to function template instantiation 'type clockwork::maths::sinD<float>(unsigned int) noexcept' being compiled
+          with
+          [
+              type=float
+          ]
+  NormalCube.cpp
+  InstancedRenderer.cpp
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\SpriteSheet.h(66): warning C4267: 'return': conversion from 'size_t' to 'const unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(151): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(157): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(184): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(190): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(218): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(253): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(344): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+  NormalRenderer.cpp
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Buffers\VertexBuffer.h(194): warning C4312: 'reinterpret_cast': conversion from 'GLuint' to 'void *' of greater size
+  D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Renderables\BadTerrainTest.h(114): note: see reference to function template instantiation 'void clockwork::graphics::VertexBuffer::connectToVao<float>(GLint,GLboolean,GLuint,GLuint) noexcept const' being compiled
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Buffers\VertexBuffer.h(196): warning C4312: 'reinterpret_cast': conversion from 'GLuint' to 'void *' of greater size
+  TestGame.cpp
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\SpriteSheet.h(66): warning C4267: 'return': conversion from 'size_t' to 'const unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(151): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(157): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(184): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(190): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(218): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(253): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Textures\TextureArray2D.h(344): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Core\Window.h(190): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Core\Window.h(193): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
+src\Logics\States\Game\TestGame.cpp(65): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+src\Logics\States\Game\TestGame.cpp(85): warning C4244: 'argument': conversion from 'double' to 'unsigned int', possible loss of data
+src\Logics\States\Game\TestGame.cpp(90): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+src\Logics\States\Game\TestGame.cpp(109): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+src\Logics\States\Game\TestGame.cpp(113): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+src\Logics\States\Game\TestGame.cpp(117): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+src\Logics\States\Game\TestGame.cpp(121): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+src\Logics\States\Game\TestGame.cpp(125): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+src\Logics\States\Game\TestGame.cpp(129): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+src\Logics\States\Game\TestGame.cpp(145): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+src\Logics\States\Game\TestGame.cpp(183): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+src\Logics\States\Game\TestGame.cpp(196): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Buffers\VertexBuffer.h(194): warning C4312: 'reinterpret_cast': conversion from 'GLuint' to 'void *' of greater size
+  D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Renderables\BadTerrainTest.h(114): note: see reference to function template instantiation 'void clockwork::graphics::VertexBuffer::connectToVao<float>(GLint,GLboolean,GLuint,GLuint) noexcept const' being compiled
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Graphics\Buffers\VertexBuffer.h(196): warning C4312: 'reinterpret_cast': conversion from 'GLuint' to 'void *' of greater size
+  Loading.cpp
+  State.cpp
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Core\Window.h(190): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
+D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\src\Core\Window.h(193): warning C4244: 'return': conversion from 'double' to 'const int', possible loss of data
+  MathFunctions.cpp
+  File.cpp
+  Image.cpp
+  Generating code
+  3 of 817 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  Clockwork_Core.vcxproj -> D:\Programmieren\visual_studio\workspace\Clockwork\Clockwork_Core\bin\x64\Release\Clockwork_Core.exe
