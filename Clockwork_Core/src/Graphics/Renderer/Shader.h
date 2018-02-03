@@ -45,6 +45,11 @@ namespace clockwork {
 
 		public:
 
+			/*creates an empty shader with no data in it, so you have to call loadData() before using it*/
+			Shader() noexcept
+				: m_id(0)
+			{}
+
 			/*loads a vertex and a fragmentshader into a shader program both specified by the file path relative to the engine.exe
 			vertex shader is called for each vertex(for example triangle 3 times), specifies how the vertex arrives at the screen and passes the data(for example position) to the fragment shader
 			fragment shader is called for each pixel between the vertices and specifies the colour/lightning of the pixels
@@ -52,6 +57,7 @@ namespace clockwork {
 			Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath) noexcept
 				:m_vertexPath(vertexShaderPath), m_fragmentPath(fragmentShaderPath)
 			{
+				m_id = glCreateProgram();//one shader program for both fragment and vertex shader
 				loadShader(vertexShaderPath, fragmentShaderPath);
 			}
 
@@ -65,7 +71,7 @@ namespace clockwork {
 
 			/*copies the unique id and resets the id of the moved object*/
 			Shader(Shader&& other) noexcept
-				: m_id(other.m_id), m_vertexPath(std::move(other.m_vertexPath)), m_fragmentPath(std::move(other.m_fragmentPath))
+				: m_id(other.m_id), m_vertexPath(std::move(other.m_vertexPath)), m_fragmentPath(std::move(other.m_fragmentPath)), m_uniformLocationCache(std::move(other.m_uniformLocationCache))
 			{
 				other.m_id = 0;
 			}
@@ -79,6 +85,7 @@ namespace clockwork {
 				other.m_id = 0;
 				m_vertexPath = std::move(other.m_vertexPath);
 				m_fragmentPath = std::move(other.m_fragmentPath);
+				m_uniformLocationCache = std::move(other.m_uniformLocationCache);
 			}
 
 		public:
@@ -89,7 +96,7 @@ namespace clockwork {
 			{
 				m_vertexPath = vertexShaderPath;
 				m_fragmentPath = fragmentShaderPath;
-				m_id = glCreateProgram();//one shader program for both fragment and vertex shader
+				m_uniformLocationCache.clear();
 
 				GLuint vs = glCreateShader(GL_VERTEX_SHADER);//vertex shader unique opengl state id 
 				GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);//here fragmentshader
