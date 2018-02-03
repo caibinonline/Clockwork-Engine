@@ -185,9 +185,9 @@ namespace clockwork {
 			}
 		}
 
-		void InstancedCube::setTexture(const std::string& imagePath) noexcept
+		void InstancedCube::setTexture(const utils::Image& image) noexcept
 		{
-			m_data.textureId = m_renderer->cubeManager.m_textureArray.getTextureId(imagePath);
+			m_data.textureId = m_renderer->cubeManager.m_textureArray.getTextureId(image);
 			if ( m_pos != -1 )
 			{
 				m_renderer->cubeManager.m_copyBuffer.bind();
@@ -195,9 +195,9 @@ namespace clockwork {
 			}
 		}
 
-		void InstancedCube::setTexture(const utils::Image& image) noexcept
+		void InstancedCube::setTexture(const std::string& imagePath) noexcept
 		{
-			m_data.textureId = m_renderer->cubeManager.m_textureArray.getTextureId(image);
+			m_data.textureId = m_renderer->cubeManager.m_textureArray.getTextureId(imagePath);
 			if ( m_pos != -1 )
 			{
 				m_renderer->cubeManager.m_copyBuffer.bind();

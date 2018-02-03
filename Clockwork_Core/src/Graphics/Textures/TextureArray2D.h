@@ -190,7 +190,7 @@ namespace clockwork {
 				return m_images.size() - 1;
 			}
 
-			/*adds an image to the texturearray2d if the image isnt already in the texturearray2d
+			/*adds an image/texture(that is not in the texturearray) to the texturearray2d | dont add an image that already is in the texturearray, because then 2 identical images/textures would be in the texturearray2d 
 			CAREFUL: the size of the new image has to be the same as the size of the other images and the pixelkind has to be the same too(rgb/rgba = same transparancy level)
 			the texturearray will be bound after this method*/
 			void addTexture(const utils::Image& image) noexcept
@@ -223,7 +223,7 @@ namespace clockwork {
 				glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 			}
 
-			/*adds an image to the texturearray2d if the image isnt already in the texturearray2d
+			/*adds an image/texture(that is not in the texturearray) to the texturearray2d | dont add an image that already is in the texturearray, because then 2 identical images/textures would be in the texturearray2d 
 			CAREFUL: the size of the new image has to be the same as the size of the other images and the pixelkind has to be the same too(rgb/rgba = same transparancy level)
 			the texturearray will be bound after this method*/
 			void addTexture(const std::string& imagePath) noexcept

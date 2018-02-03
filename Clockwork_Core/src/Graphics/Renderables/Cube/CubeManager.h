@@ -26,6 +26,8 @@ namespace clockwork {
 
 		class InstancedCube;
 
+		/*
+		CAREFUL: the size of each image has to be the same as the size of the other images and the pixelkind has to be the same too(rgb/rgba = same transparancy level), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures*/
 		class CubeManager
 		{
 
@@ -66,12 +68,19 @@ namespace clockwork {
 
 			void render() noexcept;
 
-			void removeAt(int pos) noexcept;//bei allen hier muss copyBuffer vorher gebindet werden, auch überall unten dazu schreiben | hiernach das objekt an der position nicht mehr benutzen, m_pos ist dann -1
+			/*dont use the object at the position in the cubemanager, because it will change places with the last object in the list and the last object will then be removed */
+			void removeAt(int pos) noexcept;///neu besser kommentieren
 
 			void removeLast() noexcept;
 
+			/*adds an image/texture(that is not in the texturearray) to the texturearray2d of the cubemanager | dont add an image that already is in the texturearray, because then 2 identical images/textures would be in the texturearray2d
+			CAREFUL: the size of the new image has to be the same as the size of the other images and the pixelkind has to be the same too(rgb/rgba = same transparancy level), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures
+			@param[image] the texture/image that will be used for this model*/
 			void addTexture(const utils::Image& image) noexcept;
 
+			/*adds an image/texture(that is not in the texturearray) to the texturearray2d of the cubemanager | dont add an image that already is in the texturearray, because then 2 identical images/textures would be in the texturearray2d
+			CAREFUL: the size of the new image has to be the same as the size of the other images and the pixelkind has to be the same too(rgb/rgba = same transparancy level), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures
+			@param[imagePath] the path of a texture/image that will be used for this model*/
 			void addTexture(const std::string& imagePath) noexcept;
 
 			void removeTexture(int textureId) noexcept;
@@ -80,7 +89,7 @@ namespace clockwork {
 
 			void removeTexture(const std::string& imagePath) noexcept;
 
-			inline const unsigned int getCount() noexcept {return m_instanceCount;}
+			inline const unsigned int getCount() const noexcept {return m_instanceCount;}
 
 
 		};

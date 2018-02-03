@@ -26,7 +26,6 @@ namespace clockwork {
 		the instancedcube will have a pointer to a renderer, where a cubemanager will render all instancedcubes that are added to the cubemanager
 		the cubemanager can also add a texture to prepare for instancedcubes(textures are also automaticly added when adding instancedcubes), or remove an instancedcube from the render list
 		every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures*/
-		///das letzte auch bei allen funktionen mit images dazu kommentieren und auch beim cubemanager dazu kommentieren 
 		class InstancedCube
 		{
 
@@ -99,7 +98,7 @@ namespace clockwork {
 			InstancedCube(const std::string& imagePath, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, InstancedRenderer* renderer) noexcept;
 
 			/*creates an instancedcube that is added to the cubemanager and will be rendered
-			@param[imagePath] the texture/image that will be used for this model
+			@param[image] the texture/image that will be used for this model
 			the textureId will be equal to the position of the image in the texturearray2d of the cubemanager and if the image is not already in the texturearray2d, it will be added to it
 			every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures
 			@param[scaling] the scale of the size of the model
@@ -157,18 +156,16 @@ namespace clockwork {
 			void setTexture(int textureId) noexcept;
 
 			/*changes the texture of this instancedcube and automaticly updates the buffer(gpu side) in the cubemanager
-			@param[imagePath] the path of a texture/image that will be used for this model
-			the textureId will be equal to the position of the image in the texturearray2d of the cubemanager and if the image is not already in the texturearray2d, it will be added to it
-			every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures
-			every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures*/
-			void setTexture(const std::string& imagePath) noexcept;
-
-			/*changes the texture of this instancedcube and automaticly updates the buffer(gpu side) in the cubemanager
 			@param[image] the texture/image that will be used for this model
 			the textureId will be equal to the position of the image in the texturearray2d of the cubemanager and if the image is not already in the texturearray2d, it will be added to it
-			every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures
 			every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures*/
 			void setTexture(const utils::Image& image) noexcept;
+
+			/*changes the texture of this instancedcube and automaticly updates the buffer(gpu side) in the cubemanager
+			@param[imagePath] the path of a texture/image that will be used for this model
+			the textureId will be equal to the position of the image in the texturearray2d of the cubemanager and if the image is not already in the texturearray2d, it will be added to it
+			every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures*/
+			void setTexture(const std::string& imagePath) noexcept;
 
 			/*hides, or shows the instance/object of the model, by setting its modelmatrix and textureid in the buffer(gpu side) of the cubemanager to the actual modelmatrix and textureid of the instancedcube for true
 			or setting them to 0 in the buffer for false | use add()/remove() for few changes with many models to hide/show objects/instances and use setVisible(true/false) for many changes with few models*/

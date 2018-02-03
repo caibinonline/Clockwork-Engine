@@ -21,6 +21,7 @@ namespace clockwork {
 		{}
 
 		CubeManager::CubeManager(unsigned int reserved) noexcept
+			: m_textureArray(reserved), m_instanceCount(0)
 		{
 			m_vertexBuffer = VertexBuffer(//you could also create a local nameless array of vertices, where vertex is a struct with vec2 of float for position and vec2 of float for colour
 				floatarr//floats
