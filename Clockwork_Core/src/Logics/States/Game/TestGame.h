@@ -14,8 +14,7 @@
 #include "src\Logics\States\State.h"
 #include <vector>
 #include "src\Maths\Mat4x4.h"
-#include "src\Graphics\Renderer\InstancedRenderer.h"
-#include "src\Graphics\Renderer\NormalRenderer.h"
+#include "src\Graphics\Renderer\Renderer.h"
 
 namespace clockwork {
 	namespace logics {
@@ -27,8 +26,7 @@ namespace clockwork {
 		private:
 			maths::Mat4f m_perspectiveProjection;
 			maths::Mat4f m_orthographicProjection;
-			graphics::InstancedRenderer* m_instancedRenderer;
-			graphics::NormalRenderer* m_normalRenderer;
+			graphics::Renderer* m_renderer;
 
 		public:
 			TestGame() noexcept;

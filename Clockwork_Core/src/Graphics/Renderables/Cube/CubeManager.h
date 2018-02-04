@@ -36,7 +36,7 @@ namespace clockwork {
 		private:
 			friend class InstancedCube;
 			friend class NormalCube;
-			friend class InstancedRenderer;
+			friend class Renderer;
 			using floatarr = float[8 * 4 * 6];
 			using uchararr = unsigned  char[36];
 

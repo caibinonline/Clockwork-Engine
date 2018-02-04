@@ -60,12 +60,6 @@
     <ClCompile Include="src\Utils\Image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Graphics\Renderer\InstancedRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Graphics\Renderer\NormalRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Graphics\Renderables\Cube\CubeManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -73,6 +67,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\Renderables\Cube\NormalCube.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Renderer\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -200,12 +197,6 @@
     <ClInclude Include="src\Graphics\Renderer\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\Renderer\InstancedRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\Renderer\NormalRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Graphics\Renderables\Cube\CubeManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -225,6 +216,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Renderables\Cube\Cube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Renderer\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

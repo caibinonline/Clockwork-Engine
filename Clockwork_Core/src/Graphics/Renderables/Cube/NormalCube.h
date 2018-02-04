@@ -18,34 +18,34 @@
 namespace clockwork {
 	namespace graphics {
 
-		class InstancedRenderer;
+		class Renderer;
 
 		class NormalCube
 		{
 
 		private:
 			friend class CubeManager;
-			friend class InstancedRenderer;
+			friend class Renderer;
 			int m_textureId;///später wahrscheinlich materialid mit materialarray benutzen | dann auch materialarray, etc machen 
 			maths::Mat4f m_modelMatrix;
 			bool m_visible;
 			int m_pos;
-			InstancedRenderer* m_renderer;
+			Renderer* m_renderer;
 
 		public:
-			explicit NormalCube(InstancedRenderer* renderer) noexcept;
+			explicit NormalCube(Renderer* renderer) noexcept;
 
-			NormalCube(int textureId, const maths::Mat4f& mat, InstancedRenderer* renderer) noexcept;
+			NormalCube(int textureId, const maths::Mat4f& mat, Renderer* renderer) noexcept;
 
-			NormalCube(const std::string& imagePath, const maths::Mat4f& mat, InstancedRenderer* renderer) noexcept;
+			NormalCube(const std::string& imagePath, const maths::Mat4f& mat, Renderer* renderer) noexcept;
 
-			NormalCube(const utils::Image& image, const maths::Mat4f& mat, InstancedRenderer* renderer) noexcept;
+			NormalCube(const utils::Image& image, const maths::Mat4f& mat, Renderer* renderer) noexcept;
 
-			NormalCube(int textureId, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, InstancedRenderer* renderer) noexcept;
+			NormalCube(int textureId, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, Renderer* renderer) noexcept;
 
-			NormalCube(const std::string& imagePath, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, InstancedRenderer* renderer) noexcept;
+			NormalCube(const std::string& imagePath, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, Renderer* renderer) noexcept;
 
-			NormalCube(const utils::Image& image, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, InstancedRenderer* renderer) noexcept;
+			NormalCube(const utils::Image& image, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, Renderer* renderer) noexcept;
 
 			virtual ~NormalCube() noexcept;
 

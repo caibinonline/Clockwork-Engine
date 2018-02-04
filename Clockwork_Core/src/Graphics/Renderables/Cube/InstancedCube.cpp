@@ -12,16 +12,16 @@
 *************************************************************************/
 #include "CubeManager.h"
 #include "InstancedCube.h"
-#include "src\Graphics\Renderer\InstancedRenderer.h"
+#include "src\Graphics\Renderer\Renderer.h"
 
 namespace clockwork {
 	namespace graphics {
 		
-		InstancedCube::InstancedCube(InstancedRenderer* renderer) noexcept
+		InstancedCube::InstancedCube(Renderer* renderer) noexcept
 			: m_textureId(0), m_modelMatrix(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0), m_pos(-1), m_renderer(renderer)
 		{}
 
-		InstancedCube::InstancedCube(int textureId, const maths::Mat4f& mat, InstancedRenderer* renderer) noexcept
+		InstancedCube::InstancedCube(int textureId, const maths::Mat4f& mat, Renderer* renderer) noexcept
 			: m_textureId(textureId), m_modelMatrix(mat), m_pos(-1), m_renderer(renderer)
 		{
 #if CLOCKWORK_DEBUG
@@ -30,17 +30,17 @@ namespace clockwork {
 #endif
 		}
 
-		InstancedCube::InstancedCube(const std::string& imagePath, const maths::Mat4f& mat, InstancedRenderer* renderer) noexcept
+		InstancedCube::InstancedCube(const std::string& imagePath, const maths::Mat4f& mat, Renderer* renderer) noexcept
 			: m_textureId(m_renderer->cubeManager.m_textureArray.getTextureId(imagePath)), m_modelMatrix(mat), m_pos(-1), m_renderer(renderer)
 		{
 		}
 
-		InstancedCube::InstancedCube(const utils::Image& image, const maths::Mat4f& mat, InstancedRenderer* renderer) noexcept
+		InstancedCube::InstancedCube(const utils::Image& image, const maths::Mat4f& mat, Renderer* renderer) noexcept
 			: m_textureId(m_renderer->cubeManager.m_textureArray.getTextureId(image)), m_modelMatrix(mat), m_pos(-1), m_renderer(renderer)
 		{
 		}
 
-		InstancedCube::InstancedCube(int textureId, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, InstancedRenderer* renderer) noexcept
+		InstancedCube::InstancedCube(int textureId, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, Renderer* renderer) noexcept
 			: m_textureId(textureId), m_modelMatrix(maths::Mat4f::scaling(scaling).rotateXD(rotation.x).rotateYD(rotation.y).rotateZD(rotation.z).translate(translation)), m_pos(-1), m_renderer(renderer)
 		{
 #if CLOCKWORK_DEBUG
@@ -49,12 +49,12 @@ namespace clockwork {
 #endif
 		}
 
-		InstancedCube::InstancedCube(const std::string& imagePath, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, InstancedRenderer* renderer) noexcept
+		InstancedCube::InstancedCube(const std::string& imagePath, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, Renderer* renderer) noexcept
 			: m_textureId(m_renderer->cubeManager.m_textureArray.getTextureId(imagePath)), m_modelMatrix(maths::Mat4f::scaling(scaling).rotateXD(rotation.x).rotateYD(rotation.y).rotateZD(rotation.z).translate(translation)), m_pos(-1), m_renderer(renderer)
 		{
 		}
 
-		InstancedCube::InstancedCube(const utils::Image& image, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, InstancedRenderer* renderer) noexcept
+		InstancedCube::InstancedCube(const utils::Image& image, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, Renderer* renderer) noexcept
 			: m_textureId(m_renderer->cubeManager.m_textureArray.getTextureId(image)), m_modelMatrix(maths::Mat4f::scaling(scaling).rotateXD(rotation.x).rotateYD(rotation.y).rotateZD(rotation.z).translate(translation)), m_pos(-1), m_renderer(renderer)
 		{
 		}

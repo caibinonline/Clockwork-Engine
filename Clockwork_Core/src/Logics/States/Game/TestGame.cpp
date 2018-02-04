@@ -56,31 +56,29 @@ namespace clockwork {
 
 			m_currentCamera = new Camera({ 0,10,5 });
 
-			m_instancedRenderer = new InstancedRenderer(new graphics::Shader("res/Shaders/Testing/Instancing.vs", "res/Shaders/Testing/Instancing.fs"), new graphics::Shader("res/Shaders/Testing/Normal.vs", "res/Shaders/Testing/Normal.fs"), &m_currentCamera, &m_perspectiveProjection);
-			m_normalRenderer = new NormalRenderer(new graphics::Shader("res/Shaders/Testing/Normal.vs", "res/Shaders/Testing/Normal.fs"), &m_currentCamera, &m_perspectiveProjection);
+			m_renderer = new Renderer(new graphics::Shader("res/Shaders/Testing/Instancing.vs", "res/Shaders/Testing/Instancing.fs"), new graphics::Shader("res/Shaders/Testing/Normal.vs", "res/Shaders/Testing/Normal.fs"), &m_currentCamera, &m_perspectiveProjection);
 
 		
 			if ( engine->getWindow()->getWidth() != 0 && engine->getWindow()->getHeight() != 0 )
 			{
 				m_perspectiveProjection = maths::Mat4x4<float>::perspective(maths::toRadians<float>(fov), static_cast<double>( engine->getWindow()->getWidth() ) / static_cast<double>( engine->getWindow()->getHeight() ), 0.1f, 1000.0f);//projection matrix for the scene to transform world coordinates into screen coordinates | has to be set once per update of the window size
-				m_instancedRenderer->updateProjection();
-				m_normalRenderer->updateProjection();
+				m_renderer->updateProjection();
 			}
 			
 
 
 
-			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/brick.jpg").load());
-			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/stone.jpg").load());
-			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/granite.jpg").load());
-			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/moss.jpg").load());
-			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/brick2.jpg").load());
-			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/granite2.jpg").load());
-			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/wood.jpg").load());
-			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/grass.jpg").load());
-			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/blue.jpg").load());
-			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/red.jpg").load());
-			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/purple.jpg").load());
+			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/brick.jpg").load());
+			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/stone.jpg").load());
+			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/granite.jpg").load());
+			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/moss.jpg").load());
+			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/brick2.jpg").load());
+			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/granite2.jpg").load());
+			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/wood.jpg").load());
+			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/grass.jpg").load());
+			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/blue.jpg").load());
+			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/red.jpg").load());
+			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/purple.jpg").load());
 
 
 			std::srand(engine->getWindow()->getTimer() * 10);
@@ -89,7 +87,7 @@ namespace clockwork {
 			{
 				maths::Mat4x4<float> modelMatrix = modelMatrix = maths::Mat4x4<float>::scaling(1, 1, 1);
 				modelMatrix.translate(-( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10);
-				NormalCube* inst = new NormalCube(rand() % 11, modelMatrix, m_instancedRenderer);
+				NormalCube* inst = new NormalCube(rand() % 11, modelMatrix, m_renderer);
 				inst->add();
 			}
 
@@ -135,8 +133,7 @@ namespace clockwork {
 
 		void TestGame::render() noexcept
 		{
-			m_instancedRenderer->render();
-			m_normalRenderer->render();
+			m_renderer->render();
 		}
 
 
@@ -145,8 +142,7 @@ namespace clockwork {
 			if ( width != 0 && height != 0 )
 			{
 				m_perspectiveProjection = maths::Mat4x4<float>::perspective(maths::toRadians<float>(fov), static_cast<double>( width ) / static_cast<double>( height ), 0.1f, 1000.0f);//projection matrix for the scene to transform world coordinates into screen coordinates | has to be set once per update of the window size
-				m_instancedRenderer->updateProjection();
-				m_normalRenderer->updateProjection();
+				m_renderer->updateProjection();
 			}
 		}
 
@@ -170,12 +166,12 @@ namespace clockwork {
 					maths::Vec3f pos = m_currentCamera->getPosition() + m_currentCamera->getDirection() * 2;
 					maths::Mat4x4<float> modelMatrix = modelMatrix = maths::Mat4x4<float>::scaling(1, 1, 1);
 					modelMatrix.translate(pos.x, pos.y, pos.z);
-					graphics::NormalCube* inst = new graphics::NormalCube(rand() % 11, modelMatrix, m_instancedRenderer);
+					graphics::NormalCube* inst = new graphics::NormalCube(rand() % 11, modelMatrix, m_renderer);
 					inst->add();
 				}
 				else if ( button == CLOCKWORK_MOUSE_BUTTON_2 )
 				{
-					m_instancedRenderer->cubeManager.removeLastNormalCube();
+					m_renderer->cubeManager.removeLastNormalCube();
 				}
 			}
 
@@ -197,8 +193,7 @@ namespace clockwork {
 			if ( engine->getWindow()->getWidth() != 0 && engine->getWindow()->getHeight() != 0 )
 			{
 				m_perspectiveProjection = maths::Mat4x4<float>::perspective(maths::toRadians<float>(fov), static_cast<double>( engine->getWindow()->getWidth() ) / static_cast<double>( engine->getWindow()->getHeight() ), 0.1f, 1000.0f);//projection matrix for the scene to transform world coordinates into screen coordinates | has to be set once per update of the window size
-				m_instancedRenderer->updateProjection();
-				m_normalRenderer->updateProjection();
+				m_renderer->updateProjection();
 			}
 
 		}

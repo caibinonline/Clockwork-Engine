@@ -135,8 +135,7 @@
     <ClCompile Include="src\Graphics\Renderables\Cube\CubeManager.cpp" />
     <ClCompile Include="src\Graphics\Renderables\Cube\InstancedCube.cpp" />
     <ClCompile Include="src\Graphics\Renderables\Cube\NormalCube.cpp" />
-    <ClCompile Include="src\Graphics\Renderer\InstancedRenderer.cpp" />
-    <ClCompile Include="src\Graphics\Renderer\NormalRenderer.cpp" />
+    <ClCompile Include="src\Graphics\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Logics\States\Game\TestGame.cpp" />
     <ClCompile Include="src\Logics\States\Loading\Loading.cpp" />
     <ClCompile Include="src\Logics\States\State.cpp" />
@@ -164,8 +163,7 @@
     <ClInclude Include="src\Graphics\Renderables\Cube\TransparentNormalCube.h" />
     <ClInclude Include="src\Graphics\Renderables\Mesh.h" />
     <ClInclude Include="src\Graphics\Renderables\Model.h" />
-    <ClInclude Include="src\Graphics\Renderer\InstancedRenderer.h" />
-    <ClInclude Include="src\Graphics\Renderer\NormalRenderer.h" />
+    <ClInclude Include="src\Graphics\Renderer\Renderer.h" />
     <ClInclude Include="src\Graphics\Renderer\Shader.h" />
     <ClInclude Include="src\Graphics\Textures\Material.h" />
     <ClInclude Include="src\Graphics\Textures\SpriteSheet.h" />

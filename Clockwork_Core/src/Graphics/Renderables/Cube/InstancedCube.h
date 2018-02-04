@@ -18,7 +18,7 @@
 namespace clockwork {
 	namespace graphics {
 
-		class InstancedRenderer;
+		class Renderer;
 
 		/*this is an instanced textured cube for drawing many small models with the same shader
 		there will be one model and some textures in the cubemanager and each instancedcube is an instance of this model 
@@ -31,18 +31,18 @@ namespace clockwork {
 
 		private:
 			friend class CubeManager;
-			friend class InstancedRenderer;
+			friend class Renderer;
 			/*the data of each instance/object of the model(textureid for the texturearray and modelmatrix fro the transformation in the world*/
 			int m_textureId;///später wahrscheinlich materialid mit materialarray benutzen | dann auch materialarray, etc machen 
 			maths::Mat4f m_modelMatrix;
 			int m_pos;//noch isadded machen und dann mpos!=-1 ausgeben als bool 
-			InstancedRenderer* m_renderer;
+			Renderer* m_renderer;
 
 		public:
 
 			/*creates an empty instancedcube data = 0 that is not added to the cubemanager and will not be rendered | so you have to call add after the constructor to render it 
 			@param[renderer] a pointer to an instancedrenderer where the cubemanager is stored*/
-			explicit InstancedCube(InstancedRenderer* renderer) noexcept;
+			explicit InstancedCube(Renderer* renderer) noexcept;
 
 			/*creates an instancedcube that is not added to the cubemanager and will not be rendered | so you have to call add after the constructor to render it 
 			dont use this constructor, if the count of textures/images in the texturearray2d of the cubemanager is equal or less than the textureID, because it will give an error
@@ -50,7 +50,7 @@ namespace clockwork {
 			every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures
 			@param[mat] the modelmatrix of the instance/object that will transform the model into the world
 			@param[renderer] a pointer to an instancedrenderer where the cubemanager is stored*/
-			InstancedCube(int textureId, const maths::Mat4f& mat, InstancedRenderer* renderer) noexcept;
+			InstancedCube(int textureId, const maths::Mat4f& mat, Renderer* renderer) noexcept;
 
 			/*creates an instancedcube that is not added to the cubemanager and will not be rendered | so you have to call add after the constructor to render it 
 			@param[imagePath] the path of a texture/image that will be used for this model 
@@ -58,14 +58,14 @@ namespace clockwork {
 			every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures
 			@param[mat] the modelmatrix of the instance/object that will transform the model into the world
 			@param[renderer] a pointer to an instancedrenderer where the cubemanager is stored*/
-			InstancedCube(const std::string& imagePath, const maths::Mat4f& mat, InstancedRenderer* renderer) noexcept;
+			InstancedCube(const std::string& imagePath, const maths::Mat4f& mat, Renderer* renderer) noexcept;
 
 			/*creates an instancedcube that is not added to the cubemanager and will not be rendered | so you have to call add after the constructor to render it 
 			@param[imagePath] the texture/image that will be used for this model
 			the textureId will be equal to the position of the image in the texturearray2d of the cubemanager and if the image is not already in the texturearray2d, it will be added to it
 			@param[mat] the modelmatrix of the instance/object that will transform the model into the world
 			@param[renderer] a pointer to an instancedrenderer where the cubemanager is stored*/
-			InstancedCube(const utils::Image& image, const maths::Mat4f& mat, InstancedRenderer* renderer) noexcept;
+			InstancedCube(const utils::Image& image, const maths::Mat4f& mat, Renderer* renderer) noexcept;
 
 			/*creates an instancedcube that is not added to the cubemanager and will not be rendered | so you have to call add after the constructor to render it 
 			dont use this constructor, if the count of textures/images in the texturearray2d of the cubemanager is equal or less than the textureID, because it will give an error
@@ -76,7 +76,7 @@ namespace clockwork {
 			@param[translation] the position of the model
 			the modelmatrix of the instance/object will be created out of the 3 vectors and will transform the model into the world
 			@param[renderer] a pointer to an instancedrenderer where the cubemanager is stored*/
-			InstancedCube(int textureId, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, InstancedRenderer* renderer) noexcept;
+			InstancedCube(int textureId, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, Renderer* renderer) noexcept;
 
 			/*creates an instancedcube that is not added to the cubemanager and will not be rendered | so you have to call add after the constructor to render it 
 			@param[imagePath] the path of a texture/image that will be used for this model
@@ -87,7 +87,7 @@ namespace clockwork {
 			@param[translation] the position of the model
 			the modelmatrix of the instance/object will be created out of the 3 vectors and will transform the model into the world
 			@param[renderer] a pointer to an instancedrenderer where the cubemanager is stored*/
-			InstancedCube(const std::string& imagePath, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, InstancedRenderer* renderer) noexcept;
+			InstancedCube(const std::string& imagePath, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, Renderer* renderer) noexcept;
 
 			/*creates an instancedcube that is not added to the cubemanager and will not be rendered | so you have to call add after the constructor to render it 
 			@param[image] the texture/image that will be used for this model
@@ -98,7 +98,7 @@ namespace clockwork {
 			@param[translation] the position of the model
 			the modelmatrix of the instance/object will be created out of the 3 vectors and will transform the model into the world
 			@param[renderer] a pointer to an instancedrenderer where the cubemanager is stored*/
-			InstancedCube(const utils::Image& image, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, InstancedRenderer* renderer) noexcept;
+			InstancedCube(const utils::Image& image, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, Renderer* renderer) noexcept;
 
 			/*removes the instancedcube from the cubemanager, if its currently added to it*/
 			~InstancedCube() noexcept;

@@ -17,10 +17,15 @@
 #include "src\Graphics\Renderables\Cube\InstancedCube.h"
 #include "src\Graphics\Renderables\Cube\NormalCube.h"
 
+
+
+#include "src\Graphics\Renderables\BadTerrainTest.h"
+
+
 namespace clockwork {
 	namespace graphics {
 
-		class InstancedRenderer
+		class Renderer
 		{
 
 		private:
@@ -36,15 +41,19 @@ namespace clockwork {
 		public:
 			CubeManager cubeManager;
 
+
+
+			BadTerrainTest terrain;
+
 		public:
 
-			InstancedRenderer() noexcept
+			Renderer() noexcept
 				: m_instanceShader(nullptr), m_normalShader(nullptr), m_currentCamera(nullptr), m_currentProjection(nullptr), cubeManager(), m_deleteShader(false)
 			{}
 
 			//pointer to dynamic, or class owned shader, pointer to dynamic, or class owned pointer to camera, pointer to dynnamic, or class owned projection matrix
 			//bool deleteshader this renderer deletes the shader with its destruktor call when its set to true | so if you have a shared shader in multiple renderers and you manage it/delete it in your game, then pass false as the boolean(just shader pointer passed as parameter, not new shader objekt created with new)
-			InstancedRenderer(Shader* instanceShader, Shader* normalShader, logics::Camera** camera, maths::Mat4f* projection, unsigned int reserved = 10, bool deleteShader = true) noexcept
+			Renderer(Shader* instanceShader, Shader* normalShader, logics::Camera** camera, maths::Mat4f* projection, unsigned int reserved = 10, bool deleteShader = true) noexcept
 				: m_instanceShader(instanceShader), m_normalShader(normalShader), m_currentCamera(camera), m_currentProjection(projection), cubeManager(reserved), m_deleteShader(deleteShader)
 			{
 				m_instanceShader->enable();
@@ -55,7 +64,7 @@ namespace clockwork {
 				m_normalShader->setUniform("u_texture1", 0);
 			}
 
-			~InstancedRenderer() noexcept
+			~Renderer() noexcept
 			{
 				if ( m_deleteShader )
 				{
@@ -64,9 +73,9 @@ namespace clockwork {
 				}
 			}
 
-			InstancedRenderer(const InstancedRenderer& other) = delete;
+			Renderer(const Renderer& other) = delete;
 
-			InstancedRenderer(InstancedRenderer&& other) noexcept///WICHTIG auch für alle anderen cubemanager moven, etc, wenn meherere manager da sind | WICHTIG NOCH INSTANCEN UPDATEN POINTER AUF RENDERER 
+			Renderer(Renderer&& other) noexcept///WICHTIG auch für alle anderen cubemanager moven, etc, wenn meherere manager da sind | WICHTIG NOCH INSTANCEN UPDATEN POINTER AUF RENDERER 
 				: m_instanceShader(other.m_instanceShader), m_normalShader(other.m_normalShader), m_currentCamera(other.m_currentCamera), m_currentProjection(other.m_currentProjection), m_deleteShader(other.m_deleteShader), cubeManager(std::move(other.cubeManager))
 			{
 				other.m_instanceShader = nullptr;
@@ -84,9 +93,9 @@ namespace clockwork {
 				}
 			}
 
-			InstancedRenderer& operator=(const InstancedRenderer& other) = delete;
+			Renderer& operator=(const Renderer& other) = delete;
 
-			InstancedRenderer& operator=(InstancedRenderer&& other) noexcept
+			Renderer& operator=(Renderer&& other) noexcept
 			{
 				m_instanceShader = other.m_instanceShader;
 				m_normalShader = other.m_normalShader;
@@ -119,6 +128,8 @@ namespace clockwork {
 				m_normalShader->enable();
 				( *m_currentCamera )->update(m_normalShader);
 				cubeManager.renderNormalCubes();
+
+				terrain.render(m_normalShader);
 
 			}
 

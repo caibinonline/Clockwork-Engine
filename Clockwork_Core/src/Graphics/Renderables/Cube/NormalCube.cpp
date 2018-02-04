@@ -12,19 +12,19 @@
 *************************************************************************/
 #include "CubeManager.h"
 #include "NormalCube.h"
-#include "src\Graphics\Renderer\InstancedRenderer.h"
+#include "src\Graphics\Renderer\Renderer.h"
 
 namespace clockwork {
 	namespace graphics {
 
 
-		NormalCube::NormalCube(InstancedRenderer* renderer) noexcept
+		NormalCube::NormalCube(Renderer* renderer) noexcept
 			: m_textureId(0), m_modelMatrix(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), m_visible(false), m_pos(-1), m_renderer(renderer)
 		{
 
 		}
 
-		NormalCube::NormalCube(int textureId, const maths::Mat4f& mat, InstancedRenderer* renderer) noexcept
+		NormalCube::NormalCube(int textureId, const maths::Mat4f& mat, Renderer* renderer) noexcept
 			: m_textureId(textureId), m_modelMatrix(mat), m_visible(true), m_pos(-1), m_renderer(renderer)
 		{
 #if CLOCKWORK_DEBUG
@@ -33,31 +33,31 @@ namespace clockwork {
 #endif
 		}
 
-		NormalCube::NormalCube(const std::string& imagePath, const maths::Mat4f& mat, InstancedRenderer* renderer) noexcept
+		NormalCube::NormalCube(const std::string& imagePath, const maths::Mat4f& mat, Renderer* renderer) noexcept
 			: m_textureId(m_renderer->cubeManager.getNormalTextureId(imagePath)), m_modelMatrix(mat), m_visible(true), m_pos(-1), m_renderer(renderer)
 		{
 
 		}
 
-		NormalCube::NormalCube(const utils::Image& image, const maths::Mat4f& mat, InstancedRenderer* renderer) noexcept
+		NormalCube::NormalCube(const utils::Image& image, const maths::Mat4f& mat, Renderer* renderer) noexcept
 			: m_textureId(m_renderer->cubeManager.getNormalTextureId(image)), m_modelMatrix(mat), m_visible(true), m_pos(-1), m_renderer(renderer)
 		{
 
 		}
 
-		NormalCube::NormalCube(int textureId, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, InstancedRenderer* renderer) noexcept
+		NormalCube::NormalCube(int textureId, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, Renderer* renderer) noexcept
 			: m_textureId(textureId), m_modelMatrix(maths::Mat4f::scaling(scaling).rotateXD(rotation.x).rotateYD(rotation.y).rotateZD(rotation.z).translate(translation)), m_visible(false), m_pos(-1), m_renderer(renderer)
 		{
 
 		}
 
-		NormalCube::NormalCube(const std::string& imagePath, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, InstancedRenderer* renderer) noexcept
+		NormalCube::NormalCube(const std::string& imagePath, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, Renderer* renderer) noexcept
 			: m_textureId(m_renderer->cubeManager.getNormalTextureId(imagePath)), m_modelMatrix(maths::Mat4f::scaling(scaling).rotateXD(rotation.x).rotateYD(rotation.y).rotateZD(rotation.z).translate(translation)), m_visible(true), m_pos(-1), m_renderer(renderer)
 		{
 
 		}
 
-		NormalCube::NormalCube(const utils::Image& image, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, InstancedRenderer* renderer) noexcept
+		NormalCube::NormalCube(const utils::Image& image, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, Renderer* renderer) noexcept
 			: m_textureId(m_renderer->cubeManager.getNormalTextureId(image)), m_modelMatrix(maths::Mat4f::scaling(scaling).rotateXD(rotation.x).rotateYD(rotation.y).rotateZD(rotation.z).translate(translation)), m_visible(true), m_pos(-1), m_renderer(renderer)
 		{
 
