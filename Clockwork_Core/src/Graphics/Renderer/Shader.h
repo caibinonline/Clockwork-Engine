@@ -57,7 +57,6 @@ namespace clockwork {
 			Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath) noexcept
 				:m_vertexPath(vertexShaderPath), m_fragmentPath(fragmentShaderPath)
 			{
-				m_id = glCreateProgram();//one shader program for both fragment and vertex shader
 				loadShader(vertexShaderPath, fragmentShaderPath);
 			}
 
@@ -96,6 +95,8 @@ namespace clockwork {
 			{
 				m_vertexPath = vertexShaderPath;
 				m_fragmentPath = fragmentShaderPath;
+				if ( m_id == 0 )
+					m_id = glCreateProgram();//one shader program for both fragment and vertex shader
 				m_uniformLocationCache.clear();
 
 				GLuint vs = glCreateShader(GL_VERTEX_SHADER);//vertex shader unique opengl state id 

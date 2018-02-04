@@ -54,7 +54,7 @@ namespace clockwork {
 			using namespace graphics;
 			using namespace utils;
 
-			m_currentCamera = new Camera({ 0,10,5 });//
+			m_currentCamera = new Camera({ 0,10,5 });
 
 			m_instancedRenderer = new InstancedRenderer(new graphics::Shader("res/Shaders/Testing/Instancing.vs", "res/Shaders/Testing/Instancing.fs"), &m_currentCamera, &m_perspectiveProjection);
 			m_normalRenderer = new NormalRenderer(new graphics::Shader("res/Shaders/Testing/Normal.vs", "res/Shaders/Testing/Normal.fs"), &m_currentCamera, &m_perspectiveProjection);
@@ -67,6 +67,7 @@ namespace clockwork {
 				m_normalRenderer->updateProjection();
 			}
 			
+
 
 
 			m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/brick.jpg").load());

@@ -11,3 +11,12 @@
 * arising from the use of this software.
 * You can use this software under the following License: https://github.com/Clock-work/Clockwork-Engine/blob/master/LICENSE
 *************************************************************************/
+
+
+namespace clockwork {
+	namespace graphics {
+
+
+
+	}
+}

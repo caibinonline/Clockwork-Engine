@@ -5,10 +5,10 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <Link>
-      <AdditionalDependencies>glfw3.lib;FreeImage.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;FreeImage.lib;assimp.lib;OpenAl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-    <ItemDefinitionGroup Condition="'$(Configuration)'=='DEBUG'" Label="Configuration">
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='DEBUG'" Label="Configuration">
     <ClCompile>
       <PreprocessorDefinitions>CLOCKWORK_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>

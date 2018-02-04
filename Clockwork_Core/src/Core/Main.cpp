@@ -11,12 +11,16 @@
 * You can use this software under the following License: https://github.com/Clock-work/Clockwork-Engine/blob/master/LICENSE
 *************************************************************************/
 #include "src\Core\ExampleGame.h"
+#include "OpenAl\al.h"
+#include "OpenAl\alc.h" 
+
 
 int main()
 {
 	clockwork::engine = new clockwork::Engine("Clockwork Engine");
 	clockwork::engine->start();
 	delete clockwork::engine;
+	
 	system("pause");
 	return 1;
 }
