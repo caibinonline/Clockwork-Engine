@@ -41,9 +41,6 @@ namespace clockwork {
 			static const GLint bufferType = GL_ELEMENT_ARRAY_BUFFER;
 
 		public:
-#if CLOCKWORK_DEBUG
-			VertexArray* debug_vertexarray;
-#endif
 
 		public:
 			/*creates a indexbuffer and binds it, so another bind() call is unnecessary
@@ -60,26 +57,17 @@ namespace clockwork {
 				glGenBuffers(1, &m_id);
 				glBindBuffer(bufferType, m_id);//an element array buffer instead of the array buffer of the vbo
 				glBufferData(bufferType, count * sizeof(type), static_cast<const void*>( data ), drawMode);//1. type, 2. size, 3. ptr to array of data, 4. drawmode
-#if CLOCKWORK_DEBUG
-				debug_vertexarray = nullptr;
-#endif
 			}
 
 			/*creates an empty indexbuffer with an uninitialized opengl buffer | does not bind it*/
 			IndexBuffer() noexcept
 				:m_id(0), m_count(0)
 			{
-#if CLOCKWORK_DEBUG
-				debug_vertexarray = nullptr;
-#endif
 			}
 
 			/*deletes the indexbufferid in the opengl state machine*/
 			~IndexBuffer() noexcept
 			{
-#if CLOCKWORK_DEBUG
-				debug_vertexarray = nullptr;
-#endif
 				glDeleteBuffers(1, &m_id);
 			}
 
@@ -91,10 +79,6 @@ namespace clockwork {
 			{
 				other.m_id = 0;
 				other.m_count = 0;
-#if CLOCKWORK_DEBUG
-				debug_vertexarray = other.debug_vertexarray;
-				other.debug_vertexarray = nullptr;
-#endif
 			}
 
 			IndexBuffer<type>& operator=(const IndexBuffer<type>&) = delete;
@@ -106,10 +90,6 @@ namespace clockwork {
 				m_count = other.m_count;
 				other.m_id = 0;
 				other.m_count = 0;
-#if CLOCKWORK_DEBUG
-				debug_vertexarray = other.debug_vertexarray;
-				other.debug_vertexarray = nullptr;
-#endif
 				return *this;
 			}
 
@@ -121,12 +101,6 @@ namespace clockwork {
 			its the normal method for few big models with diffrent shaders where the model is drawn per instance/object with another draw call and the transformation is passed as an uniform to the shader for each drawcall*/
 			void draw() const noexcept
 			{
-#if CLOCKWORK_DEBUG
-				if ( debug_vertexarray == nullptr )
-					std::cout << "Error VertexBuffer::draw(): debug_vertexarray was not initialized" << std::endl;
-				else if ( !debug_vertexarray->debug_bound )
-					std::cout << "Error VertexBuffer::draw(): VertexArray was not bound" << std::endl;
-#endif
 				glDrawElements(GL_TRIANGLES, m_count, OpenglType<type>::gltype, nullptr);//gldrawelements to specify that its drawing an indexbuffer | 1. draw kind(everything is drawn of ttriangles), 2. count of indices to draw, 3. type of the indices, 4. offset in the indexbuffer, or index array(for using when not using index buffeR)
 			}
 
@@ -138,12 +112,6 @@ namespace clockwork {
 			@param[instanceCount] the count of diffrent objects/transformations/instances of each model to draw | you have to store the diffrent model matrices per object/instance in a seperate vertexbuffer for instanced arrays and the transformation will be passed as a vertexattribute to the shader for each instance */
 			void drawInstanced(unsigned int instanceCount) const noexcept
 			{
-#if CLOCKWORK_DEBUG
-				if ( debug_vertexarray == nullptr )
-					std::cout << "Error VertexBuffer::drawInstanced(): debug_vertexarray was not initialized" << std::endl;
-				else if ( !debug_vertexarray->debug_bound )
-					std::cout << "Error VertexBuffer::drawInstanced(): VertexArray was not bound" << std::endl;
-#endif
 				glDrawElementsInstanced(GL_TRIANGLES, m_count, OpenglType<type>::gltype, nullptr, instanceCount);//additional count of instances to draw of the model
 			}
 
@@ -158,12 +126,6 @@ namespace clockwork {
 			@param[indicesCount] the amount of indices to draw | should not be bigger than the amount of indices stored in the indexbuffer(m_count)*/
 			void drawParts(unsigned int position, unsigned int indicesCount ) const noexcept
 			{
-#if CLOCKWORK_DEBUG
-				if ( debug_vertexarray == nullptr )
-					std::cout << "Error VertexBuffer::drawParts(): debug_vertexarray was not initialized" << std::endl;
-				else if ( !debug_vertexarray->debug_bound )
-					std::cout << "Error VertexBuffer::drawParts(): VertexArray was not bound" << std::endl;
-#endif
 				glDrawElements(GL_TRIANGLES, indicesCount, OpenglType<type>::gltype, reinterpret_cast<void*>(position * sizeof(type)));
 			}
 
@@ -179,12 +141,6 @@ namespace clockwork {
 			@param[instanceCount] the count of diffrent objects/transformations/instances of each model to draw | you have to store the diffrent model matrices per object/instance in a seperate vertexbuffer for instanced arrays and the transformation will be passed as a vertexattribute to the shader for each instance */
 			void drawInstancedParts(unsigned int position, unsigned int indicesCount, unsigned int instanceCount) const noexcept
 			{
-#if CLOCKWORK_DEBUG
-				if ( debug_vertexarray == nullptr )
-					std::cout << "Error VertexBuffer::drawInstancedParts(): debug_vertexarray was not initialized" << std::endl;
-				else if ( !debug_vertexarray->debug_bound )
-					std::cout << "Error VertexBuffer::drawInstancedParts(): VertexArray was not bound" << std::endl;
-#endif
 				glDrawElementsInstanced(GL_TRIANGLES, indicesCount, OpenglType<type>::gltype, reinterpret_cast<void*>( position * sizeof(type)), instanceCount);
 			}
 

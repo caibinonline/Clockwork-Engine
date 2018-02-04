@@ -100,10 +100,6 @@ namespace clockwork {
 
 												   }, 36
 												   );
-#if CLOCKWORK_DEBUG
-				m_vbo.debug_vertexarray = &m_vao;
-				m_ibo.debug_vertexarray = &m_vao;
-#endif
 				front = Texture2D(utils::Image("res/Images/front.png").load());
 				back = Texture2D(utils::Image("res/Images/back.png").load());
 				top = Texture2D(utils::Image("res/Images/top.png").load());

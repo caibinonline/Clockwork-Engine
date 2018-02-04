@@ -52,7 +52,6 @@ namespace clockwork {
 #if CLOCKWORK_DEBUG
 			static std::vector<VertexBuffer*> debug_buffers;
 			mutable bool debug_bound;
-			VertexArray* debug_vertexarray;
 #endif
 
 		public:
@@ -81,7 +80,6 @@ namespace clockwork {
 				for ( std::vector<VertexBuffer*>::iterator it = debug_buffers.begin(); it != debug_buffers.end(); ++it )
 					(*it)->debug_bound = false;
 				debug_bound = true;
-				debug_vertexarray = nullptr;
 				debug_buffers.push_back(this);
 #endif
 			}
@@ -92,7 +90,6 @@ namespace clockwork {
 			{
 #if CLOCKWORK_DEBUG
 				debug_bound = false;
-				debug_vertexarray = nullptr;
 				debug_buffers.push_back(this);
 #endif
 			}
@@ -103,7 +100,6 @@ namespace clockwork {
 				glDeleteBuffers(1, &m_id);
 #if CLOCKWORK_DEBUG
 				debug_bound = false;
-				debug_vertexarray = nullptr;
 				for ( std::vector<VertexBuffer*>::iterator it = debug_buffers.begin(); it != debug_buffers.end(); ++it )
 				{
 					if ( ( *it ) == this )
@@ -126,9 +122,7 @@ namespace clockwork {
 				other.m_bufferMode = 0;
 #if CLOCKWORK_DEBUG
 				debug_bound = other.debug_bound;
-				debug_vertexarray = other.debug_vertexarray;
 				other.debug_bound = false;
-				other.debug_vertexarray = nullptr;
 				debug_buffers.push_back(this);
 #endif
 			}
@@ -146,9 +140,7 @@ namespace clockwork {
 				other.m_bufferMode = 0;
 #if CLOCKWORK_DEBUG
 				debug_bound = other.debug_bound;
-				debug_vertexarray = other.debug_vertexarray;
 				other.debug_bound = false;
-				other.debug_vertexarray = nullptr;
 #endif
 				return *this;
 			}
@@ -183,10 +175,6 @@ namespace clockwork {
 #if CLOCKWORK_DEBUG
 				if ( !debug_bound )
 					std::cout << "Error VertexBuffer::connectToVao(): VertexBuffer was not bound" << std::endl;
-				if ( debug_vertexarray == nullptr )
-					std::cout << "Error VertexBuffer::connectToVao(): debug_vertexarray was not initialized" << std::endl;
-				else if ( !debug_vertexarray->debug_bound )
-					std::cout << "Error VertexBuffer::connectToVao(): VertexArray was not bound" << std::endl;
 #endif
 				glEnableVertexAttribArray(VaoPos);//enables the vertexarray at the position
 

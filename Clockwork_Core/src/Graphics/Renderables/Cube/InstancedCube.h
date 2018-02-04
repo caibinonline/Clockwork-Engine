@@ -31,20 +31,11 @@ namespace clockwork {
 
 		private:
 			friend class CubeManager;
-
+			friend class InstancedRenderer;
 			/*the data of each instance/object of the model(textureid for the texturearray and modelmatrix fro the transformation in the world*/
-			struct Data
-			{
-				int textureId;///später wahrscheinlich materialid mit materialarray benutzen | dann auch materialarray, etc machen 
-				maths::Mat4f modelMatrix;
-				Data() noexcept;
-				Data(int textureId, const maths::Mat4f& modelMatrix) noexcept;
-				Data(const Data& other) noexcept;
-				Data(Data&& other) noexcept;
-				Data& operator=(const Data& other) noexcept;
-				Data& operator=(Data&& other) noexcept;
-			} m_data;
-			int m_pos;
+			int m_textureId;///später wahrscheinlich materialid mit materialarray benutzen | dann auch materialarray, etc machen 
+			maths::Mat4f m_modelMatrix;
+			int m_pos;//noch isadded machen und dann mpos!=-1 ausgeben als bool 
 			InstancedRenderer* m_renderer;
 
 		public:
@@ -132,13 +123,13 @@ namespace clockwork {
 			/*removes the instancedcube from the cubemanager in the instancedrender | the last instancedcube in the list of the cubemanager will swap positions with this instancedcube and then this instancedcube(then the last instancedcube in the list) will be removed from the list
 			dont call the remove function again if the instancedcube is already removed | you have to call add first | the destructor will also call remove
 			use add()/remove() for few changes with many models to hide/show objects/instances and use setVisible(true/false) for many changes with few models
-			BUT setvisible will not give any performance boost, because the render call will still happen | add/remove will give a performanceboost, because the render call will not happen*/
+			BUT setvisible will not give a huge performance boost, because the render call will still happen | add/remove will give a performanceboost, because the render call will not happen*/
 			void remove() noexcept;
 
 			/*adds the instancedcube to the cubemanager in the instancedrender | the instancedcube will be added to the end of the list
 			dont call the add function again if the instancedcube is already added | you have to call remove first | the constructor will not automaticly call add()
 			use add()/remove() for few changes with many models to hide/show objects/instances and use setVisible(true/false) for many changes with few models
-			BUT setvisible will not give any performance boost, because the render call will still happen | add/remove will give a performanceboost, because the render call will not happen*/
+			BUT setvisible will not give a huge performance boost, because the render call will still happen | add/remove will give a performanceboost, because the render call will not happen*/
 			void add() noexcept;
 
 			/*changes the modelmatrix of this instancedcube and automaticly updates the buffer(gpu side) in the cubemanager*/
@@ -172,8 +163,10 @@ namespace clockwork {
 
 			/*hides, or shows the instance/object of the model, by setting its modelmatrix and textureid in the buffer(gpu side) of the cubemanager to the actual modelmatrix and textureid of the instancedcube for true
 			or setting them to 0 in the buffer for false | use add()/remove() for few changes with many models to hide/show objects/instances and use setVisible(true/false) for many changes with few models
-			BUT setvisible will not give any performance boost, because the render call will still happen | add/remove will give a performanceboost, because the render call will not happen*/
+			BUT setvisible will not give a huge performance boost, because the render call will still happen | add/remove will give a performanceboost, because the render call will not happen*/
 			void setVisible(bool visible) noexcept;
+
+			//ggf gettextureid machen und gettextureimage, wobei bei id einfach gettextureid aufgerufen wird und bei gettextureimage texturearray.gettexture mit id | auch für normalcube | natürlich auch getmodelmatrix und isadded | ggf hier auch noch bool visible speichern und dann isvisible machen
 
 		};
 

@@ -133,7 +133,7 @@ namespace clockwork {
 
 		public:
 
-
+			const utils::Image& getImage() const noexcept {return m_image;}
 
 
 

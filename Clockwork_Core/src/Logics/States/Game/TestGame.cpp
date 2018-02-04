@@ -56,7 +56,7 @@ namespace clockwork {
 
 			m_currentCamera = new Camera({ 0,10,5 });
 
-			m_instancedRenderer = new InstancedRenderer(new graphics::Shader("res/Shaders/Testing/Instancing.vs", "res/Shaders/Testing/Instancing.fs"), &m_currentCamera, &m_perspectiveProjection);
+			m_instancedRenderer = new InstancedRenderer(new graphics::Shader("res/Shaders/Testing/Instancing.vs", "res/Shaders/Testing/Instancing.fs"), new graphics::Shader("res/Shaders/Testing/Normal.vs", "res/Shaders/Testing/Normal.fs"), &m_currentCamera, &m_perspectiveProjection);
 			m_normalRenderer = new NormalRenderer(new graphics::Shader("res/Shaders/Testing/Normal.vs", "res/Shaders/Testing/Normal.fs"), &m_currentCamera, &m_perspectiveProjection);
 
 		
@@ -70,17 +70,17 @@ namespace clockwork {
 
 
 
-			m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/brick.jpg").load());
-			m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/stone.jpg").load());
-			m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/granite.jpg").load());
-			m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/moss.jpg").load());
-			m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/brick2.jpg").load());
-			m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/granite2.jpg").load());
-			m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/wood.jpg").load());
-			m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/grass.jpg").load());
-			m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/blue.jpg").load());
-			m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/red.jpg").load());
-			m_instancedRenderer->cubeManager.addTexture(utils::Image("res/Images/purple.jpg").load());
+			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/brick.jpg").load());
+			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/stone.jpg").load());
+			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/granite.jpg").load());
+			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/moss.jpg").load());
+			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/brick2.jpg").load());
+			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/granite2.jpg").load());
+			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/wood.jpg").load());
+			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/grass.jpg").load());
+			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/blue.jpg").load());
+			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/red.jpg").load());
+			m_instancedRenderer->cubeManager.addNormalTexture(utils::Image("res/Images/purple.jpg").load());
 
 
 			std::srand(engine->getWindow()->getTimer() * 10);
@@ -89,7 +89,7 @@ namespace clockwork {
 			{
 				maths::Mat4x4<float> modelMatrix = modelMatrix = maths::Mat4x4<float>::scaling(1, 1, 1);
 				modelMatrix.translate(-( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10);
-				InstancedCube* inst = new InstancedCube(rand() % 11, modelMatrix, m_instancedRenderer);
+				NormalCube* inst = new NormalCube(rand() % 11, modelMatrix, m_instancedRenderer);
 				inst->add();
 			}
 
@@ -170,12 +170,12 @@ namespace clockwork {
 					maths::Vec3f pos = m_currentCamera->getPosition() + m_currentCamera->getDirection() * 2;
 					maths::Mat4x4<float> modelMatrix = modelMatrix = maths::Mat4x4<float>::scaling(1, 1, 1);
 					modelMatrix.translate(pos.x, pos.y, pos.z);
-					graphics::InstancedCube* inst = new graphics::InstancedCube(rand() % 11, modelMatrix, m_instancedRenderer);
+					graphics::NormalCube* inst = new graphics::NormalCube(rand() % 11, modelMatrix, m_instancedRenderer);
 					inst->add();
 				}
 				else if ( button == CLOCKWORK_MOUSE_BUTTON_2 )
 				{
-					m_instancedRenderer->cubeManager.removeLast();
+					m_instancedRenderer->cubeManager.removeLastNormalCube();
 				}
 			}
 
