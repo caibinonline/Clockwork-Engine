@@ -31,6 +31,7 @@ namespace clockwork {
 
 		private:
 			friend class CubeManager;
+
 			/*the data of each instance/object of the model(textureid for the texturearray and modelmatrix fro the transformation in the world*/
 			struct Data
 			{
