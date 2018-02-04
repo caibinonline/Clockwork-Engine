@@ -77,6 +77,13 @@ namespace clockwork {
 			//hier gibt setvisible schon guten performance boost
 			void setVisible(bool visible) noexcept;
 
+			const utils::Image& getTextureImage() noexcept;
+
+		public:
+			const bool isVisible() noexcept { return m_visible;}
+			const maths::Mat4f& getModelMatrix() noexcept {return m_modelMatrix;}
+			const bool isAdded() noexcept {return m_pos!=-1;}
+			const int getTextureId() noexcept {return m_textureId;}
 
 		};
 

@@ -233,5 +233,10 @@ namespace clockwork {
 				this->clearBufferData();
 		}
 
+		const utils::Image& InstancedCube::getTextureImage() noexcept
+		{
+			return m_renderer->cubeManager.m_textureArray.getTexture(m_textureId);
+		}
+
 	}
 }

@@ -168,6 +168,11 @@ namespace clockwork {
 			m_visible = visible;
 		}
 
+		const utils::Image& NormalCube::getTextureImage() noexcept
+		{
+			return m_renderer->cubeManager.m_textures.at(m_textureId).getImage();
+		}
+
 	}
 }
 

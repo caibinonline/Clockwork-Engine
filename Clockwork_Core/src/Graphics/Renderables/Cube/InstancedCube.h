@@ -167,8 +167,13 @@ namespace clockwork {
 			BUT setvisible will not give a huge performance boost, because the render call will still happen | add/remove will give a performanceboost, because the render call will not happen*/
 			void setVisible(bool visible) noexcept;
 
-			//ggf gettextureid machen und gettextureimage, wobei bei id einfach gettextureid aufgerufen wird und bei gettextureimage texturearray.gettexture mit id | auch für normalcube | natürlich auch getmodelmatrix und isadded | ggf hier auch noch bool visible speichern und dann isvisible machen
-			//natürlich auch const bool isvisible
+			const utils::Image& getTextureImage() noexcept;
+
+		public:
+			const bool isVisible() noexcept { return m_visible;}
+			const maths::Mat4f& getModelMatrix() noexcept {return m_modelMatrix;}
+			const bool isAdded() noexcept {return m_pos!=-1;}
+			const int getTextureId() noexcept {return m_textureId;}
 
 		};
 

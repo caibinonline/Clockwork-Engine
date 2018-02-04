@@ -209,12 +209,6 @@
     <ClInclude Include="src\Graphics\Renderables\Cube\TransparentCubeManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\Renderables\Cube\TransparentInstancedCube.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\Renderables\Cube\TransparentNormalCube.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Graphics\Renderables\Cube\Cube.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -223,9 +217,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\Shaders\Testing\Instancing.fs" />
-    <None Include="res\Shaders\Testing\Instancing.vs" />
-    <None Include="res\Shaders\Testing\Normal.fs" />
-    <None Include="res\Shaders\Testing\Normal.vs" />
+    <None Include="res\Shaders\Default\Instancing.fs" />
+    <None Include="res\Shaders\Default\Instancing.vs" />
+    <None Include="res\Shaders\Default\Normal.fs" />
+    <None Include="res\Shaders\Default\Normal.vs" />
   </ItemGroup>
 </Project>

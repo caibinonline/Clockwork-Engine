@@ -36,6 +36,7 @@
 namespace clockwork {
 	namespace logics {
 
+#define instancing 1
 
 		TestGame::TestGame() noexcept
 		{
@@ -56,7 +57,7 @@ namespace clockwork {
 
 			m_currentCamera = new Camera({ 0,10,5 });
 
-			m_renderer = new Renderer(new graphics::Shader("res/Shaders/Testing/Instancing.vs", "res/Shaders/Testing/Instancing.fs"), new graphics::Shader("res/Shaders/Testing/Normal.vs", "res/Shaders/Testing/Normal.fs"), &m_currentCamera, &m_perspectiveProjection);
+			m_renderer = new Renderer(new graphics::Shader("res/Shaders/Default/Instancing.vs", "res/Shaders/Default/Instancing.fs"), new graphics::Shader("res/Shaders/Default/Normal.vs", "res/Shaders/Default/Normal.fs"), &m_currentCamera, &m_perspectiveProjection);
 
 		
 			if ( engine->getWindow()->getWidth() != 0 && engine->getWindow()->getHeight() != 0 )
@@ -83,11 +84,15 @@ namespace clockwork {
 
 			std::srand(engine->getWindow()->getTimer() * 10);
 
-			for ( int i = 0; i < 1000; ++i )
+			for ( int i = 0; i < 1000; ++i )//10000 objects: normal 300fps, instancing 2300fps | 1000objects: normal 2000fps, instancing 5000fps | 100 objects: normal 5500fps, instancing 6100fps | 10 objects: normal 5500fps, instancing 5500fps | 1 object: normal 6300fps, instancing 6100fps
 			{
 				maths::Mat4x4<float> modelMatrix = modelMatrix = maths::Mat4x4<float>::scaling(1, 1, 1);
 				modelMatrix.translate(-( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10);
+#if instancing
+				InstancedCube* inst = new InstancedCube(rand() % 11, modelMatrix, m_renderer);
+#else 
 				NormalCube* inst = new NormalCube(rand() % 11, modelMatrix, m_renderer);
+#endif
 				inst->add();
 			}
 
@@ -166,12 +171,20 @@ namespace clockwork {
 					maths::Vec3f pos = m_currentCamera->getPosition() + m_currentCamera->getDirection() * 2;
 					maths::Mat4x4<float> modelMatrix = modelMatrix = maths::Mat4x4<float>::scaling(1, 1, 1);
 					modelMatrix.translate(pos.x, pos.y, pos.z);
+#if instancing
+					graphics::InstancedCube* inst = new graphics::InstancedCube(rand() % 11, modelMatrix, m_renderer);
+#else 
 					graphics::NormalCube* inst = new graphics::NormalCube(rand() % 11, modelMatrix, m_renderer);
+#endif
 					inst->add();
 				}
 				else if ( button == CLOCKWORK_MOUSE_BUTTON_2 )
 				{
+#if instancing
+					m_renderer->cubeManager.removeLastInstancedCube();
+#else 
 					m_renderer->cubeManager.removeLastNormalCube();
+#endif
 				}
 			}
 

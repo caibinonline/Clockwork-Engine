@@ -159,8 +159,6 @@
     <ClInclude Include="src\Graphics\Renderables\Cube\InstancedCube.h" />
     <ClInclude Include="src\Graphics\Renderables\Cube\NormalCube.h" />
     <ClInclude Include="src\Graphics\Renderables\Cube\TransparentCubeManager.h" />
-    <ClInclude Include="src\Graphics\Renderables\Cube\TransparentInstancedCube.h" />
-    <ClInclude Include="src\Graphics\Renderables\Cube\TransparentNormalCube.h" />
     <ClInclude Include="src\Graphics\Renderables\Mesh.h" />
     <ClInclude Include="src\Graphics\Renderables\Model.h" />
     <ClInclude Include="src\Graphics\Renderer\Renderer.h" />
@@ -195,10 +193,10 @@
     <ClInclude Include="src\Utils\Structures\LinkedList.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\Shaders\Testing\Normal.fs" />
-    <None Include="res\Shaders\Testing\Normal.vs" />
-    <None Include="res\Shaders\Testing\Instancing.fs" />
-    <None Include="res\Shaders\Testing\Instancing.vs" />
+    <None Include="res\Shaders\Default\Normal.fs" />
+    <None Include="res\Shaders\Default\Normal.vs" />
+    <None Include="res\Shaders\Default\Instancing.fs" />
+    <None Include="res\Shaders\Default\Instancing.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
