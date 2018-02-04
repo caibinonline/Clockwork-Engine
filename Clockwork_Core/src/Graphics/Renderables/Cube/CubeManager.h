@@ -103,6 +103,10 @@ namespace clockwork {
 
 			void addNormalTexture(const std::string& imagePath) noexcept;
 
+			void addTextureBoth(const utils::Image& image) noexcept;//texture zu beiden hinzugefügt, kommentieren
+
+			void addTextureBoth( const std::string& imagePath ) noexcept;
+
 			void removeInstancedTexture(int textureId) noexcept;
 
 			void removeInstancedTexture(const utils::Image& image) noexcept;

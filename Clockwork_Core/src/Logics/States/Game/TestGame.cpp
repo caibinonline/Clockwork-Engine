@@ -68,17 +68,17 @@ namespace clockwork {
 
 
 
-			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/brick.jpg").load());
-			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/stone.jpg").load());
-			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/granite.jpg").load());
-			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/moss.jpg").load());
-			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/brick2.jpg").load());
-			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/granite2.jpg").load());
-			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/wood.jpg").load());
-			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/grass.jpg").load());
-			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/blue.jpg").load());
-			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/red.jpg").load());
-			m_renderer->cubeManager.addNormalTexture(utils::Image("res/Images/purple.jpg").load());
+			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/brick.jpg").load());
+			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/stone.jpg").load());
+			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/granite.jpg").load());
+			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/moss.jpg").load());
+			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/brick2.jpg").load());
+			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/granite2.jpg").load());
+			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/wood.jpg").load());
+			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/grass.jpg").load());
+			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/blue.jpg").load());
+			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/red.jpg").load());
+			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/purple.jpg").load());
 
 
 			std::srand(engine->getWindow()->getTimer() * 10);

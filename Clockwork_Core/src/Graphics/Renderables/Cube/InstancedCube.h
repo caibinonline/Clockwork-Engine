@@ -35,6 +35,7 @@ namespace clockwork {
 			/*the data of each instance/object of the model(textureid for the texturearray and modelmatrix fro the transformation in the world*/
 			int m_textureId;///später wahrscheinlich materialid mit materialarray benutzen | dann auch materialarray, etc machen 
 			maths::Mat4f m_modelMatrix;
+			bool m_visible;
 			int m_pos;//noch isadded machen und dann mpos!=-1 ausgeben als bool 
 			Renderer* m_renderer;
 
@@ -167,6 +168,7 @@ namespace clockwork {
 			void setVisible(bool visible) noexcept;
 
 			//ggf gettextureid machen und gettextureimage, wobei bei id einfach gettextureid aufgerufen wird und bei gettextureimage texturearray.gettexture mit id | auch für normalcube | natürlich auch getmodelmatrix und isadded | ggf hier auch noch bool visible speichern und dann isvisible machen
+			//natürlich auch const bool isvisible
 
 		};
 

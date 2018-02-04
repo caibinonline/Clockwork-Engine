@@ -151,6 +151,11 @@ namespace clockwork {
 
 		int CubeManager::getNormalTextureId(const std::string& imagePath) noexcept
 		{
+			for ( unsigned int i = 0; i < m_textures.size(); ++i )
+			{
+				if ( m_textures.at(i).getImage().getFilepath() == imagePath )
+					return i;
+			}
 			utils::Image image(imagePath);
 			image.load();
 #if CLOCKWORK_DEBUG
@@ -161,11 +166,6 @@ namespace clockwork {
 			if ( m_textures.size() > 0 && m_textures.at(0).getImage().getSize() != image.getSize() )
 				std::cout << "Error CubeManager::getNormalTextureId(): the new image has not the same size as the other images in the texture list" << std::endl;
 #endif 
-			for ( unsigned int i = 0; i < m_textures.size(); ++i )
-			{
-				if ( m_textures.at(i).getImage().getFilepath() == image.getFilepath() )
-					return i;
-			}
 			m_textures.push_back(Texture2D(image));
 		}
 
@@ -256,6 +256,16 @@ namespace clockwork {
 
 		void CubeManager::addNormalTexture(const std::string& imagePath) noexcept
 		{
+#if CLOCKWORK_DEBUG
+			for ( unsigned int i = 0; i < m_textures.size(); ++i )
+			{
+				if ( m_textures.at(i).getImage().getFilepath() == imagePath )
+				{
+					std::cout << "Error TextureArray2D::addTexture(): an image with the same imagepath already is in the texture list" << std::endl;
+					return;
+				}
+			}
+#endif 
 			utils::Image image(imagePath);
 			image.load();
 #if CLOCKWORK_DEBUG
@@ -266,17 +276,19 @@ namespace clockwork {
 			if ( m_textures.size() > 0 && m_textures.at(0).getImage().getSize() != image.getSize() )
 				std::cout << "Error CubeManager::addNormalTexture(): the new image has not the same size as the other images in the texture list" << std::endl;
 #endif 
-#if CLOCKWORK_DEBUG
-			for ( unsigned int i = 0; i < m_textures.size(); ++i )
-			{
-				if ( m_textures.at(i).getImage().getFilepath() == image.getFilepath() )
-				{
-					std::cout << "Error TextureArray2D::addTexture(): an image with the same imagepath already is in the texture list" << std::endl;
-					return;
-				}
-			}
-#endif 
 			m_textures.push_back(Texture2D(image));
+		}
+
+		void CubeManager::addTextureBoth(const utils::Image& image) noexcept
+		{
+			addInstancedTexture(image);
+			addNormalTexture(image);
+		}
+
+		void CubeManager::addTextureBoth(const std::string& imagePath) noexcept
+		{
+			addInstancedTexture(imagePath);
+			addNormalTexture(imagePath);
 		}
 
 		void CubeManager::removeInstancedTexture(int textureId) noexcept

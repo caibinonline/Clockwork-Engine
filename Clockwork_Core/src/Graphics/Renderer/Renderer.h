@@ -56,12 +56,7 @@ namespace clockwork {
 			Renderer(Shader* instanceShader, Shader* normalShader, logics::Camera** camera, maths::Mat4f* projection, unsigned int reserved = 10, bool deleteShader = true) noexcept
 				: m_instanceShader(instanceShader), m_normalShader(normalShader), m_currentCamera(camera), m_currentProjection(projection), cubeManager(reserved), m_deleteShader(deleteShader)
 			{
-				m_instanceShader->enable();
-				m_instanceShader->setUniform("u_texture1", 0);//keine ahnung, wie ich später einzelne uniformen entweder seperat über methoden vom shader setze, oder hier standard sachen, die für alle shader angenommen werden | auf jedenfall getshader methode machen und ggf setstandarduniforms, oder so
-				//setting uniforms, but shader has to be enabled first | here binds the texture1 uniform to the first texture pos in the shader | is not necessary for the first texture, if only one texture is used and not more
-		
-				m_normalShader->enable();
-				m_normalShader->setUniform("u_texture1", 0);
+				prepare();
 			}
 
 			~Renderer() noexcept
@@ -117,6 +112,17 @@ namespace clockwork {
 					cubeManager.m_normalCubes.at(i)->m_renderer = this;
 				}
 				return *this;
+			}
+
+			//auch alle anderen methoden virtual machen
+			virtual void prepare() noexcept//virtual, kann überschrieben werden und andere uniformen setzten, etc | alles andere neu kommentieren und neu machen(auch virtual destruktor) | auch dazu kommentieren, dass man vom renderer erben kann und soll, wenn man im render loop etwas verändern will(genausop bei normalcube dazu schreiben und bei engine, etc)
+			{
+				m_instanceShader->enable();
+				m_instanceShader->setUniform("u_texture1", 0);//keine ahnung, wie ich später einzelne uniformen entweder seperat über methoden vom shader setze, oder hier standard sachen, die für alle shader angenommen werden | auf jedenfall getshader methode machen und ggf setstandarduniforms, oder so
+															  //setting uniforms, but shader has to be enabled first | here binds the texture1 uniform to the first texture pos in the shader | is not necessary for the first texture, if only one texture is used and not more
+
+				m_normalShader->enable();
+				m_normalShader->setUniform("u_texture1", 0);
 			}
 
 			void render() noexcept
