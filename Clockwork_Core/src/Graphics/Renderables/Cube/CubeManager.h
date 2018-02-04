@@ -69,7 +69,7 @@ namespace clockwork {
 			void render() noexcept;
 
 			/*dont use the object at the position in the cubemanager, because it will change places with the last object in the list and the last object will then be removed */
-			void removeAt(int pos) noexcept;///neu besser kommentieren
+			void removeAt(int pos) noexcept;///neu besser kommentieren		| kommentieren, funktioniert nicht, wenn man 3. letztes mehrmals hintereinander entfernt, da es die sachen mischt und nicht aufrückt, also das letzte objekt kommt zur position des gelöschten objekts | ist richtig so, nur dazu schreiben | vorher binden | objekt danach nicht mehr benutzen
 
 			void removeLast() noexcept;
 

@@ -88,7 +88,8 @@ namespace clockwork {
 			{
 				maths::Mat4x4<float> modelMatrix = modelMatrix = maths::Mat4x4<float>::scaling(1, 1, 1);
 				modelMatrix.translate(-( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10);
-				new InstancedCube(rand() % 11, modelMatrix, m_instancedRenderer);
+				InstancedCube* inst = new InstancedCube(rand() % 11, modelMatrix, m_instancedRenderer);
+				inst->add();
 			}
 
 
@@ -168,7 +169,8 @@ namespace clockwork {
 					maths::Vec3f pos = m_currentCamera->getPosition() + m_currentCamera->getDirection() * 2;
 					maths::Mat4x4<float> modelMatrix = modelMatrix = maths::Mat4x4<float>::scaling(1, 1, 1);
 					modelMatrix.translate(pos.x, pos.y, pos.z);
-					new graphics::InstancedCube(rand() % 11, modelMatrix, m_instancedRenderer);
+					graphics::InstancedCube* inst = new graphics::InstancedCube(rand() % 11, modelMatrix, m_instancedRenderer);
+					inst->add();
 				}
 				else if ( button == CLOCKWORK_MOUSE_BUTTON_2 )
 				{

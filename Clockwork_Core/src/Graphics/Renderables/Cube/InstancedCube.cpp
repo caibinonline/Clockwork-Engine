@@ -28,19 +28,16 @@ namespace clockwork {
 			if ( m_renderer->cubeManager.m_textureArray.getTextureCount() <= textureId )
 				std::cout << "Error InstancedCube::InstancedCube(): TextureId is not in the texturearray2d of the cubemanager" << std::endl;
 #endif
-				this->add();
 		}
 
 		InstancedCube::InstancedCube(const std::string& imagePath, const maths::Mat4f& mat, InstancedRenderer* renderer) noexcept
 			: m_data { m_renderer->cubeManager.m_textureArray.getTextureId(imagePath), mat }, m_pos(-1), m_renderer(renderer)
 		{
-			this->add();
 		}
 
 		InstancedCube::InstancedCube(const utils::Image& image, const maths::Mat4f& mat, InstancedRenderer* renderer) noexcept
 			: m_data { m_renderer->cubeManager.m_textureArray.getTextureId(image), mat }, m_pos(-1), m_renderer(renderer)
 		{
-			this->add();
 		}
 
 		InstancedCube::InstancedCube(int textureId, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, InstancedRenderer* renderer) noexcept
@@ -50,19 +47,16 @@ namespace clockwork {
 			if ( m_renderer->cubeManager.m_textureArray.getTextureCount() <= textureId )
 				std::cout << "Error InstancedCube::InstancedCube(): TextureId is not in the texturearray2d of the cubemanager" << std::endl;
 #endif
-			this->add();
 		}
 
 		InstancedCube::InstancedCube(const std::string& imagePath, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, InstancedRenderer* renderer) noexcept
 			: m_data { m_renderer->cubeManager.m_textureArray.getTextureId(imagePath), maths::Mat4f::scaling(scaling).rotateXD(rotation.x).rotateYD(rotation.y).rotateZD(rotation.z).translate(translation) }, m_pos(-1), m_renderer(renderer)
 		{
-			this->add();
 		}
 
 		InstancedCube::InstancedCube(const utils::Image& image, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, InstancedRenderer* renderer) noexcept
 			: m_data { m_renderer->cubeManager.m_textureArray.getTextureId(image), maths::Mat4f::scaling(scaling).rotateXD(rotation.x).rotateYD(rotation.y).rotateZD(rotation.z).translate(translation) }, m_pos(-1), m_renderer(renderer)
 		{
-			this->add();
 		}
 
 		InstancedCube::~InstancedCube() noexcept

@@ -48,11 +48,11 @@ namespace clockwork {
 
 		public:
 
-			/*creates an empty instancedcube data = 0 that is not added to the cubemanager and will not be rendered
+			/*creates an empty instancedcube data = 0 that is not added to the cubemanager and will not be rendered | so you have to call add after the constructor to render it 
 			@param[renderer] a pointer to an instancedrenderer where the cubemanager is stored*/
 			explicit InstancedCube(InstancedRenderer* renderer) noexcept;
 
-			/*creates an instancedcube that is added to the cubemanager and will be rendered
+			/*creates an instancedcube that is not added to the cubemanager and will not be rendered | so you have to call add after the constructor to render it 
 			dont use this constructor, if the count of textures/images in the texturearray2d of the cubemanager is equal or less than the textureID, because it will give an error
 			@param[textureId] the id of the texture in the texturearray2d of the cubemanager that will be used for this model
 			every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures
@@ -60,7 +60,7 @@ namespace clockwork {
 			@param[renderer] a pointer to an instancedrenderer where the cubemanager is stored*/
 			InstancedCube(int textureId, const maths::Mat4f& mat, InstancedRenderer* renderer) noexcept;
 
-			/*creates an instancedcube that is added to the cubemanager and will be rendered
+			/*creates an instancedcube that is not added to the cubemanager and will not be rendered | so you have to call add after the constructor to render it 
 			@param[imagePath] the path of a texture/image that will be used for this model 
 			the textureId will be equal to the position of the image in the texturearray2d of the cubemanager and if the image is not already in the texturearray2d, it will be added to it
 			every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures
@@ -68,14 +68,14 @@ namespace clockwork {
 			@param[renderer] a pointer to an instancedrenderer where the cubemanager is stored*/
 			InstancedCube(const std::string& imagePath, const maths::Mat4f& mat, InstancedRenderer* renderer) noexcept;
 
-			/*creates an instancedcube that is added to the cubemanager and will be rendered
+			/*creates an instancedcube that is not added to the cubemanager and will not be rendered | so you have to call add after the constructor to render it 
 			@param[imagePath] the texture/image that will be used for this model
 			the textureId will be equal to the position of the image in the texturearray2d of the cubemanager and if the image is not already in the texturearray2d, it will be added to it
 			@param[mat] the modelmatrix of the instance/object that will transform the model into the world
 			@param[renderer] a pointer to an instancedrenderer where the cubemanager is stored*/
 			InstancedCube(const utils::Image& image, const maths::Mat4f& mat, InstancedRenderer* renderer) noexcept;
 
-			/*creates an instancedcube that is added to the cubemanager and will be rendered
+			/*creates an instancedcube that is not added to the cubemanager and will not be rendered | so you have to call add after the constructor to render it 
 			dont use this constructor, if the count of textures/images in the texturearray2d of the cubemanager is equal or less than the textureID, because it will give an error
 			@param[textureId] the id of the texture in the texturearray2d of the cubemanager that will be used for this model
 			every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures
@@ -86,7 +86,7 @@ namespace clockwork {
 			@param[renderer] a pointer to an instancedrenderer where the cubemanager is stored*/
 			InstancedCube(int textureId, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, InstancedRenderer* renderer) noexcept;
 
-			/*creates an instancedcube that is added to the cubemanager and will be rendered
+			/*creates an instancedcube that is not added to the cubemanager and will not be rendered | so you have to call add after the constructor to render it 
 			@param[imagePath] the path of a texture/image that will be used for this model
 			the textureId will be equal to the position of the image in the texturearray2d of the cubemanager and if the image is not already in the texturearray2d, it will be added to it
 			every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures
@@ -97,7 +97,7 @@ namespace clockwork {
 			@param[renderer] a pointer to an instancedrenderer where the cubemanager is stored*/
 			InstancedCube(const std::string& imagePath, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, InstancedRenderer* renderer) noexcept;
 
-			/*creates an instancedcube that is added to the cubemanager and will be rendered
+			/*creates an instancedcube that is not added to the cubemanager and will not be rendered | so you have to call add after the constructor to render it 
 			@param[image] the texture/image that will be used for this model
 			the textureId will be equal to the position of the image in the texturearray2d of the cubemanager and if the image is not already in the texturearray2d, it will be added to it
 			every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures
@@ -134,7 +134,7 @@ namespace clockwork {
 			void remove() noexcept;
 
 			/*adds the instancedcube to the cubemanager in the instancedrender | the instancedcube will be added to the end of the list
-			dont call the add function again if the instancedcube is already added | you have to call remove first | some constructors will automaticly call add
+			dont call the add function again if the instancedcube is already added | you have to call remove first | the constructor will not automaticly call add()
 			use add()/remove() for few changes with many models to hide/show objects/instances and use setVisible(true/false) for many changes with few models*/
 			void add() noexcept;
 

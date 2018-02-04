@@ -127,7 +127,6 @@ namespace clockwork {
 
 		void CubeManager::removeAt(int pos) noexcept
 		{
-			//kommentieren, funktioniert nicht, wenn man 3. letztes mehrmals hintereinander entfernt, da es die sachen mischt und nicht aufrückt, also das letzte objekt kommt zur position des gelöschten objekts | ist richtig so, nur dazu schreiben | vorher binden | objekt danach nicht mehr benutzen
 			m_copyBuffer.bind();
 			m_copyBuffer.setData(&m_instances.back()->m_data, sizeof(InstancedCube::Data), pos * sizeof(InstancedCube::Data));
 			m_copyBuffer.setData(nullptr, sizeof(InstancedCube::Data), ( m_instanceCount - 1 ) * sizeof(InstancedCube::Data));
