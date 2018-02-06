@@ -19,33 +19,37 @@ namespace clockwork {
 	namespace graphics {
 
 		class Renderer;
+		class CubeManager;
+		class Shader;
 
 		class NormalCube
 		{
 
-		private:
+		protected:
 			friend class CubeManager;
+			friend class TransparentCubeManager;
 			friend class Renderer;
+			friend struct InstancedCubeCompare;
+			friend struct NormalCubeCompare;
 			int m_textureId;///später wahrscheinlich materialid mit materialarray benutzen | dann auch materialarray, etc machen 
 			maths::Mat4f m_modelMatrix;
+			maths::Vec3f m_scaling;
+			maths::Vec3f m_rotation;
+			maths::Vec3f m_translation;
 			bool m_visible;
+			bool m_transparent;
+			bool m_changed;
 			int m_pos;
-			Renderer* m_renderer;
+			CubeManager* m_manager;
 
 		public:
-			explicit NormalCube(Renderer* renderer) noexcept;
+			explicit NormalCube(Renderer* renderer, bool transparent) noexcept;
 
-			NormalCube(int textureId, const maths::Mat4f& mat, Renderer* renderer) noexcept;
+			NormalCube(int textureId, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer, bool transparent) noexcept;
 
-			NormalCube(const std::string& imagePath, const maths::Mat4f& mat, Renderer* renderer) noexcept;
+			NormalCube(const std::string& imagePath, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept;
 
-			NormalCube(const utils::Image& image, const maths::Mat4f& mat, Renderer* renderer) noexcept;
-
-			NormalCube(int textureId, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, Renderer* renderer) noexcept;
-
-			NormalCube(const std::string& imagePath, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, Renderer* renderer) noexcept;
-
-			NormalCube(const utils::Image& image, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, Renderer* renderer) noexcept;
+			NormalCube(const utils::Image& image, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept;
 
 			virtual ~NormalCube() noexcept;
 
@@ -60,16 +64,16 @@ namespace clockwork {
 		public:
 			virtual void render() noexcept;
 
+			void updateModelMatrix() noexcept;
+
 			void remove() noexcept;
 
 			void add() noexcept;
 
-			void setModelMatrix(const maths::Mat4f& mat) noexcept;
+			//bleibt im gleichen cubemanager, wenn als bool transparent einfach istransparent getter mitgegeben wird 
+			void setTexture(int textureId, bool transparent) noexcept;
 
-			void setModelMatrix(const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation) noexcept;
-
-			void setTexture(int textureId) noexcept;
-
+			//kann auch zu transparentcubemanager wechseln
 			void setTexture(const utils::Image& image) noexcept;
 
 			void setTexture(const std::string& imagePath) noexcept;
@@ -79,12 +83,18 @@ namespace clockwork {
 
 			const utils::Image& getTextureImage() noexcept;
 
-		public:
-			const bool isVisible() noexcept { return m_visible;}
-			const maths::Mat4f& getModelMatrix() noexcept {return m_modelMatrix;}
-			const bool isAdded() noexcept {return m_pos!=-1;}
-			const int getTextureId() noexcept {return m_textureId;}
+			const Renderer* const getRenderer() const noexcept;
 
+		public:
+			inline const bool isVisible() const noexcept { return m_visible;}
+			inline const maths::Mat4f& getModelMatrix() const noexcept {return m_modelMatrix;}
+			inline const bool isAdded() const noexcept {return m_pos!=-1;}
+			inline const int getTextureId() const noexcept {return m_textureId;}
+			inline const bool isTransparent() const noexcept {return m_transparent;}
+			inline const bool hasChanged() const noexcept {return m_changed;}
+
+
+			inline const maths::Vec3f& getPosition() const noexcept{return m_translation;}
 		};
 
 	}

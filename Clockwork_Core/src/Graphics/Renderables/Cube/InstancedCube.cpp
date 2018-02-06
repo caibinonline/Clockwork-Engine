@@ -18,44 +18,26 @@ namespace clockwork {
 	namespace graphics {
 		
 		InstancedCube::InstancedCube(Renderer* renderer) noexcept
-			: m_textureId(0), m_modelMatrix(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0), m_visible(false), m_pos(-1), m_renderer(renderer)
-		{}
+			: m_textureId(0), m_modelMatrix(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0), m_visible(false), m_changed(false), m_pos(-1), m_manager(&renderer->cubeManager)
+		{//einziger konstruktor, der fertig ist | bei anderen konstruktoren changed true machen und vektoren verarbeiten 
+		}
 
-		InstancedCube::InstancedCube(int textureId, const maths::Mat4f& mat, Renderer* renderer) noexcept
-			: m_textureId(textureId), m_modelMatrix(mat), m_visible(true), m_pos(-1), m_renderer(renderer)
+		InstancedCube::InstancedCube(int textureId, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept
+			: m_textureId(textureId), m_scaling(size), m_rotation(rotation), m_translation(position), m_visible(true), m_changed(true), m_pos(-1), m_manager(&renderer->cubeManager)
 		{
 #if CLOCKWORK_DEBUG
-			if ( m_renderer->cubeManager.m_textureArray.getTextureCount() <= textureId )
+			if ( m_manager->m_textureArray.getTextureCount() <= textureId )
 				std::cout << "Error InstancedCube::InstancedCube(): TextureId is not in the texturearray2d of the cubemanager" << std::endl;
 #endif
 		}
 
-		InstancedCube::InstancedCube(const std::string& imagePath, const maths::Mat4f& mat, Renderer* renderer) noexcept
-			: m_textureId(m_renderer->cubeManager.m_textureArray.getTextureId(imagePath)), m_modelMatrix(mat), m_visible(true), m_pos(-1), m_renderer(renderer)
+		InstancedCube::InstancedCube(const std::string& imagePath, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept
+			: m_textureId(renderer->cubeManager.m_textureArray.getTextureId(imagePath)), m_scaling(size), m_rotation(rotation), m_translation(position), m_modelMatrix(maths::Mat4f::scaling(size).rotateXD(rotation.x).rotateYD(rotation.y).rotateZD(rotation.z).translate(position)), m_visible(true), m_pos(-1), m_manager(&renderer->cubeManager)
 		{
 		}
 
-		InstancedCube::InstancedCube(const utils::Image& image, const maths::Mat4f& mat, Renderer* renderer) noexcept
-			: m_textureId(m_renderer->cubeManager.m_textureArray.getTextureId(image)), m_modelMatrix(mat), m_visible(true), m_pos(-1), m_renderer(renderer)
-		{
-		}
-
-		InstancedCube::InstancedCube(int textureId, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, Renderer* renderer) noexcept
-			: m_textureId(textureId), m_modelMatrix(maths::Mat4f::scaling(scaling).rotateXD(rotation.x).rotateYD(rotation.y).rotateZD(rotation.z).translate(translation)), m_visible(true), m_pos(-1), m_renderer(renderer)
-		{
-#if CLOCKWORK_DEBUG
-			if ( m_renderer->cubeManager.m_textureArray.getTextureCount() <= textureId )
-				std::cout << "Error InstancedCube::InstancedCube(): TextureId is not in the texturearray2d of the cubemanager" << std::endl;
-#endif
-		}
-
-		InstancedCube::InstancedCube(const std::string& imagePath, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, Renderer* renderer) noexcept
-			: m_textureId(m_renderer->cubeManager.m_textureArray.getTextureId(imagePath)), m_modelMatrix(maths::Mat4f::scaling(scaling).rotateXD(rotation.x).rotateYD(rotation.y).rotateZD(rotation.z).translate(translation)), m_visible(true), m_pos(-1), m_renderer(renderer)
-		{
-		}
-
-		InstancedCube::InstancedCube(const utils::Image& image, const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation, Renderer* renderer) noexcept
-			: m_textureId(m_renderer->cubeManager.m_textureArray.getTextureId(image)), m_modelMatrix(maths::Mat4f::scaling(scaling).rotateXD(rotation.x).rotateYD(rotation.y).rotateZD(rotation.z).translate(translation)), m_visible(true), m_pos(-1), m_renderer(renderer)
+		InstancedCube::InstancedCube(const utils::Image& image, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept
+			: m_textureId(renderer->cubeManager.m_textureArray.getTextureId(image)), m_scaling(size), m_rotation(rotation), m_translation(position), m_modelMatrix(maths::Mat4f::scaling(size).rotateXD(rotation.x).rotateYD(rotation.y).rotateZD(rotation.z).translate(position)), m_visible(true), m_pos(-1), m_manager(&renderer->cubeManager)
 		{
 		}
 
@@ -66,15 +48,15 @@ namespace clockwork {
 		}
 
 		InstancedCube::InstancedCube(InstancedCube&& other) noexcept
-			: m_textureId(other.m_textureId), m_modelMatrix(other.m_modelMatrix), m_visible(other.m_visible), m_pos(other.m_pos), m_renderer(other.m_renderer)
+			: m_textureId(other.m_textureId), m_modelMatrix(other.m_modelMatrix), m_visible(other.m_visible), m_pos(other.m_pos), m_manager(other.m_manager)
 		{ 
 			other.m_textureId = 0;
 			other.m_modelMatrix = maths::Mat4f(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 			other.m_visible = false;
 			other.m_pos = -1;
-			other.m_renderer = nullptr;
+			other.m_manager = nullptr;
 			if ( m_pos != -1 )
-				m_renderer->cubeManager.m_instanceCubes.at(m_pos) = this;
+				m_manager->m_instanceCubes.at(m_pos) = this;
 		}
 
 		InstancedCube& InstancedCube::operator=(InstancedCube&& other) noexcept
@@ -87,44 +69,38 @@ namespace clockwork {
 			other.m_modelMatrix = maths::Mat4f(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 			m_visible = other.m_visible;
 			m_pos = other.m_pos;
-			m_renderer = other.m_renderer;
+			m_manager = other.m_manager;
 			other.m_visible = false;
 			other.m_pos = -1;
-			other.m_renderer = nullptr;
+			other.m_manager = nullptr;
 			if ( m_pos != -1 )
-				m_renderer->cubeManager.m_instanceCubes.at(m_pos) = this;
+				m_manager->m_instanceCubes.at(m_pos) = this;
 			return *this;
+		}
+
+		void InstancedCube::updateModelMatrix() noexcept
+		{
+			if ( m_changed )
+			{
+				m_modelMatrix = maths::Mat4f::scaling(m_scaling);
+				if ( m_rotation.x > 0 )
+					m_modelMatrix.rotateXD(m_rotation.x);
+				if ( m_rotation.y > 0 )
+					m_modelMatrix.rotateYD(m_rotation.y);
+				if ( m_rotation.z > 0 )
+					m_modelMatrix.rotateZD(m_rotation.z);
+				m_modelMatrix.translate(m_translation);
+				if ( m_pos != -1 )
+				{
+					m_manager->m_copyBuffer.setData(&m_modelMatrix, sizeof(maths::Mat4f), m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ) + sizeof(int));
+				}
+				m_changed = false;
+			}
 		}
 
 		void InstancedCube::updateBufferData() noexcept
 		{
-			if ( m_pos != -1 )
-			{
-				m_renderer->cubeManager.m_copyBuffer.bind();
-				m_renderer->cubeManager.m_copyBuffer.setData(&m_textureId, sizeof(int) + sizeof(maths::Mat4f), m_pos *( sizeof(int) + sizeof(maths::Mat4f) ));
-			}
-#if CLOCKWORK_DEBUG == 2
-			else
-				std::cout << "Info InstancedCube::updateBufferData(): Cube is not added to the CubeManager" << std::endl;
-#endif
-		}
-
-		void InstancedCube::clearBufferData() noexcept
-		{
-			if ( m_pos != -1 )
-			{
-				m_renderer->cubeManager.m_copyBuffer.bind();
-				struct
-				{
-					int textureId = 0;
-					maths::Mat4f m_modelMatrix = maths::Mat4f(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-				} temp;
-				m_renderer->cubeManager.m_copyBuffer.setData(&temp, ( sizeof(int) + sizeof(maths::Mat4f) ), m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ));
-			}
-#if CLOCKWORK_DEBUG == 2
-			else
-				std::cout << "Info InstancedCube::deleteBufferData(): Cube is not added to the CubeManager" << std::endl;
-#endif
+			m_manager->m_copyBuffer.setData(&m_textureId, ( sizeof(int) + sizeof(maths::Mat4f) ), m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ));
 		}
 
 		void InstancedCube::remove() noexcept
@@ -133,14 +109,13 @@ namespace clockwork {
 			if ( m_pos == -1 )
 				std::cout << "Error InstancedCube::remove(): InstancedCube was already removed" << std::endl;
 #endif
-			m_renderer->cubeManager.m_copyBuffer.bind();
-			m_renderer->cubeManager.m_copyBuffer.setData(&m_renderer->cubeManager.m_instanceCubes.back()->m_textureId, ( sizeof(int) + sizeof(maths::Mat4f) ), m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ));
-			m_renderer->cubeManager.m_copyBuffer.setData(nullptr, ( sizeof(int) + sizeof(maths::Mat4f) ), ( m_renderer->cubeManager.m_instanceCount - 1 ) * ( sizeof(int) + sizeof(maths::Mat4f) ));
-			m_renderer->cubeManager.m_instanceCubes.back()->m_pos = m_pos;
-			m_renderer->cubeManager.m_instanceCubes.at(m_pos) = m_renderer->cubeManager.m_instanceCubes.back();
+			m_manager->m_copyBuffer.bind();
+			m_manager->m_copyBuffer.setData(&m_manager->m_instanceCubes.back()->m_textureId, ( sizeof(int) + sizeof(maths::Mat4f) ), m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ));
+			m_manager->m_copyBuffer.setData(nullptr, ( sizeof(int) + sizeof(maths::Mat4f) ), ( m_manager->m_instanceCubes.size() - 1 ) * ( sizeof(int) + sizeof(maths::Mat4f) ));
+			m_manager->m_instanceCubes.back()->m_pos = m_pos;
+			m_manager->m_instanceCubes.at(m_pos) = m_manager->m_instanceCubes.back();
 			m_pos = -1;
-			--m_renderer->cubeManager.m_instanceCount;
-			m_renderer->cubeManager.m_instanceCubes.erase(m_renderer->cubeManager.m_instanceCubes.end() - 1);
+			m_manager->m_instanceCubes.erase(m_manager->m_instanceCubes.end() - 1);
 		}
 
 		void InstancedCube::add() noexcept
@@ -149,78 +124,46 @@ namespace clockwork {
 			if ( m_pos != -1 )
 				std::cout << "Error InstancedCube::add(): InstancedCube was already added" << std::endl;
 #endif
-			m_pos = m_renderer->cubeManager.m_instanceCount;
-			m_renderer->cubeManager.m_copyBuffer.bind();
-			if ( m_renderer->cubeManager.m_instanceCount * ( sizeof(int) + sizeof(maths::Mat4f) ) + ( sizeof(int) + sizeof(maths::Mat4f) ) >= m_renderer->cubeManager.m_copyBuffer.getSize() )
-				m_renderer->cubeManager.m_copyBuffer.setSize(m_renderer->cubeManager.m_instanceCount * ( sizeof(int) + sizeof(maths::Mat4f) ) * 2);
-			m_renderer->cubeManager.m_copyBuffer.setData(&m_textureId, ( sizeof(int) + sizeof(maths::Mat4f) ), m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ));
-			++m_renderer->cubeManager.m_instanceCount;
-			m_renderer->cubeManager.m_instanceCubes.push_back(this);
-		}
-
-		void InstancedCube::setModelMatrix(const maths::Mat4f& mat) noexcept
-		{
-#if CLOCKWORK_DEBUG == 2
-			if ( !m_visible )
-				std::cout << "Info InstancedCube::setModelMatrix(): Instancedcube was not visible" << std::endl;
-#endif
-			if ( !m_visible )
-				m_visible = true;
-			m_modelMatrix = mat;
-			if ( m_pos != -1 )
-			{
-				m_renderer->cubeManager.m_copyBuffer.bind();
-				m_renderer->cubeManager.m_copyBuffer.setData(&m_modelMatrix, sizeof(maths::Mat4f), m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ) + sizeof(int));
-			}
-		}
-
-		void InstancedCube::setModelMatrix(const maths::Vec3f& scaling, const maths::Vec3f& rotation, const maths::Vec3f& translation) noexcept
-		{
-#if CLOCKWORK_DEBUG == 2
-			if ( !m_visible )
-				std::cout << "Info InstancedCube::setModelMatrix(): Instancedcube was not visible" << std::endl;
-#endif
-			if ( !m_visible )
-				m_visible = true;
-			m_modelMatrix = maths::Mat4f::scaling(scaling).rotateXD(rotation.x).rotateYD(rotation.y).rotateZD(rotation.z).translate(translation);
-			if ( m_pos != -1 )
-			{
-				m_renderer->cubeManager.m_copyBuffer.bind();
-				m_renderer->cubeManager.m_copyBuffer.setData(&m_modelMatrix, sizeof(maths::Mat4f), m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ) + sizeof(int));
-			}
+			unsigned int instanceCount = m_manager->m_instanceCubes.size();
+			m_pos = instanceCount;
+			m_manager->m_copyBuffer.bind();
+			if ( instanceCount * ( sizeof(int) + sizeof(maths::Mat4f) ) + ( sizeof(int) + sizeof(maths::Mat4f) ) >= m_manager->m_copyBuffer.getSize() )
+				m_manager->m_copyBuffer.setSize(instanceCount * ( sizeof(int) + sizeof(maths::Mat4f) ) * 2);
+			m_manager->m_copyBuffer.setData(&m_textureId, ( sizeof(int) + sizeof(maths::Mat4f) ), m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ));
+			m_manager->m_instanceCubes.push_back(this);
 		}
 
 		void InstancedCube::setTexture(int textureId) noexcept
 		{
 #if CLOCKWORK_DEBUG
-			if ( m_renderer->cubeManager.m_textureArray.getTextureCount()<=textureId)
+			if ( m_manager->m_textureArray.getTextureCount()<=textureId)
 				std::cout << "Error InstancedCube::setTexture(): TextureId is not in the texturearray2d of the cubemanager" << std::endl;
 #endif
 			m_textureId = textureId;
 			if ( m_pos != -1 )
 			{
-				m_renderer->cubeManager.m_copyBuffer.bind();
-				m_renderer->cubeManager.m_copyBuffer.setData(&m_textureId, sizeof(int), m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ));
+				m_manager->m_copyBuffer.bind();
+				m_manager->m_copyBuffer.setData(&m_textureId, sizeof(int), m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ));
 			}
 		}
 
 		void InstancedCube::setTexture(const utils::Image& image) noexcept
 		{
-			m_textureId = m_renderer->cubeManager.m_textureArray.getTextureId(image);
+			m_textureId = m_manager->m_textureArray.getTextureId(image);
 			if ( m_pos != -1 )
 			{
-				m_renderer->cubeManager.m_copyBuffer.bind();
-				m_renderer->cubeManager.m_copyBuffer.setData(&m_textureId, sizeof(int), m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ));
+				m_manager->m_copyBuffer.bind();
+				m_manager->m_copyBuffer.setData(&m_textureId, sizeof(int), m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ));
 			}
 		}
 
 		void InstancedCube::setTexture(const std::string& imagePath) noexcept
 		{
-			m_textureId = m_renderer->cubeManager.m_textureArray.getTextureId(imagePath);
+			m_textureId = m_manager->m_textureArray.getTextureId(imagePath);
 			if ( m_pos != -1 )
 			{
-				m_renderer->cubeManager.m_copyBuffer.bind();
-				m_renderer->cubeManager.m_copyBuffer.setData(&m_textureId, sizeof(int), m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ));
+				m_manager->m_copyBuffer.bind();
+				m_manager->m_copyBuffer.setData(&m_textureId, sizeof(int), m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ));
 			}
 		}
 
@@ -228,14 +171,44 @@ namespace clockwork {
 		{
 			m_visible = visible;
 			if ( m_visible )
-				this->updateBufferData();
+			{
+				if ( m_pos != -1 )
+				{
+					m_manager->m_copyBuffer.bind();
+					m_manager->m_copyBuffer.setData(&m_textureId, sizeof(int) + sizeof(maths::Mat4f), m_pos *( sizeof(int) + sizeof(maths::Mat4f) ));
+				}
+#if CLOCKWORK_DEBUG == 2
+				else
+					std::cout << "Info InstancedCube::updateBufferData(): Cube is not added to the CubeManager" << std::endl;
+#endif
+			}
 			else
-				this->clearBufferData();
+			{
+				if ( m_pos != -1 )
+				{
+					m_manager->m_copyBuffer.bind();
+					struct
+					{
+						int textureId = 0;
+						maths::Mat4f m_modelMatrix = maths::Mat4f(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+					} temp;
+					m_manager->m_copyBuffer.setData(&temp, ( sizeof(int) + sizeof(maths::Mat4f) ), m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ));
+				}
+#if CLOCKWORK_DEBUG == 2
+				else
+					std::cout << "Info InstancedCube::deleteBufferData(): Cube is not added to the CubeManager" << std::endl;
+#endif
+			}
 		}
 
 		const utils::Image& InstancedCube::getTextureImage() noexcept
 		{
-			return m_renderer->cubeManager.m_textureArray.getTexture(m_textureId);
+			return m_manager->m_textureArray.getTexture(m_textureId);
+		}
+
+		const Renderer* const InstancedCube::getRenderer() const noexcept
+		{
+			return m_manager->m_renderer;
 		}
 
 	}

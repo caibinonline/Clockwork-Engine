@@ -13,16 +13,17 @@
 #include "InstancedCube.h"
 #include "NormalCube.h"
 #include "CubeManager.h"
+#include "src\Graphics\Renderer\Renderer.h"
 
 namespace clockwork {
 	namespace graphics {
 
 		CubeManager::CubeManager() noexcept
-			: m_instanceCount(0), m_normalCount(0)
+			: m_transparent(false), m_renderer(nullptr)
 		{}
 
-		CubeManager::CubeManager(unsigned int reserved) noexcept
-			: m_textureArray(10), m_instanceCount(0), m_normalCount(0)
+		CubeManager::CubeManager(unsigned int reserved, Renderer* renderer) noexcept
+			: m_textureArray(10), m_transparent(false), m_renderer(renderer)
 		{
 			m_instanceArray.bind();
 			m_vertexBuffer = VertexBuffer(//you could also create a local nameless array of vertices, where vertex is a struct with vec2 of float for position and vec2 of float for colour
@@ -105,11 +106,11 @@ namespace clockwork {
 
 		CubeManager::CubeManager(CubeManager&& other) noexcept
 			: m_instanceArray(std::move(other.m_instanceArray)), m_normalArray(std::move(other.m_normalArray)), m_indexBuffer(std::move(other.m_indexBuffer)), m_vertexBuffer(std::move(other.m_vertexBuffer)), m_modelBuffer(std::move(other.m_modelBuffer)),
-			m_copyBuffer(std::move(other.m_copyBuffer)), m_textureArray(std::move(other.m_textureArray)), m_textures(std::move(other.m_textures)), m_instanceCubes(std::move(other.m_instanceCubes)), m_instanceCount(std::move(other.m_instanceCount)), 
-			m_normalCubes(std::move(other.m_normalCubes)), m_normalCount(std::move(other.m_normalCount))
+			m_copyBuffer(std::move(other.m_copyBuffer)), m_textureArray(std::move(other.m_textureArray)), m_textures(std::move(other.m_textures)), m_instanceCubes(std::move(other.m_instanceCubes)),
+			m_normalCubes(std::move(other.m_normalCubes)), m_transparent(other.m_transparent), m_renderer(other.m_renderer)
 		{
-			other.m_instanceCount = 0;
-			other.m_normalCount = 0;
+			other.m_transparent = false;
+			other.m_renderer = nullptr;
 		}
 
 		CubeManager& CubeManager::operator=(CubeManager&& other) noexcept
@@ -123,11 +124,11 @@ namespace clockwork {
 			m_textureArray = std::move(other.m_textureArray);
 			m_textures = std::move(other.m_textures);
 			m_instanceCubes = std::move(other.m_instanceCubes);
-			m_instanceCount = std::move(other.m_instanceCount);
 			m_normalCubes = std::move(other.m_normalCubes);
-			m_normalCount = std::move(other.m_normalCount);
-			other.m_instanceCount = 0;
-			other.m_normalCount = 0;
+			m_transparent = other.m_transparent;
+			m_renderer = other.m_renderer;
+			other.m_transparent = false;
+			other.m_renderer = nullptr;
 			return *this;
 		}
 
@@ -147,6 +148,7 @@ namespace clockwork {
 					return i;
 			}
 			m_textures.push_back(Texture2D(image));
+			return m_textures.size() - 1;
 		}
 
 		int CubeManager::getNormalTextureId(const std::string& imagePath) noexcept
@@ -167,6 +169,30 @@ namespace clockwork {
 				std::cout << "Error CubeManager::getNormalTextureId(): the new image has not the same size as the other images in the texture list" << std::endl;
 #endif 
 			m_textures.push_back(Texture2D(image));
+			return m_textures.size() - 1;
+		}
+
+		int CubeManager::containsNormalTexture(const utils::Image& image) noexcept
+		{
+#if CLOCKWORK_DEBUG
+			if ( image.getData() == nullptr )
+				std::cout << "Error CubeManager::containsNormalTexture(): Image has no data" << std::endl;
+#endif
+			for ( unsigned int i = 0; i < m_textures.size(); ++i )
+			{
+				if ( m_textures.at(i).getImage().getFilepath() == image.getFilepath() )
+					return true;
+			}
+			return false;
+		}
+		int CubeManager::containsNormalTexture(const std::string& imagePath) noexcept
+		{
+			for ( unsigned int i = 0; i < m_textures.size(); ++i )
+			{
+				if ( m_textures.at(i).getImage().getFilepath() == imagePath )
+					return true;
+			}
+			return false;
 		}
 
 		void CubeManager::renderInstancedCubes() noexcept
@@ -174,17 +200,27 @@ namespace clockwork {
 			m_textureArray.bind();
 			m_copyBuffer.bind();
 			m_modelBuffer.bind();
+			for ( auto cube : m_instanceCubes )
+			{
+				cube->updateModelMatrix();
+			}
 			m_modelBuffer.copy(m_copyBuffer);
 			m_instanceArray.bind();
-			m_indexBuffer.drawInstanced(m_instanceCount);
+			m_indexBuffer.drawInstanced(m_instanceCubes.size());
 		}
 
 		void CubeManager::renderNormalCubes() noexcept
 		{
 			m_normalArray.bind();
-			for ( auto& cube : m_normalCubes )
+			for ( auto cube : m_normalCubes )
 			{
-				cube->render();
+				if ( cube->m_visible )
+				{
+					cube->updateModelMatrix();
+					m_textures.at(cube->m_textureId).bind();
+					cube->render();
+					m_indexBuffer.draw();
+				}
 			}
 		}
 
@@ -192,33 +228,29 @@ namespace clockwork {
 		{
 			m_copyBuffer.bind();
 			m_copyBuffer.setData(&m_instanceCubes.back()->m_textureId, ( sizeof(int) + sizeof(maths::Mat4f) ), pos * ( sizeof(int) + sizeof(maths::Mat4f) ));
-			m_copyBuffer.setData(nullptr, ( sizeof(int) + sizeof(maths::Mat4f) ), ( m_instanceCount - 1 ) * ( sizeof(int) + sizeof(maths::Mat4f) ));
+			m_copyBuffer.setData(nullptr, ( sizeof(int) + sizeof(maths::Mat4f) ), ( m_instanceCubes.size() - 1 ) * ( sizeof(int) + sizeof(maths::Mat4f) ));
 			m_instanceCubes.back()->m_pos = pos;
 			m_instanceCubes.at(pos)->m_pos = -1;
 			m_instanceCubes.at(pos) = m_instanceCubes.back();
-			--m_instanceCount;
 			m_instanceCubes.erase(m_instanceCubes.end() - 1);
 		}
 
 		void CubeManager::removeLastInstancedCube() noexcept
 		{
 			m_copyBuffer.bind();
-			m_copyBuffer.setData(nullptr, ( sizeof(int) + sizeof(maths::Mat4f) ), ( m_instanceCount - 1 ) * ( sizeof(int) + sizeof(maths::Mat4f) ));
+			m_copyBuffer.setData(nullptr, ( sizeof(int) + sizeof(maths::Mat4f) ), ( m_instanceCubes.size() - 1 ) * ( sizeof(int) + sizeof(maths::Mat4f) ));
 			m_instanceCubes.back()->m_pos = -1;
-			--m_instanceCount;
 			m_instanceCubes.erase(m_instanceCubes.end() - 1);
 		}
 
 		void CubeManager::removeNormalCubesAt(int pos) noexcept
 		{
 			m_normalCubes.erase(m_normalCubes.begin() + pos);
-			--m_normalCount;
 		}
 
 		void CubeManager::removeLastNormalCube() noexcept
 		{
 			m_normalCubes.erase(m_normalCubes.end() - 1);
-			--m_normalCount;
 		}
 
 		void CubeManager::addInstancedTexture(const utils::Image& image) noexcept
@@ -293,18 +325,19 @@ namespace clockwork {
 
 		void CubeManager::removeInstancedTexture(int textureId) noexcept
 		{
+			m_copyBuffer.bind();
 			m_textureArray.removeTexture(textureId);
-			for ( unsigned int i = 0; i < m_instanceCount; ++i )
+			for ( unsigned int i = 0; i < m_instanceCubes.size(); ++i )
 			{
 				if ( m_instanceCubes.at(i)->m_textureId == textureId )
 				{
 					m_instanceCubes.at(i)->m_textureId = 0;
-					m_instanceCubes.at(i)->updateBufferData();
+					m_copyBuffer.setData(&m_instanceCubes.at(i)->m_textureId, sizeof(int), m_instanceCubes.at(i)->m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ));
 				}
 				else if ( m_instanceCubes.at(i)->m_textureId > textureId )
 				{
 					--m_instanceCubes.at(i)->m_textureId;
-					m_instanceCubes.at(i)->updateBufferData();
+					m_copyBuffer.setData(&m_instanceCubes.at(i)->m_textureId, sizeof(int), m_instanceCubes.at(i)->m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ));
 				}
 			}
 		}
@@ -326,7 +359,7 @@ namespace clockwork {
 				std::cout << "Error CubeManager::removeNormalTexture(): TextureId is not in the texture list" << std::endl;
 #endif
 			m_textures.erase(m_textures.begin() + textureId);
-			for ( unsigned int i = 0; i < m_normalCount; ++i )
+			for ( unsigned int i = 0; i < m_normalCubes.size(); ++i )
 			{
 				if ( m_normalCubes.at(i)->m_textureId == textureId )
 				{
@@ -363,8 +396,10 @@ namespace clockwork {
 			}
 		}
 
-
-
+		const Renderer* const CubeManager::getRenderer() const noexcept
+		{
+			return m_renderer;
+		}
 
 	}
 }

@@ -11,3 +11,34 @@
 * arising from the use of this software.
 * You can use this software under the following License: https://github.com/Clock-work/Clockwork-Engine/blob/master/LICENSE
 *************************************************************************/
+#include "CubeManager.h"
+
+namespace clockwork {
+	namespace graphics {
+
+		class TransparentCubeManager
+			: public CubeManager
+		{
+
+		private:
+			friend struct InstancedCubeCompare;
+			friend struct NormalCubeCompare;
+
+		public:
+
+			TransparentCubeManager() noexcept;
+
+			TransparentCubeManager(unsigned int reserved, Renderer* renderer) noexcept;
+
+
+		public:
+
+			void renderInstancedCubes() noexcept;
+
+			void renderNormalCubes() noexcept;
+
+
+		};
+
+	}
+}

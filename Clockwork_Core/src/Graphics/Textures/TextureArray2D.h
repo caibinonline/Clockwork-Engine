@@ -148,10 +148,21 @@ namespace clockwork {
 				}
 				m_images.push_back(image);
 				glBindTexture(GL_TEXTURE_2D_ARRAY, m_id);
-				glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, nullptr);
-				for ( unsigned int img = 0; img < m_images.size(); ++img )
+				if ( image.hasAlpha() )//look at pixelsize to guess the colour format for the image
 				{
-					glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
+					glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, nullptr);
+					for ( unsigned int img = 0; img < m_images.size(); ++img )
+					{
+						glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
+					}
+				}
+				else
+				{
+					glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, nullptr);
+					for ( unsigned int img = 0; img < m_images.size(); ++img )
+					{
+						glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
+					}
 				}
 				glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 				return m_images.size() - 1;
@@ -181,10 +192,21 @@ namespace clockwork {
 #endif 
 				m_images.push_back(image);
 				glBindTexture(GL_TEXTURE_2D_ARRAY, m_id);
-				glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, nullptr);
-				for ( unsigned int img = 0; img < m_images.size(); ++img )
+				if ( image.hasAlpha() )//look at pixelsize to guess the colour format for the image
 				{
-					glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
+					glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, nullptr);
+					for ( unsigned int img = 0; img < m_images.size(); ++img )
+					{
+						glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
+					}
+				}
+				else
+				{
+					glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, nullptr);
+					for ( unsigned int img = 0; img < m_images.size(); ++img )
+					{
+						glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
+					}
 				}
 				glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 				return m_images.size() - 1;
@@ -215,10 +237,21 @@ namespace clockwork {
 #endif 
 				m_images.push_back(image);
 				glBindTexture(GL_TEXTURE_2D_ARRAY, m_id);
-				glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, nullptr);
-				for ( unsigned int img = 0; img < m_images.size(); ++img )
+				if ( image.hasAlpha() )//look at pixelsize to guess the colour format for the image
 				{
-					glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
+					glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, nullptr);
+					for ( unsigned int img = 0; img < m_images.size(); ++img )
+					{
+						glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
+					}
+				}
+				else
+				{
+					glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, nullptr);
+					for ( unsigned int img = 0; img < m_images.size(); ++img )
+					{
+						glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
+					}
 				}
 				glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 			}
@@ -250,10 +283,21 @@ namespace clockwork {
 #endif 
 				m_images.push_back(image);
 				glBindTexture(GL_TEXTURE_2D_ARRAY, m_id);
-				glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, nullptr);
-				for ( unsigned int img = 0; img < m_images.size(); ++img )
+				if ( image.hasAlpha() )//look at pixelsize to guess the colour format for the image
 				{
-					glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
+					glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, nullptr);
+					for ( unsigned int img = 0; img < m_images.size(); ++img )
+					{
+						glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
+					}
+				}
+				else
+				{
+					glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, nullptr);
+					for ( unsigned int img = 0; img < m_images.size(); ++img )
+					{
+						glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
+					}
 				}
 				glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 			}

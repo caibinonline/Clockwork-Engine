@@ -86,12 +86,11 @@ namespace clockwork {
 
 			for ( int i = 0; i < 1000; ++i )//10000 objects: normal 300fps, instancing 2300fps | 1000objects: normal 2000fps, instancing 5000fps | 100 objects: normal 5500fps, instancing 6100fps | 10 objects: normal 5500fps, instancing 5500fps | 1 object: normal 6300fps, instancing 6100fps
 			{
-				maths::Mat4x4<float> modelMatrix = modelMatrix = maths::Mat4x4<float>::scaling(1, 1, 1);
-				modelMatrix.translate(-( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10);
+				maths::Vec3f pos = maths::Vec3f(-( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10);
 #if instancing
-				InstancedCube* inst = new InstancedCube(rand() % 11, modelMatrix, m_renderer);
+				graphics::InstancedCube* inst = new graphics::InstancedCube(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, m_renderer, false);
 #else 
-				NormalCube* inst = new NormalCube(rand() % 11, modelMatrix, m_renderer);
+				NormalCube* inst = new NormalCube(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, m_renderer, false);
 #endif
 				inst->add();
 			}
@@ -139,6 +138,7 @@ namespace clockwork {
 		void TestGame::render() noexcept
 		{
 			m_renderer->render();
+			m_renderer->renderTransparent();
 		}
 
 
@@ -169,22 +169,22 @@ namespace clockwork {
 				if ( button == CLOCKWORK_MOUSE_BUTTON_1 )
 				{
 					maths::Vec3f pos = m_currentCamera->getPosition() + m_currentCamera->getDirection() * 2;
-					maths::Mat4x4<float> modelMatrix = modelMatrix = maths::Mat4x4<float>::scaling(1, 1, 1);
-					modelMatrix.translate(pos.x, pos.y, pos.z);
 #if instancing
-					graphics::InstancedCube* inst = new graphics::InstancedCube(rand() % 11, modelMatrix, m_renderer);
+					//graphics::InstancedCube* inst = new graphics::InstancedCube(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, m_renderer, false);
 #else 
-					graphics::NormalCube* inst = new graphics::NormalCube(rand() % 11, modelMatrix, m_renderer);
+					//graphics::NormalCube* inst = new graphics::NormalCube(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, m_renderer, false);
 #endif
+					graphics::NormalCube* inst = new graphics::NormalCube("res/Images/transparent.png", maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, m_renderer);
 					inst->add();
 				}
 				else if ( button == CLOCKWORK_MOUSE_BUTTON_2 )
 				{
 #if instancing
-					m_renderer->cubeManager.removeLastInstancedCube();
+					//m_renderer->cubeManager.removeLastInstancedCube();
 #else 
-					m_renderer->cubeManager.removeLastNormalCube();
+					//m_renderer->cubeManager.removeLastNormalCube();
 #endif
+					m_renderer->transparentCubeManager.removeLastNormalCube();
 				}
 			}
 

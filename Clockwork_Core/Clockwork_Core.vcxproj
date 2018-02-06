@@ -135,6 +135,7 @@
     <ClCompile Include="src\Graphics\Renderables\Cube\CubeManager.cpp" />
     <ClCompile Include="src\Graphics\Renderables\Cube\InstancedCube.cpp" />
     <ClCompile Include="src\Graphics\Renderables\Cube\NormalCube.cpp" />
+    <ClCompile Include="src\Graphics\Renderables\Cube\TransparentCubeManager.cpp" />
     <ClCompile Include="src\Graphics\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Logics\States\Game\TestGame.cpp" />
     <ClCompile Include="src\Logics\States\Loading\Loading.cpp" />

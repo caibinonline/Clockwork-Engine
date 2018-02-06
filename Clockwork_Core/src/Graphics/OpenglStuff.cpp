@@ -25,31 +25,18 @@ namespace clockwork {
 			InternalCopyBuffer::copyBuffer = new CopyBuffer(nullptr, size, GL_STREAM_DRAW);
 		}
 
-		void openglParams(bool enableCulling, int cullFace, int windingOrder, bool enableDepthTest, int depthCompare, bool enableBlending, int blendSourceFactor, int blendDestinationFactor, int blendFunc) noexcept
+		void openglParams(int cullFace, int windingOrder, int depthCompare, int blendSourceFactor, int blendDestinationFactor, int blendFunc) noexcept
 		{
-			if ( enableCulling )
-			{
-				glEnable(GL_CULL_FACE);
-				glCullFace(cullFace);
-				glFrontFace(windingOrder);
-			}
-			else
-				glDisable(GL_CULL_FACE);
-			if ( enableDepthTest )
-			{
-				glEnable(GL_DEPTH_TEST);
-				glDepthFunc(depthCompare);
-			}
-			else
-				glDisable(GL_DEPTH_TEST);
-			if ( enableBlending )
-			{
-				glEnable(GL_BLEND);
-				glBlendEquation(blendFunc);
-				glBlendFunc(blendSourceFactor, blendDestinationFactor);
-			}
-			else
-				glDisable(GL_BLEND);
+			glEnable(GL_CULL_FACE);
+			glCullFace(cullFace);
+			glFrontFace(windingOrder);
+
+			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(depthCompare);
+
+			glEnable(GL_BLEND);
+			glBlendEquation(blendFunc);
+			glBlendFunc(blendSourceFactor, blendDestinationFactor);
 		}
 
 	}

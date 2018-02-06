@@ -33,14 +33,16 @@ namespace clockwork {
 		class CubeManager
 		{
 
-		private:
+		protected:
 			friend class InstancedCube;
 			friend class NormalCube;
 			friend class Renderer;
+			friend struct InstancedCubeCompare;
+			friend struct NormalCubeCompare;
 			using floatarr = float[8 * 4 * 6];
 			using uchararr = unsigned  char[36];
 
-		private:
+		protected:
 			VertexArray m_instanceArray;
 			VertexArray m_normalArray;
 			VertexBuffer m_vertexBuffer;
@@ -50,15 +52,15 @@ namespace clockwork {
 			TextureArray2D m_textureArray;
 			std::vector<Texture2D> m_textures;
 			std::vector<InstancedCube*> m_instanceCubes;
-			unsigned int m_instanceCount;
 			std::vector<NormalCube*> m_normalCubes;
-			unsigned int m_normalCount;
+			bool m_transparent;
+			Renderer* m_renderer;
 
 		public:
 
 			CubeManager() noexcept;
 
-			CubeManager(unsigned int reserved) noexcept;
+			CubeManager(unsigned int reserved, Renderer* renderer) noexcept;
 
 			~CubeManager() noexcept;
 
@@ -73,6 +75,8 @@ namespace clockwork {
 		private:
 			int getNormalTextureId(const utils::Image& image) noexcept;
 			int getNormalTextureId(const std::string& imagePath) noexcept;
+			int containsNormalTexture(const utils::Image& image) noexcept;
+			int containsNormalTexture(const std::string& imagePath) noexcept;
 
 		public:
 
@@ -82,7 +86,8 @@ namespace clockwork {
 
 			/*dont use the object at the position in the cubemanager, because it will change places with the last object in the list and the last object will then be removed */
 			void removeInstancedCubesAt(int pos) noexcept;///neu besser kommentieren		| kommentieren, funktioniert nicht, wenn man 3. letztes mehrmals hintereinander entfernt, da es die sachen mischt und nicht aufrückt, also das letzte objekt kommt zur position des gelöschten objekts | ist richtig so, nur dazu schreiben | vorher binden | objekt danach nicht mehr benutzen
-
+			
+			//entfernt bei transparent immer das nächste
 			void removeLastInstancedCube() noexcept;
 
 			void removeNormalCubesAt(int pos) noexcept;
@@ -119,10 +124,12 @@ namespace clockwork {
 
 			void removeNormalTexture(const std::string& imagePath) noexcept;
 
+			const Renderer* const getRenderer() const noexcept;
 
-			inline const unsigned int getInstanceCount() const noexcept {return m_instanceCount;}
+			inline const unsigned int getInstanceCount() const noexcept {return m_instanceCubes.size();}
 
-			inline const unsigned int getNormalCount() const noexcept {return m_normalCount;}
+			inline const unsigned int getNormalCount() const noexcept {return m_normalCubes.size();}
+
 
 
 		};
