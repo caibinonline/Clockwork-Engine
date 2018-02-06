@@ -85,13 +85,15 @@ namespace clockwork {
 
 			const utils::Image& getTextureImage() noexcept;
 
+			void changeRenderer(Renderer* renderer) noexcept;
+
 			const Renderer* const getRenderer() const noexcept;
 
 		public:
-			inline const bool isVisible() const noexcept { return m_visible;}
 			inline const maths::Mat4f& getModelMatrix() const noexcept {return m_modelMatrix;}
-			inline const bool isAdded() const noexcept {return m_pos!=-1;}
 			inline const int getTextureId() const noexcept {return m_textureId;}
+			inline const bool isAdded() const noexcept {return m_pos!=-1;}
+			inline const bool isVisible() const noexcept { return m_visible;}
 			inline const bool isTransparent() const noexcept {return m_transparent;}
 
 		};

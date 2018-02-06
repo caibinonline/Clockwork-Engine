@@ -36,7 +36,7 @@
 namespace clockwork {
 	namespace logics {
 
-#define instancing 0
+#define instancing 1
 
 		TestGame::TestGame() noexcept
 		{
@@ -168,23 +168,24 @@ namespace clockwork {
 			{
 				if ( button == CLOCKWORK_MOUSE_BUTTON_1 )
 				{
-					maths::Vec3f pos = m_currentCamera->getPosition() + m_currentCamera->getDirection() * 2;
-#if instancing
-					graphics::InstancedCube* inst = new graphics::InstancedCube(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, m_renderer);
-#else 
-					graphics::NormalCube* inst = new graphics::NormalCube(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, m_renderer, false);
-#endif
-					//graphics::NormalCube* inst = new graphics::NormalCube("res/Images/transparent.png", maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, m_renderer);
-					inst->add();
+					maths::Vec3f pos1 = m_currentCamera->getPosition() + m_currentCamera->getDirection() * 2;
+					maths::Vec3f pos2 = m_currentCamera->getPosition() + m_currentCamera->getDirection() * 4;
+					maths::Vec3f pos3 = m_currentCamera->getPosition() + m_currentCamera->getDirection() * 6;
+
+					graphics::InstancedCube* inst1 = new graphics::InstancedCube(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos1, m_renderer);
+					inst1->add();
+
+					graphics::NormalCube* inst2 = new graphics::NormalCube(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos2, m_renderer, false);
+					inst2->add();
+
+					graphics::NormalCube* inst3 = new graphics::NormalCube("res/Images/transparent.png", maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos3, m_renderer);
+					inst3->add();
 				}
 				else if ( button == CLOCKWORK_MOUSE_BUTTON_2 )
 				{
-#if instancing
 					m_renderer->cubeManager.removeLastInstancedCube();
-#else 
 					m_renderer->cubeManager.removeLastNormalCube();
-#endif
-					//m_renderer->transparentCubeManager.removeLastNormalCube();
+					m_renderer->cubeManager.removeLastTransparentCube();
 				}
 			}
 

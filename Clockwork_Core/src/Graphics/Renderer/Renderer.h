@@ -13,10 +13,9 @@
 #pragma once
 #include "src\Graphics\Renderer\Shader.h"
 #include "src\Logics\Camera\Camera.h"
-#include "src\Graphics\Renderables\Cube\TransparentCubeManager.h"
 #include "src\Graphics\Renderables\Cube\InstancedCube.h"
 #include "src\Graphics\Renderables\Cube\NormalCube.h"
-
+#include "src\Graphics\Renderables\Cube\CubeManager.h"
 
 
 #include "src\Graphics\Renderables\BadTerrainTest.h"
@@ -32,7 +31,7 @@ namespace clockwork {
 			friend class NormalCube;
 			friend class CubeManager;
 			friend class TransparentCubeManager;
-			friend struct NormalCubeCompare;
+			friend struct TransparentCubeCompare;
 
 		private:
 			Shader * m_instanceShader;
@@ -43,7 +42,6 @@ namespace clockwork {
 
 		public:
 			CubeManager cubeManager;
-			TransparentCubeManager transparentCubeManager;
 
 
 
@@ -58,7 +56,7 @@ namespace clockwork {
 			//pointer to dynamic, or class owned shader, pointer to dynamic, or class owned pointer to camera, pointer to dynnamic, or class owned projection matrix
 			//bool deleteshader this renderer deletes the shader with its destruktor call when its set to true | so if you have a shared shader in multiple renderers and you manage it/delete it in your game, then pass false as the boolean(just shader pointer passed as parameter, not new shader objekt created with new)
 			Renderer(Shader* instanceShader, Shader* normalShader, logics::Camera** camera, maths::Mat4f* projection, unsigned int reserved = 10, bool deleteShader = true) noexcept
-				: m_instanceShader(instanceShader), m_normalShader(normalShader), m_currentCamera(camera), m_currentProjection(projection), cubeManager(reserved, this), transparentCubeManager(reserved,this), m_deleteShader(deleteShader)
+				: m_instanceShader(instanceShader), m_normalShader(normalShader), m_currentCamera(camera), m_currentProjection(projection), cubeManager(reserved, this), m_deleteShader(deleteShader)
 			{
 				prepare();
 			}
@@ -74,7 +72,7 @@ namespace clockwork {
 
 			Renderer(const Renderer& other) = delete;
 
-			Renderer(Renderer&& other) noexcept///WICHTIG auch für alle anderen cubemanager moven, etc, wenn meherere manager da sind | WICHTIG NOCH INSTANCEN UPDATEN POINTER AUF RENDERER 
+			Renderer(Renderer&& other) noexcept
 				: m_instanceShader(other.m_instanceShader), m_normalShader(other.m_normalShader), m_currentCamera(other.m_currentCamera), m_currentProjection(other.m_currentProjection), m_deleteShader(other.m_deleteShader), cubeManager(std::move(other.cubeManager))
 			{
 				other.m_instanceShader = nullptr;
@@ -82,14 +80,6 @@ namespace clockwork {
 				other.m_currentCamera = nullptr;
 				other.m_currentProjection = nullptr;
 				other.m_deleteShader = false;
-				/*for ( unsigned int i = 0; i < cubeManager.m_instanceCount; ++i )
-				{
-					cubeManager.m_instanceCubes.at(i)->m_manager = this;
-				}
-				for ( unsigned int i = 0; i < cubeManager.m_normalCount; ++i )
-				{
-					cubeManager.m_normalCubes.at(i)->m_manager = this;
-				}*/
 			}
 
 			Renderer& operator=(const Renderer& other) = delete;
@@ -107,14 +97,6 @@ namespace clockwork {
 				other.m_currentCamera = nullptr;
 				other.m_currentProjection = nullptr;
 				other.m_deleteShader = false;
-				/*for ( unsigned int i = 0; i < cubeManager.m_instanceCount; ++i )
-				{
-					cubeManager.m_instanceCubes.at(i)->m_manager = this;
-				}
-				for ( unsigned int i = 0; i < cubeManager.m_normalCount; ++i )
-				{
-					cubeManager.m_normalCubes.at(i)->m_manager = this;
-				}*/
 				return *this;
 			}
 
@@ -135,26 +117,27 @@ namespace clockwork {
 				glEnable(GL_CULL_FACE);
 				m_instanceShader->enable();
 				(*m_currentCamera)->update(m_instanceShader);//so ähnlich dann hier die verschiedenen modelle vorbereiten, dann texturen und dann positionen, etc schicken
+
 				if ( cubeManager.m_instanceCubes.size() != 0 )
 					cubeManager.renderInstancedCubes();
 
 
 				m_normalShader->enable();
 				( *m_currentCamera )->update(m_normalShader);
+
 				if ( cubeManager.m_normalCubes.size() != 0 )
 					cubeManager.renderNormalCubes();
-
-
 				terrain.render(m_normalShader);
+
 			}
 
 			void renderTransparent() noexcept
 			{
 				//ggf culling deaktivieren für transparent sachen 
 				glDisable(GL_CULL_FACE);
-
 				m_normalShader->enable();
-				transparentCubeManager.renderNormalCubes();//hier vom normalen cubemanager erste testen ob liste von transparentcubes size ungleich null ist, dann renderTransparentCubes aufrufen 
+
+				cubeManager.renderTransparentCubes();//hier vom normalen cubemanager erste testen ob liste von transparentcubes size ungleich null ist, dann renderTransparentCubes aufrufen 
 			}
 
 			void updateProjection() noexcept
@@ -163,6 +146,7 @@ namespace clockwork {
 				m_instanceShader->setUniform("u_projection", *m_currentProjection);
 				m_normalShader->enable();
 				m_normalShader->setUniform("u_projection", *m_currentProjection);
+
 			}
 
 		};

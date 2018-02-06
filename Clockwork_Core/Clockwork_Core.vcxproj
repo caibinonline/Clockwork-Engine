@@ -135,7 +135,6 @@
     <ClCompile Include="src\Graphics\Renderables\Cube\CubeManager.cpp" />
     <ClCompile Include="src\Graphics\Renderables\Cube\InstancedCube.cpp" />
     <ClCompile Include="src\Graphics\Renderables\Cube\NormalCube.cpp" />
-    <ClCompile Include="src\Graphics\Renderables\Cube\TransparentCubeManager.cpp" />
     <ClCompile Include="src\Graphics\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Logics\States\Game\TestGame.cpp" />
     <ClCompile Include="src\Logics\States\Loading\Loading.cpp" />
@@ -159,7 +158,6 @@
     <ClInclude Include="src\Graphics\Renderables\Cube\CubeManager.h" />
     <ClInclude Include="src\Graphics\Renderables\Cube\InstancedCube.h" />
     <ClInclude Include="src\Graphics\Renderables\Cube\NormalCube.h" />
-    <ClInclude Include="src\Graphics\Renderables\Cube\TransparentCubeManager.h" />
     <ClInclude Include="src\Graphics\Renderables\Mesh.h" />
     <ClInclude Include="src\Graphics\Renderables\Model.h" />
     <ClInclude Include="src\Graphics\Renderer\Renderer.h" />

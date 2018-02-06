@@ -148,8 +148,8 @@ namespace clockwork {
 
 		public:
 			inline const maths::Mat4f& getModelMatrix() const noexcept {return m_modelMatrix;}
-			inline const bool isAdded() const noexcept {return m_pos!=-1;}
 			inline const int getTextureId() const noexcept {return m_textureId;}
+			inline const bool isAdded() const noexcept {return m_pos!=-1;}
 			inline const bool hasChanged() const noexcept {return m_changed;}//wahrscheinlich wird es nicht gebraucht
 	
 
