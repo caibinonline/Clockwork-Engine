@@ -33,14 +33,16 @@ namespace clockwork {
 			friend struct NormalCubeCompare;
 			int m_textureId;///später wahrscheinlich materialid mit materialarray benutzen | dann auch materialarray, etc machen 
 			maths::Mat4f m_modelMatrix;
-			maths::Vec3f m_scaling;
-			maths::Vec3f m_rotation;
-			maths::Vec3f m_translation;
 			bool m_visible;
 			bool m_transparent;
-			bool m_changed;
 			int m_pos;
 			CubeManager* m_manager;
+
+		public:
+			maths::Vec3f size;
+			maths::Vec3f rotation;
+			maths::Vec3f position;
+
 
 		public:
 			explicit NormalCube(Renderer* renderer, bool transparent) noexcept;
@@ -91,10 +93,7 @@ namespace clockwork {
 			inline const bool isAdded() const noexcept {return m_pos!=-1;}
 			inline const int getTextureId() const noexcept {return m_textureId;}
 			inline const bool isTransparent() const noexcept {return m_transparent;}
-			inline const bool hasChanged() const noexcept {return m_changed;}
 
-
-			inline const maths::Vec3f& getPosition() const noexcept{return m_translation;}
 		};
 
 	}

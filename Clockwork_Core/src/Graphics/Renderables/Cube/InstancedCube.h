@@ -35,18 +35,17 @@ namespace clockwork {
 			friend class CubeManager;
 			friend class TransparentCubeManager;
 			friend class Renderer;
-			friend struct InstancedCubeCompare;
-			friend struct NormalCubeCompare;
 			/*the data of each instance/object of the model(textureid for the texturearray and modelmatrix fro the transformation in the world*/
 			int m_textureId;///später wahrscheinlich materialid mit materialarray benutzen | dann auch materialarray, etc machen 
 			maths::Mat4f m_modelMatrix;
-			maths::Vec3f m_scaling;
-			maths::Vec3f m_rotation;
-			maths::Vec3f m_translation;
-			bool m_visible;
 			bool m_changed;
 			int m_pos;//noch isadded machen und dann mpos!=-1 ausgeben als bool 
 			CubeManager* m_manager;
+
+		public:
+			maths::Vec3f size;
+			maths::Vec3f rotation;
+			maths::Vec3f position;
 
 		public:
 
@@ -103,10 +102,10 @@ namespace clockwork {
 
 		public:
 
-			//ggf private machen(auch in normalcube) | copybuffer muss vorher gebindet werden und es wird ja eh automatisch gemacht vor dem rendern
+			//ggf private machen(auch in normalcube) | sollte immer aufgerufen werden, nachdem vektoren verändert wurden
 			void updateModelMatrix() noexcept;
 
-			//wird nur von transparentmanager aufgerufen, auch ggf private | copybuffer muss auch vorher bound sein
+			//wird nur von transparentmanager aufgerufen, auch ggf private |  copybuffer muss vorher gebindet werden und es wird ja eh automatisch gemacht vor dem rendern
 			void updateBufferData() noexcept;
 
 
@@ -141,24 +140,18 @@ namespace clockwork {
 			every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures*/
 			void setTexture(const std::string& imagePath) noexcept;
 
-			/*hides, or shows the instance/object of the model, by setting its modelmatrix and textureid in the buffer(gpu side) of the cubemanager to the actual modelmatrix and textureid of the instancedcube for true
-			or setting them to 0 in the buffer for false | use add()/remove() for few changes with many models to hide/show objects/instances and use setVisible(true/false) for many changes with few models
-			BUT setvisible will not give a huge performance boost, because the render call will still happen | add/remove will give a performanceboost, because the render call will not happen*/
-			void setVisible(bool visible) noexcept;
-
 			const utils::Image& getTextureImage() noexcept;
+
+			void changeRenderer(Renderer* renderer) noexcept;///changerenderer auch in normalcube machen
 
 			const Renderer* const getRenderer() const noexcept;
 
 		public:
-			inline const bool isVisible() const noexcept { return m_visible;}
 			inline const maths::Mat4f& getModelMatrix() const noexcept {return m_modelMatrix;}
 			inline const bool isAdded() const noexcept {return m_pos!=-1;}
 			inline const int getTextureId() const noexcept {return m_textureId;}
-			inline const bool hasChanged() const noexcept {return m_changed;}
-			//noch changerenderer machen, der guckt ob added ist, dann im aktuellen removed, im neuen added | cubemanager pointer ändert und natürlich im richtigen hinzufügt 
-		
-			inline const maths::Vec3f& getPosition() const noexcept{return m_translation;}
+			inline const bool hasChanged() const noexcept {return m_changed;}//wahrscheinlich wird es nicht gebraucht
+	
 
 		};
 

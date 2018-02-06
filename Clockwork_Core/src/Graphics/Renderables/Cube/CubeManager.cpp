@@ -202,7 +202,7 @@ namespace clockwork {
 			m_modelBuffer.bind();
 			for ( auto cube : m_instanceCubes )
 			{
-				cube->updateModelMatrix();
+				cube->updateBufferData();
 			}
 			m_modelBuffer.copy(m_copyBuffer);
 			m_instanceArray.bind();
@@ -216,7 +216,6 @@ namespace clockwork {
 			{
 				if ( cube->m_visible )
 				{
-					cube->updateModelMatrix();
 					m_textures.at(cube->m_textureId).bind();
 					cube->render();
 					m_indexBuffer.draw();

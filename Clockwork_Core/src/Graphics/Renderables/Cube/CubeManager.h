@@ -37,12 +37,11 @@ namespace clockwork {
 			friend class InstancedCube;
 			friend class NormalCube;
 			friend class Renderer;
-			friend struct InstancedCubeCompare;
 			friend struct NormalCubeCompare;
 			using floatarr = float[8 * 4 * 6];
 			using uchararr = unsigned  char[36];
 
-		protected:
+		protected://wieder private machen und nnicht protected
 			VertexArray m_instanceArray;
 			VertexArray m_normalArray;
 			VertexBuffer m_vertexBuffer;

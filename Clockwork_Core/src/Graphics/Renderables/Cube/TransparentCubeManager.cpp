@@ -21,19 +21,7 @@
 namespace clockwork {
 	namespace graphics {
 
-		struct InstancedCubeCompare
-		{
-			TransparentCubeManager* m_manager;
-			InstancedCubeCompare(TransparentCubeManager* manager)
-				:m_manager(manager)
-			{}
-			inline bool operator()(InstancedCube* ptr1, InstancedCube* ptr2)
-			{
-				return ptr1->getPosition().distance(( *m_manager->m_renderer->m_currentCamera )->getPosition()) > ptr2->getPosition().distance(( *m_manager->m_renderer->m_currentCamera )->getPosition());
-			}
-		};
-
-		struct NormalCubeCompare
+		struct NormalCubeCompare//namen und alle prototypes ändern zu TransparentCubeCompare
 		{
 			TransparentCubeManager* m_manager;
 			NormalCubeCompare(TransparentCubeManager* manager)
@@ -41,7 +29,7 @@ namespace clockwork {
 			{}
 			inline bool operator()(NormalCube* ptr1, NormalCube* ptr2)
 			{
-				return ptr1->getPosition().distance(( *m_manager->m_renderer->m_currentCamera )->getPosition()) > ptr2->getPosition().distance(( *m_manager->m_renderer->m_currentCamera )->getPosition());
+				return ptr1->position.distance(( *m_manager->m_renderer->m_currentCamera )->getPosition()) > ptr2->position.distance(( *m_manager->m_renderer->m_currentCamera )->getPosition());
 			}
 		};
 

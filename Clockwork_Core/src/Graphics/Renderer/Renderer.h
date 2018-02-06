@@ -32,7 +32,6 @@ namespace clockwork {
 			friend class NormalCube;
 			friend class CubeManager;
 			friend class TransparentCubeManager;
-			friend struct InstancedCubeCompare;
 			friend struct NormalCubeCompare;
 
 		private:
@@ -136,12 +135,14 @@ namespace clockwork {
 				glEnable(GL_CULL_FACE);
 				m_instanceShader->enable();
 				(*m_currentCamera)->update(m_instanceShader);//so ähnlich dann hier die verschiedenen modelle vorbereiten, dann texturen und dann positionen, etc schicken
-				cubeManager.renderInstancedCubes();
+				if ( cubeManager.m_instanceCubes.size() != 0 )
+					cubeManager.renderInstancedCubes();
 
 
 				m_normalShader->enable();
 				( *m_currentCamera )->update(m_normalShader);
-				cubeManager.renderNormalCubes();
+				if ( cubeManager.m_normalCubes.size() != 0 )
+					cubeManager.renderNormalCubes();
 
 
 				terrain.render(m_normalShader);
@@ -151,11 +152,9 @@ namespace clockwork {
 			{
 				//ggf culling deaktivieren für transparent sachen 
 				glDisable(GL_CULL_FACE);
-				m_instanceShader->enable();
-				transparentCubeManager.renderInstancedCubes();
 
 				m_normalShader->enable();
-				transparentCubeManager.renderNormalCubes();
+				transparentCubeManager.renderNormalCubes();//hier vom normalen cubemanager erste testen ob liste von transparentcubes size ungleich null ist, dann renderTransparentCubes aufrufen 
 			}
 
 			void updateProjection() noexcept

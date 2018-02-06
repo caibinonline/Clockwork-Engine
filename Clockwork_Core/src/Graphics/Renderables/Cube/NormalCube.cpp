@@ -19,7 +19,7 @@ namespace clockwork {
 
 
 		NormalCube::NormalCube(Renderer* renderer, bool transparent) noexcept
-			: m_textureId(0), m_modelMatrix(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), m_visible(false), m_transparent(transparent), m_changed(false), m_pos(-1)
+			: m_textureId(0), m_modelMatrix(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), m_visible(false), m_transparent(transparent), m_pos(-1)
 		{
 			if ( transparent )
 				m_manager = &renderer->transparentCubeManager;
@@ -28,7 +28,7 @@ namespace clockwork {
 		}
 
 		NormalCube::NormalCube(int textureId, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer, bool transparent) noexcept
-			: m_textureId(textureId), m_modelMatrix(maths::Mat4f::scaling(size).rotateXD(rotation.x).rotateYD(rotation.y).rotateZD(rotation.z).translate(position)), m_visible(true), m_transparent(transparent), m_pos(-1)
+			: m_textureId(textureId), size(size), rotation(rotation), position(position), m_visible(true), m_transparent(transparent), m_pos(-1)
 		{
 			if ( transparent )
 				m_manager = &renderer->transparentCubeManager;
@@ -38,10 +38,11 @@ namespace clockwork {
 			if ( m_manager->m_textures.size() <= textureId )
 				std::cout << "Error NormalCube::NormalCube(): TextureId is not in the texture list of the cubemanager" << std::endl;
 #endif
+			updateModelMatrix();
 		}
 
 		NormalCube::NormalCube(const std::string& imagePath, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept
-			: m_modelMatrix(maths::Mat4f::scaling(size).rotateXD(rotation.x).rotateYD(rotation.y).rotateZD(rotation.z).translate(position)), m_visible(true), m_pos(-1)
+			: size(size), rotation(rotation), position(position), m_visible(true), m_pos(-1)
 		{
 			if ( renderer->cubeManager.containsNormalTexture(imagePath) )
 			{
@@ -68,10 +69,11 @@ namespace clockwork {
 				m_textureId = m_manager->getNormalTextureId(image);
 			}
 			m_transparent = m_manager->m_transparent;
+			updateModelMatrix();
 		}
 
 		NormalCube::NormalCube(const utils::Image& image, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept
-			: m_modelMatrix(maths::Mat4f::scaling(size).rotateXD(rotation.x).rotateYD(rotation.y).rotateZD(rotation.z).translate(position)), m_visible(true), m_pos(-1)
+			: size(size), rotation(rotation), position(position), m_visible(true), m_pos(-1)
 		{
 			if ( image.hasAlpha() )
 				m_manager = &renderer->transparentCubeManager;
@@ -80,6 +82,7 @@ namespace clockwork {
 
 			m_textureId = m_manager->getNormalTextureId(image);
 			m_transparent = m_manager->m_transparent;
+			updateModelMatrix();
 		}
 
 		NormalCube::~NormalCube() noexcept
@@ -130,18 +133,14 @@ namespace clockwork {
 
 		void NormalCube::updateModelMatrix() noexcept
 		{
-			if ( m_changed )
-			{
-				m_modelMatrix = maths::Mat4f::scaling(m_scaling);
-				if ( m_rotation.x > 0 )
-					m_modelMatrix.rotateXD(m_rotation.x);
-				if ( m_rotation.y > 0 )
-					m_modelMatrix.rotateYD(m_rotation.y);
-				if ( m_rotation.z > 0 )
-					m_modelMatrix.rotateZD(m_rotation.z);
-				m_modelMatrix.translate(m_translation);
-				m_changed = false;
-			}
+			m_modelMatrix = maths::Mat4f::scaling(size);
+			if ( rotation.x > 0 )
+				m_modelMatrix.rotateXD(rotation.x);
+			if ( rotation.y > 0 )
+				m_modelMatrix.rotateYD(rotation.y);
+			if ( rotation.z > 0 )
+				m_modelMatrix.rotateZD(rotation.z);
+			m_modelMatrix.translate(position);
 		}
 
 		void NormalCube::remove() noexcept
