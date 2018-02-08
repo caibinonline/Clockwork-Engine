@@ -1,5 +1,5 @@
 /*************************************************************************
-* Clockwork Engine
+* Clockwork-Engine
 * A C++/Opengl/GLFW3 game engine
 * Website: clock-work.tk
 *------------------------------------------------------------------------
@@ -34,9 +34,9 @@ namespace clockwork {
 		:m_running(true), m_currentState(nullptr), m_passedTime { 0 }
 	{
 #if CLOCKWORK_DEBUG
-		std::cout << "Clockwork Engine Debug Mode" << std::endl;
+		std::cout << "Clockwork-Engine Debug Mode" << std::endl;
 #else
-		std::cout << "Clockwork Engine Release Mode" << std::endl;
+		std::cout << "Clockwork-Engine Release Mode" << std::endl;
 #endif
 		clockwork::maths::initMaths();
 		graphics::Window::init();//hier ggf noch andere libs initialisieren, oder im window initialisieren | modelloader, fonts, etc

@@ -1,6 +1,6 @@
 #pragma once
 /*************************************************************************
-* Clockwork Engine
+* Clockwork-Engine
 * A C++/Opengl/GLFW3 game engine
 * Website: clock-work.tk
 *------------------------------------------------------------------------

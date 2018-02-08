@@ -1,5 +1,5 @@
 /*************************************************************************
-* Clockwork Engine
+* Clockwork-Engine
 * A C++/Opengl/GLFW3 game engine
 * Website: clock-work.tk
 *------------------------------------------------------------------------
@@ -17,7 +17,7 @@
 
 int main()
 {
-	clockwork::engine = new clockwork::Engine("Clockwork Engine");
+	clockwork::engine = new clockwork::Engine("Clockwork-Engine");
 	clockwork::engine->start();
 	delete clockwork::engine;
 	
