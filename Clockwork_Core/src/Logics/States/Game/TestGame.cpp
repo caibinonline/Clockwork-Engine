@@ -36,8 +36,6 @@
 namespace clockwork {
 	namespace logics {
 
-#define instancing 1
-
 		TestGame::TestGame() noexcept
 		{
 
@@ -84,14 +82,17 @@ namespace clockwork {
 
 			std::srand(engine->getWindow()->getTimer() * 10);
 
-			for ( int i = 0; i < 1000; ++i )//10000 objects: normal 300fps, instancing 2300fps | 1000objects: normal 2000fps, instancing 5000fps | 100 objects: normal 5500fps, instancing 6100fps | 10 objects: normal 5500fps, instancing 5500fps | 1 object: normal 6300fps, instancing 6100fps
+			for ( int i = 0; i < 100; ++i )//10000 objects: normal 300fps, instancing 2300fps | 1000objects: normal 2000fps, instancing 5000fps | 100 objects: normal 5500fps, instancing 6100fps | 10 objects: normal 5500fps, instancing 5500fps | 1 object: normal 6300fps, instancing 6100fps
 			{
 				maths::Vec3f pos = maths::Vec3f(-( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10);
-#if instancing
 				graphics::InstancedCube* inst = new graphics::InstancedCube(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, m_renderer);
-#else 
-				NormalCube* inst = new NormalCube(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, m_renderer, false);
-#endif
+				inst->add();
+			}
+
+			for ( int i = 0; i < 100; ++i )
+			{
+				maths::Vec3f pos = maths::Vec3f(-( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10);
+				graphics::NormalCube* inst = new graphics::NormalCube("res/Images/transparent.png", maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, m_renderer);
 				inst->add();
 			}
 
@@ -178,7 +179,7 @@ namespace clockwork {
 					graphics::NormalCube* inst2 = new graphics::NormalCube(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos2, m_renderer, false);
 					inst2->add();
 
-					graphics::NormalCube* inst3 = new graphics::NormalCube("res/Images/transparent.png", maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos3, m_renderer);
+					graphics::NormalCube* inst3 = new graphics::NormalCube(0, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos3, m_renderer, true);
 					inst3->add();
 				}
 				else if ( button == CLOCKWORK_MOUSE_BUTTON_2 )

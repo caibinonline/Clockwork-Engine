@@ -18,12 +18,12 @@ namespace clockwork {
 	namespace graphics {
 		
 		InstancedCube::InstancedCube(Renderer* renderer) noexcept
-			: m_textureId(0), m_modelMatrix(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0), m_changed(false), m_pos(-1), m_manager(&renderer->cubeManager)
+			: Renderable(), m_changed(false), m_pos(-1), m_manager(&renderer->cubeManager)
 		{
 		}
 
 		InstancedCube::InstancedCube(int textureId, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept
-			: m_textureId(textureId), size(size), rotation(rotation), position(position), m_changed(false), m_pos(-1), m_manager(&renderer->cubeManager)
+			: Renderable(textureId, size, rotation, position), m_changed(false), m_pos(-1), m_manager(&renderer->cubeManager)
 		{
 #if CLOCKWORK_DEBUG
 			if ( m_manager->m_textureArray.getTextureCount() <= textureId )
@@ -33,13 +33,13 @@ namespace clockwork {
 		}
 
 		InstancedCube::InstancedCube(const std::string& imagePath, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept
-			: m_textureId(renderer->cubeManager.m_textureArray.getTextureId(imagePath)), size(size), rotation(rotation), position(position), m_changed(false), m_pos(-1), m_manager(&renderer->cubeManager)
+			: Renderable(renderer->cubeManager.m_textureArray.getTextureId(imagePath), size, rotation, position), m_changed(false), m_pos(-1), m_manager(&renderer->cubeManager)
 		{
 			updateModelMatrix();
 		}
 
 		InstancedCube::InstancedCube(const utils::Image& image, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept
-			: m_textureId(renderer->cubeManager.m_textureArray.getTextureId(image)), size(size), rotation(rotation), position(position), m_changed(false), m_pos(-1), m_manager(&renderer->cubeManager)
+			: Renderable(renderer->cubeManager.m_textureArray.getTextureId(image), size, rotation, position), m_changed(false), m_pos(-1), m_manager(&renderer->cubeManager)
 		{
 			updateModelMatrix();
 		}
@@ -51,7 +51,7 @@ namespace clockwork {
 		}
 
 		InstancedCube::InstancedCube(InstancedCube&& other) noexcept
-			: m_textureId(other.m_textureId), m_modelMatrix(other.m_modelMatrix), m_changed(true), m_pos(other.m_pos), m_manager(other.m_manager), size(other.size), rotation(other.rotation), position(other.position)
+			: Renderable(std::move(other)), m_changed(true), m_pos(other.m_pos), m_manager(other.m_manager)
 		{ 
 			other.m_pos = -1;
 			other.m_manager = nullptr;
@@ -63,14 +63,10 @@ namespace clockwork {
 		{
 			if ( m_pos != -1 )
 				this->remove();
-			m_textureId = other.m_textureId;
-			m_modelMatrix = other.m_modelMatrix;
 			m_changed = true;
 			m_pos = other.m_pos;
 			m_manager = other.m_manager;
-			size = other.size;
-			rotation = other.rotation;
-			position = other.position;
+			Renderable::operator=(std::move(other));
 			other.m_pos = -1;
 			other.m_manager = nullptr;
 			if ( m_pos != -1 )

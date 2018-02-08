@@ -11,9 +11,7 @@
 * arising from the use of this software.
 * You can use this software under the following License: https://github.com/Clock-work/Clockwork-Engine/blob/master/LICENSE
 *************************************************************************/
-#include "src\Maths\Vec3.h"
-#include "src\Maths\Mat4x4.h"
-#include "src\Utils\Image.h"
+#include "src\Graphics\Renderables\Renderable.h"
 
 namespace clockwork {
 	namespace graphics {
@@ -29,23 +27,15 @@ namespace clockwork {
 		every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures*/
 		///NEUE KOMMENTARE | KANN NICHT TRANSPARENT SEIN
 		class InstancedCube
+			: public Renderable
 		{
 
 		private:
 			friend class CubeManager;
-			friend class TransparentCubeManager;
 			friend class Renderer;
-			/*the data of each instance/object of the model(textureid for the texturearray and modelmatrix fro the transformation in the world*/
-			int m_textureId;///später wahrscheinlich materialid mit materialarray benutzen | dann auch materialarray, etc machen 
-			maths::Mat4f m_modelMatrix;
+			int m_pos;
 			bool m_changed;
-			int m_pos;//noch isadded machen und dann mpos!=-1 ausgeben als bool 
 			CubeManager* m_manager;
-
-		public:
-			maths::Vec3f size;
-			maths::Vec3f rotation;
-			maths::Vec3f position;
 
 		public:
 
@@ -147,8 +137,6 @@ namespace clockwork {
 			const Renderer* const getRenderer() const noexcept;
 
 		public:
-			inline const maths::Mat4f& getModelMatrix() const noexcept {return m_modelMatrix;}
-			inline const int getTextureId() const noexcept {return m_textureId;}
 			inline const bool isAdded() const noexcept {return m_pos!=-1;}
 			inline const bool hasChanged() const noexcept {return m_changed;}//wahrscheinlich wird es nicht gebraucht
 	

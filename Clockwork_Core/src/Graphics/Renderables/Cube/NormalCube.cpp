@@ -19,26 +19,26 @@ namespace clockwork {
 
 
 		NormalCube::NormalCube(Renderer* renderer, bool transparent) noexcept
-			: m_textureId(0), m_modelMatrix(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), m_visible(false), m_transparent(transparent), m_pos(-1), m_manager(&renderer->cubeManager)
+			: Renderable(), m_visible(false), m_transparent(transparent), m_pos(-1), m_manager(&renderer->cubeManager)
 		{
 		}
 
 		NormalCube::NormalCube(int textureId, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer, bool transparent) noexcept
-			: m_textureId(textureId), size(size), rotation(rotation), position(position), m_visible(true), m_transparent(transparent), m_pos(-1), m_manager(&renderer->cubeManager)
+			: Renderable(textureId, size, rotation, position), m_visible(true), m_transparent(transparent), m_pos(-1), m_manager(&renderer->cubeManager)
 		{
 #if CLOCKWORK_DEBUG
 			if ( m_transparent )
 					if ( m_manager->m_transparentTextures.size() <= textureId )
 						std::cout << "Error NormalCube::NormalCube(): TextureId is not in the transparent texture list of the cubemanager" << std::endl;
 				else
-					if ( m_manager->m_textures.size() <= textureId )
+					if ( m_manager->m_normalTextures.size() <= textureId )
 						std::cout << "Error NormalCube::NormalCube(): TextureId is not in the texture list of the cubemanager" << std::endl;
 #endif
 			updateModelMatrix();
 		}
 
 		NormalCube::NormalCube(const std::string& imagePath, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept
-			: size(size), rotation(rotation), position(position), m_visible(true), m_pos(-1), m_manager(&renderer->cubeManager)
+			: Renderable(0, size, rotation, position), m_visible(true), m_pos(-1), m_manager(&renderer->cubeManager)
 		{
 			if ( m_manager->containsNormalTexture(imagePath) )
 			{
@@ -69,7 +69,7 @@ namespace clockwork {
 		}
 
 		NormalCube::NormalCube(const utils::Image& image, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept
-			: size(size), rotation(rotation), position(position), m_visible(true), m_pos(-1), m_manager(&renderer->cubeManager)
+			: Renderable(0, size, rotation, position), m_visible(true), m_pos(-1), m_manager(&renderer->cubeManager)
 		{
 			if ( image.hasAlpha() )
 			{
@@ -91,13 +91,13 @@ namespace clockwork {
 		}
 
 		NormalCube::NormalCube(NormalCube&& other) noexcept
-			: m_textureId(other.m_textureId), m_modelMatrix(other.m_modelMatrix), m_visible(other.m_visible), m_transparent(other.m_transparent), m_pos(other.m_pos), m_manager(other.m_manager), size(other.size), rotation(other.rotation), position(other.position)
+			: Renderable(std::move(other)), m_visible(other.m_visible), m_transparent(other.m_transparent), m_pos(other.m_pos), m_manager(other.m_manager)
 		{
 			other.m_pos = -1;
 			other.m_manager = nullptr;
 			if ( m_pos != -1 )
 			{
-				if(m_transparent )
+				if ( m_transparent )
 					m_manager->m_transparentCubes.at(m_pos) = this;
 				else
 					m_manager->m_normalCubes.at(m_pos) = this;
@@ -108,15 +108,11 @@ namespace clockwork {
 		{
 			if ( m_pos != -1 )
 				this->remove();
-			m_textureId = other.m_textureId;
-			m_modelMatrix = other.m_modelMatrix;
 			m_visible = other.m_visible;
 			m_transparent = other.m_transparent;
 			m_pos = other.m_pos;
 			m_manager = other.m_manager;
-			size = other.size;
-			rotation = other.rotation;
-			position = other.position;
+			Renderable::operator=(std::move(other));
 			other.m_pos = -1;
 			other.m_manager = nullptr;
 			if ( m_pos != -1 )
@@ -131,7 +127,7 @@ namespace clockwork {
 
 		void NormalCube::render() noexcept
 		{
-			Shader* shader = m_manager->m_renderer->m_normalShader;
+			Shader* shader = m_manager->m_renderer->normalShader;
 			shader->setUniform("u_model",m_modelMatrix);
 		}
 
@@ -206,7 +202,7 @@ namespace clockwork {
 				if ( m_manager->m_transparentTextures.size() <= textureId )
 					std::cout << "Error NormalCube::setTexture(): TextureId is not in the texture list of the cubemanager" << std::endl;
 			else
-				if ( m_manager->m_textures.size() <= textureId )
+				if ( m_manager->m_normalTextures.size() <= textureId )
 					std::cout << "Error NormalCube::setTexture(): TextureId is not in the texture list of the cubemanager" << std::endl;
 #endif
 		}
@@ -295,7 +291,7 @@ namespace clockwork {
 			if(m_transparent )
 				return m_manager->m_transparentTextures.at(m_textureId).getImage();
 			else
-				return m_manager->m_textures.at(m_textureId).getImage();
+				return m_manager->m_normalTextures.at(m_textureId).getImage();
 
 		}
 

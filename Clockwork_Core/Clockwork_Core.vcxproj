@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Graphics\Renderables\Renderable.cpp" />
     <ClCompile Include="src\Core\Engine.cpp" />
     <ClCompile Include="src\Core\ExampleGame.cpp" />
     <ClCompile Include="src\Core\glad.c" />
@@ -144,6 +145,7 @@
     <ClCompile Include="src\Utils\Image.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Graphics\Renderables\Renderable.h" />
     <ClInclude Include="src\Core\Engine.h" />
     <ClInclude Include="src\Core\ExampleGame.h" />
     <ClInclude Include="src\Core\Window.h" />

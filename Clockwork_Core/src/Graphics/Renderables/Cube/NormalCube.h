@@ -11,9 +11,7 @@
 * arising from the use of this software.
 * You can use this software under the following License: https://github.com/Clock-work/Clockwork-Engine/blob/master/LICENSE
 *************************************************************************/
-#include "src\Maths\Vec3.h"
-#include "src\Maths\Mat4x4.h"
-#include "src\Utils\Image.h"
+#include "src\Graphics\Renderables\Renderable.h"
 
 namespace clockwork {
 	namespace graphics {
@@ -23,26 +21,16 @@ namespace clockwork {
 		class Shader;
 
 		class NormalCube
+			: public Renderable
 		{
 
 		protected:
 			friend class CubeManager;
-			friend class TransparentCubeManager;
 			friend class Renderer;
-			friend struct InstancedCubeCompare;
-			friend struct NormalCubeCompare;
-			int m_textureId;///später wahrscheinlich materialid mit materialarray benutzen | dann auch materialarray, etc machen 
-			maths::Mat4f m_modelMatrix;
+			int m_pos;
 			bool m_visible;
 			bool m_transparent;
-			int m_pos;
 			CubeManager* m_manager;
-
-		public:
-			maths::Vec3f size;
-			maths::Vec3f rotation;
-			maths::Vec3f position;
-
 
 		public:
 			explicit NormalCube(Renderer* renderer, bool transparent) noexcept;
@@ -90,8 +78,6 @@ namespace clockwork {
 			const Renderer* const getRenderer() const noexcept;
 
 		public:
-			inline const maths::Mat4f& getModelMatrix() const noexcept {return m_modelMatrix;}
-			inline const int getTextureId() const noexcept {return m_textureId;}
 			inline const bool isAdded() const noexcept {return m_pos!=-1;}
 			inline const bool isVisible() const noexcept { return m_visible;}
 			inline const bool isTransparent() const noexcept {return m_transparent;}

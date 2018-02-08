@@ -19,7 +19,7 @@
 namespace clockwork {
 	namespace graphics {
 
-		struct TransparentCubeCompare//namen und alle prototypes ändern zu TransparentCubeCompare
+		struct TransparentCubeCompare
 		{
 			CubeManager* m_manager;
 			TransparentCubeCompare(CubeManager* manager)
@@ -57,35 +57,31 @@ namespace clockwork {
 					1.0f, 1.0f, -1.0f,		0.0f, 1.0f,		0.0f, 0.0f, -1.0f,
 					-1.0f, -1.0f, -1.0f,	1.0f, 0.0f,		0.0f, 0.0f, -1.0f,
 					1.0f, -1.0f, -1.0f,		0.0f, 0.0f,		0.0f, 0.0f, -1.0f,
-
 					//bot								
 					-1.0f, -1.0f, -1.0f,    0.0f, 0.0f,     0.0f, -1.0f, 0.0f,//12
 					1.0f, -1.0f, -1.0f,    1.0f, 0.0f,     0.0f, -1.0f, 0.0f,
 					-1.0f, -1.0f,  1.0f,    0.0f, 1.0f,     0.0f, -1.0f, 0.0f,
 					1.0f, -1.0f,  1.0f,    1.0f, 1.0f,     0.0f, -1.0f, 0.0f,
-
 					//right			    			    
 					1.0f, -1.0f,  1.0f,    0.0f, 0.0f,     1.0f,  0.0f, 0.0f,//16
 					1.0f, -1.0f, -1.0f,    1.0f, 0.0f,     1.0f,  0.0f, 0.0f,
 					1.0f,  1.0f,  1.0f,    0.0f, 1.0f,     1.0f,  0.0f, 0.0f,
 					1.0f,  1.0f, -1.0f,    1.0f, 1.0f,     1.0f, 0.0f, 0.0f,
-
 					//left				    			    
 					-1.0f, -1.0f, -1.0f,    0.0f, 0.0f,     -1.0f, 0.0f, 0.0f,//20
 					-1.0f, -1.0f, 1.0f,	    1.0f, 0.0f,     -1.0f, 0.0f, 0.0f,
 					-1.0f, 1.0f, -1.0f,	    0.0f, 1.0f,     -1.0f, 0.0f, 0.0f,
-					-1.0f, 1.0f, 1.0f,	    1.0f, 1.0f,     -1.0f, 0.0f, 0.0f,
-
+					-1.0f, 1.0f, 1.0f,	    1.0f, 1.0f,     -1.0f, 0.0f, 0.0f
 				}, 8 * 4 * 6 * sizeof(float)
 				);
 			m_modelBuffer = VertexBuffer(nullptr, reserved * ( sizeof(int) + sizeof(maths::Mat4f) ), GL_STREAM_DRAW);
 			m_indexBuffer = IndexBuffer<unsigned char>(uchararr {//unsigned chars
-				0,1,2,		2,1,3,
-				4,5,6,		6,5,7,
-				8,9,10,		10,9,11,
-				12,13,14,	14,13,15,
-				16,17,18,	18,17,19,
-				20,21,22,	22,21,23
+				0,1,2,		2,1,3,//front
+				4,5,6,		6,5,7,//top
+				8,9,10,		10,9,11,//back
+				12,13,14,	14,13,15,//bot
+				16,17,18,	18,17,19,//right
+				20,21,22,	22,21,23//left
 				}, 36//6 indices
 				);
 			m_vertexBuffer.bind();
@@ -111,7 +107,9 @@ namespace clockwork {
 			m_copyBuffer = CopyBuffer(nullptr, reserved * ( sizeof(int) + sizeof(maths::Mat4f) ), GL_STREAM_DRAW);
 			m_instanceCubes.reserve(reserved);
 			m_normalCubes.reserve(reserved);
-			m_textures.reserve(10);
+			m_transparentCubes.reserve(reserved);
+			m_transparentTextures.reserve(10);
+			m_normalTextures.reserve(10);
 		}
 
 		CubeManager::~CubeManager() noexcept
@@ -119,9 +117,21 @@ namespace clockwork {
 
 		CubeManager::CubeManager(CubeManager&& other) noexcept
 			: m_instanceArray(std::move(other.m_instanceArray)), m_normalArray(std::move(other.m_normalArray)), m_indexBuffer(std::move(other.m_indexBuffer)), m_vertexBuffer(std::move(other.m_vertexBuffer)), m_modelBuffer(std::move(other.m_modelBuffer)),
-			m_copyBuffer(std::move(other.m_copyBuffer)), m_textureArray(std::move(other.m_textureArray)), m_textures(std::move(other.m_textures)), m_instanceCubes(std::move(other.m_instanceCubes)),
-			m_normalCubes(std::move(other.m_normalCubes)), m_renderer(other.m_renderer)
+			m_copyBuffer(std::move(other.m_copyBuffer)), m_textureArray(std::move(other.m_textureArray)), m_normalTextures(std::move(other.m_normalTextures)), m_transparentTextures(std::move(other.m_transparentTextures)), m_instanceCubes(std::move(other.m_instanceCubes)),
+			m_normalCubes(std::move(other.m_normalCubes)), m_transparentCubes(std::move(other.m_transparentCubes)), m_renderer(other.m_renderer)
 		{
+			for ( auto& cube : m_instanceCubes )
+			{
+				cube->m_manager = this;
+			}
+			for ( auto& cube : m_normalCubes )
+			{
+				cube->m_manager = this;
+			}
+			for ( auto& cube : m_transparentCubes )
+			{
+				cube->m_manager = this;
+			}
 			other.m_renderer = nullptr;
 		}
 
@@ -129,15 +139,29 @@ namespace clockwork {
 		{
 			m_instanceArray = std::move(other.m_instanceArray);//muss bei allen die pointer verschieben(auch bei den neuen) | also aus allen listen, etc 
 			m_normalArray = std::move(other.m_normalArray);
-			m_indexBuffer = std::move(other.m_indexBuffer);
 			m_vertexBuffer = std::move(other.m_vertexBuffer);
 			m_modelBuffer = std::move(other.m_modelBuffer);
 			m_copyBuffer = std::move(other.m_copyBuffer);
+			m_indexBuffer = std::move(other.m_indexBuffer);
 			m_textureArray = std::move(other.m_textureArray);
-			m_textures = std::move(other.m_textures);
+			m_normalTextures = std::move(other.m_normalTextures);
+			m_transparentTextures = std::move(other.m_transparentTextures);
 			m_instanceCubes = std::move(other.m_instanceCubes);
 			m_normalCubes = std::move(other.m_normalCubes);
+			m_transparentCubes = std::move(other.m_transparentCubes);
 			m_renderer = other.m_renderer;
+			for ( auto& cube : m_instanceCubes )
+			{
+				cube->m_manager = this;
+			}
+			for ( auto& cube : m_normalCubes )
+			{
+				cube->m_manager = this;
+			}
+			for ( auto& cube : m_transparentCubes )
+			{
+				cube->m_manager = this;
+			}
 			other.m_renderer = nullptr;
 			return *this;
 		}
@@ -149,23 +173,23 @@ namespace clockwork {
 				std::cout << "Error CubeManager::getNormalTextureId(): Image has no data" << std::endl;
 #endif
 #if CLOCKWORK_DEBUG
-			if ( m_textures.size() > 0 && m_textures.at(0).getImage().getSize() != image.getSize() )
+			if ( m_normalTextures.size() > 0 && m_normalTextures.at(0).getImage().getSize() != image.getSize() )
 				std::cout << "Error CubeManager::getNormalTextureId(): the new image has not the same size as the other images in the texture list" << std::endl;
 #endif 
-			for ( unsigned int i = 0; i < m_textures.size(); ++i )
+			for ( unsigned int i = 0; i < m_normalTextures.size(); ++i )
 			{
-				if ( m_textures.at(i).getImage().getFilepath() == image.getFilepath() )
+				if ( m_normalTextures.at(i).getImage().getFilepath() == image.getFilepath() )
 					return i;
 			}
-			m_textures.push_back(Texture2D(image));
-			return m_textures.size() - 1;
+			m_normalTextures.push_back(Texture2D(image));
+			return m_normalTextures.size() - 1;
 		}
 
 		int CubeManager::getNormalTextureId(const std::string& imagePath) noexcept
 		{
-			for ( unsigned int i = 0; i < m_textures.size(); ++i )
+			for ( unsigned int i = 0; i < m_normalTextures.size(); ++i )
 			{
-				if ( m_textures.at(i).getImage().getFilepath() == imagePath )
+				if ( m_normalTextures.at(i).getImage().getFilepath() == imagePath )
 					return i;
 			}
 			utils::Image image(imagePath);
@@ -175,11 +199,11 @@ namespace clockwork {
 				std::cout << "Error CubeManager::getNormalTextureId(): Image has no data" << std::endl;
 #endif
 #if CLOCKWORK_DEBUG
-			if ( m_textures.size() > 0 && m_textures.at(0).getImage().getSize() != image.getSize() )
+			if ( m_normalTextures.size() > 0 && m_normalTextures.at(0).getImage().getSize() != image.getSize() )
 				std::cout << "Error CubeManager::getNormalTextureId(): the new image has not the same size as the other images in the texture list" << std::endl;
 #endif 
-			m_textures.push_back(Texture2D(image));
-			return m_textures.size() - 1;
+			m_normalTextures.push_back(Texture2D(image));
+			return m_normalTextures.size() - 1;
 		}
 
 		int CubeManager::getTransparentTextureId(const utils::Image& image) noexcept
@@ -228,9 +252,9 @@ namespace clockwork {
 			if ( image.getData() == nullptr )
 				std::cout << "Error CubeManager::containsNormalTexture(): Image has no data" << std::endl;
 #endif
-			for ( unsigned int i = 0; i < m_textures.size(); ++i )
+			for ( unsigned int i = 0; i < m_normalTextures.size(); ++i )
 			{
-				if ( m_textures.at(i).getImage().getFilepath() == image.getFilepath() )
+				if ( m_normalTextures.at(i).getImage().getFilepath() == image.getFilepath() )
 					return true;
 			}
 			return false;
@@ -238,9 +262,9 @@ namespace clockwork {
 
 		int CubeManager::containsNormalTexture(const std::string& imagePath) noexcept
 		{
-			for ( unsigned int i = 0; i < m_textures.size(); ++i )
+			for ( unsigned int i = 0; i < m_normalTextures.size(); ++i )
 			{
-				if ( m_textures.at(i).getImage().getFilepath() == imagePath )
+				if ( m_normalTextures.at(i).getImage().getFilepath() == imagePath )
 					return true;
 			}
 			return false;
@@ -291,7 +315,7 @@ namespace clockwork {
 			{
 				if ( cube->m_visible )
 				{
-					m_textures.at(cube->m_textureId).bind();
+					m_normalTextures.at(cube->m_textureId).bind();
 					cube->render();
 					m_indexBuffer.draw();
 				}
@@ -312,11 +336,119 @@ namespace clockwork {
 					m_transparentTextures.at(cube->m_textureId).bind();
 					cube->render();
 
-					const maths::Vec3f& cameradirection = ( *m_renderer->m_currentCamera )->getPosition();
-					//hier testen ob die camera auf welche seiten zeigt 
+					maths::Vec3f distToCamera = ( *m_renderer->m_currentCamera )->getPosition() - cube->position;
 
+					if ( distToCamera.x > 0 )//camera is on the right side of the cube 
+						m_indexBuffer.drawParts(30, 6);//left
+					else//camera is on the left side of the cube
+						m_indexBuffer.drawParts(24, 6);//right
 
-					m_indexBuffer.draw();
+					if ( distToCamera.y > 0 )//camera is on the top side of the cube 
+						m_indexBuffer.drawParts(18, 6);//bot
+					else//camera is on the bot side of the cube
+						m_indexBuffer.drawParts(6, 6);//top
+
+					if ( distToCamera.z > 0 )//camera is on the front side of the cube 
+						m_indexBuffer.drawParts(12, 6);//back
+					else//camera is on the back side of the cube
+						m_indexBuffer.drawParts(0, 6);//front
+
+					if ( maths::abs(distToCamera.x) < maths::abs(distToCamera.y) )
+					{
+						if ( maths::abs(distToCamera.x) < maths::abs(distToCamera.z) )
+						{
+							if ( distToCamera.x > 0 )//camera is on the right side of the cube 
+								m_indexBuffer.drawParts(24, 6);//right
+							else//camera is on the left side of the cube
+								m_indexBuffer.drawParts(30, 6);//left
+
+							if ( maths::abs(distToCamera.y) < maths::abs(distToCamera.z) )
+							{
+								if ( distToCamera.y > 0 )//camera is on the top side of the cube 
+									m_indexBuffer.drawParts(6, 6);//top
+								else//camera is on the bot side of the cube
+									m_indexBuffer.drawParts(18, 6);//bot
+								if ( distToCamera.z > 0 )//camera is on the front side of the cube 
+									m_indexBuffer.drawParts(0, 6);//front
+								else//camera is on the back side of the cube
+									m_indexBuffer.drawParts(12, 6);//back
+							}
+							else
+							{
+								if ( distToCamera.z > 0 )//camera is on the front side of the cube 
+									m_indexBuffer.drawParts(0, 6);//front
+								else//camera is on the back side of the cube
+									m_indexBuffer.drawParts(12, 6);//back
+								if ( distToCamera.y > 0 )//camera is on the top side of the cube 
+									m_indexBuffer.drawParts(6, 6);//top
+								else//camera is on the bot side of the cube
+									m_indexBuffer.drawParts(18, 6);//bot
+							}
+						}
+						else
+						{
+							if ( distToCamera.z > 0 )//camera is on the front side of the cube 
+								m_indexBuffer.drawParts(0, 6);//front
+							else//camera is on the back side of the cube
+								m_indexBuffer.drawParts(12, 6);//back
+							if ( distToCamera.y > 0 )//camera is on the top side of the cube 
+								m_indexBuffer.drawParts(6, 6);//top
+							else//camera is on the bot side of the cube
+								m_indexBuffer.drawParts(18, 6);//bot
+							if ( distToCamera.x > 0 )//camera is on the right side of the cube 
+								m_indexBuffer.drawParts(24, 6);//right
+							else//camera is on the left side of the cube
+								m_indexBuffer.drawParts(30, 6);//left
+						}
+					}
+					else
+					{
+						if ( maths::abs(distToCamera.y) < maths::abs(distToCamera.z) )
+						{
+							if ( distToCamera.y > 0 )//camera is on the top side of the cube 
+								m_indexBuffer.drawParts(6, 6);//top
+							else//camera is on the bot side of the cube
+								m_indexBuffer.drawParts(18, 6);//bot
+
+							if ( maths::abs(distToCamera.x) < maths::abs(distToCamera.z) )
+							{
+								if ( distToCamera.x > 0 )//camera is on the right side of the cube 
+									m_indexBuffer.drawParts(24, 6);//right
+								else//camera is on the left side of the cube
+									m_indexBuffer.drawParts(30, 6);//left
+								if ( distToCamera.z > 0 )//camera is on the front side of the cube 
+									m_indexBuffer.drawParts(0, 6);//front
+								else//camera is on the back side of the cube
+									m_indexBuffer.drawParts(12, 6);//back
+							}
+							else
+							{
+								if ( distToCamera.z > 0 )//camera is on the front side of the cube 
+									m_indexBuffer.drawParts(0, 6);//front
+								else//camera is on the back side of the cube
+									m_indexBuffer.drawParts(12, 6);//back
+								if ( distToCamera.x > 0 )//camera is on the right side of the cube 
+									m_indexBuffer.drawParts(24, 6);//right
+								else//camera is on the left side of the cube
+									m_indexBuffer.drawParts(30, 6);//left
+							}
+						}
+						else
+						{
+							if ( distToCamera.z > 0 )//camera is on the front side of the cube 
+								m_indexBuffer.drawParts(0, 6);//front
+							else//camera is on the back side of the cube
+								m_indexBuffer.drawParts(12, 6);//back
+							if ( distToCamera.x > 0 )//camera is on the right side of the cube 
+								m_indexBuffer.drawParts(24, 6);//right
+							else//camera is on the left side of the cube
+								m_indexBuffer.drawParts(30, 6);//left
+							if ( distToCamera.y > 0 )//camera is on the top side of the cube 
+								m_indexBuffer.drawParts(6, 6);//top
+							else//camera is on the bot side of the cube
+								m_indexBuffer.drawParts(18, 6);//bot
+						}
+					}
 				}
 			}
 		}
@@ -392,11 +524,11 @@ namespace clockwork {
 			}
 			else
 			{
-				if ( m_textures.size() > 0 && m_textures.at(0).getImage().getSize() != image.getSize() )
+				if ( m_normalTextures.size() > 0 && m_normalTextures.at(0).getImage().getSize() != image.getSize() )
 					std::cout << "Error CubeManager::addNormalTexture(): the new image has not the same size as the other images in the texture list" << std::endl;
-				for ( unsigned int i = 0; i < m_textures.size(); ++i )
+				for ( unsigned int i = 0; i < m_normalTextures.size(); ++i )
 				{
-					if ( m_textures.at(i).getImage().getFilepath() == image.getFilepath() )
+					if ( m_normalTextures.at(i).getImage().getFilepath() == image.getFilepath() )
 					{
 						std::cout << "Error TextureArray2D::addTexture(): an image with the same imagepath already is in the texture list" << std::endl;
 						return;
@@ -407,15 +539,15 @@ namespace clockwork {
 			if(image.hasAlpha() )
 				m_transparentTextures.push_back(Texture2D(image));
 			else
-				m_textures.push_back(Texture2D(image));
+				m_normalTextures.push_back(Texture2D(image));
 		}
 
 		void CubeManager::addNormalTexture(const std::string& imagePath) noexcept
 		{
 #if CLOCKWORK_DEBUG
-			for ( unsigned int i = 0; i < m_textures.size(); ++i )
+			for ( unsigned int i = 0; i < m_normalTextures.size(); ++i )
 			{
-				if ( m_textures.at(i).getImage().getFilepath() == imagePath )
+				if ( m_normalTextures.at(i).getImage().getFilepath() == imagePath )
 				{
 					std::cout << "Error TextureArray2D::addTexture(): an image with the same imagepath already is in the texture list" << std::endl;
 					return;
@@ -441,14 +573,14 @@ namespace clockwork {
 				if ( m_transparentTextures.size() > 0 && m_transparentTextures.at(0).getImage().getSize() != image.getSize() )
 					std::cout << "Error CubeManager::addNormalTexture(): the new image has not the same size as the other images in the texture list" << std::endl;
 			else
-				if ( m_textures.size() > 0 && m_textures.at(0).getImage().getSize() != image.getSize() )
+				if ( m_normalTextures.size() > 0 && m_normalTextures.at(0).getImage().getSize() != image.getSize() )
 					std::cout << "Error CubeManager::addNormalTexture(): the new image has not the same size as the other images in the texture list" << std::endl;
 #endif 
 
 			if ( image.hasAlpha() )
 				m_transparentTextures.push_back(Texture2D(image));
 			else
-				m_textures.push_back(Texture2D(image));
+				m_normalTextures.push_back(Texture2D(image));
 		}
 
 		void CubeManager::addTextureBoth(const utils::Image& image) noexcept
@@ -516,10 +648,10 @@ namespace clockwork {
 			else
 			{
 #if CLOCKWORK_DEBUG
-				if ( m_textures.size() <= textureId )
+				if ( m_normalTextures.size() <= textureId )
 					std::cout << "Error CubeManager::removeNormalTexture(): TextureId is not in the texture list" << std::endl;
 #endif
-				m_textures.erase(m_textures.begin() + textureId);
+				m_normalTextures.erase(m_normalTextures.begin() + textureId);
 				for ( unsigned int i = 0; i < m_normalCubes.size(); ++i )
 				{
 					if ( m_normalCubes.at(i)->m_textureId == textureId )
@@ -536,9 +668,9 @@ namespace clockwork {
 
 		void CubeManager::removeNormalTexture(const utils::Image& image) noexcept
 		{
-			for ( unsigned int i = 0; i < m_textures.size(); ++i )
+			for ( unsigned int i = 0; i < m_normalTextures.size(); ++i )
 			{
-				if ( m_textures.at(i).getImage().getFilepath() == image.getFilepath() )
+				if ( m_normalTextures.at(i).getImage().getFilepath() == image.getFilepath() )
 				{
 					removeNormalTexture(i, false);
 					break;
@@ -556,9 +688,9 @@ namespace clockwork {
 
 		void CubeManager::removeNormalTexture(const std::string& imagePath) noexcept
 		{
-			for ( unsigned int i = 0; i < m_textures.size(); ++i )
+			for ( unsigned int i = 0; i < m_normalTextures.size(); ++i )
 			{
-				if ( m_textures.at(i).getImage().getFilepath() == imagePath )
+				if ( m_normalTextures.at(i).getImage().getFilepath() == imagePath )
 				{
 					removeNormalTexture(i, false);
 					break;

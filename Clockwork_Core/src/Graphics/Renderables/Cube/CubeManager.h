@@ -27,13 +27,14 @@ namespace clockwork {
 
 		class InstancedCube;
 		class NormalCube;
+		class Renderer;
 
 		/*
-		CAREFUL: the size of each image has to be the same as the size of the other images and the pixelkind has to be the same too(rgb/rgba = same transparancy level), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures*/
+		CAREFUL: the size of each image has to be the same as the size of the other images and the pixelkind has to be the same too(rgb/rgba = same transparancy level), so CAREFUL WITH TRANSPARENCY TEXUTRES | dont use them for instanced cubes */
 		class CubeManager
 		{
 
-		protected:
+		private:
 			friend class InstancedCube;
 			friend class NormalCube;
 			friend class Renderer;
@@ -41,7 +42,7 @@ namespace clockwork {
 			using floatarr = float[8 * 4 * 6];
 			using uchararr = unsigned  char[36];
 
-		protected://wieder private machen und nnicht protected
+		private:
 			VertexArray m_instanceArray;
 			VertexArray m_normalArray;
 			VertexBuffer m_vertexBuffer;
@@ -49,7 +50,7 @@ namespace clockwork {
 			CopyBuffer m_copyBuffer;
 			IndexBuffer<unsigned char> m_indexBuffer;
 			TextureArray2D m_textureArray;
-			std::vector<Texture2D> m_textures;
+			std::vector<Texture2D> m_normalTextures;
 			std::vector<Texture2D> m_transparentTextures;
 			std::vector<InstancedCube*> m_instanceCubes;
 			std::vector<NormalCube*> m_normalCubes;
@@ -100,7 +101,7 @@ namespace clockwork {
 
 			void removeLastNormalCube() noexcept;
 
-			void removeTransparentCubesAt(int pos) noexcept;
+			void removeTransparentCubesAt(int pos) noexcept;//seperat für jede liste
 
 			void removeLastTransparentCube() noexcept;
 
@@ -112,13 +113,15 @@ namespace clockwork {
 			/*adds an image/texture(that is not in the texturearray) to the texturearray2d of the cubemanager | dont add an image that already is in the texturearray, because then 2 identical images/textures would be in the texturearray2d
 			CAREFUL: the size of the new image has to be the same as the size of the other images and the pixelkind has to be the same too(rgb/rgba = same transparancy level), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures
 			@param[imagePath] the path of a texture/image that will be used for this model*/
+			///KEINE TRANSPARENTEN TEXTUREN 
 			void addInstancedTexture(const std::string& imagePath) noexcept;
 
+			//kann transparent sein, oder nicht | seperate texturelisten | textureid ist auch seperat für normal/transparent und natürlich auch für instanced
 			void addNormalTexture(const utils::Image& image) noexcept;
 
 			void addNormalTexture(const std::string& imagePath) noexcept;
 
-			void addTextureBoth(const utils::Image& image) noexcept;//texture zu beiden hinzugefügt, kommentieren
+			void addTextureBoth(const utils::Image& image) noexcept;//texture zu beiden hinzugefügt, kommentieren | normal und instanced, darf aber keine transparent texture sein 
 
 			void addTextureBoth( const std::string& imagePath ) noexcept;
 
@@ -142,6 +145,11 @@ namespace clockwork {
 
 			inline const unsigned int getTransparentCount() const noexcept {return m_transparentCubes.size();}
 
+			inline const unsigned int getInstancedTextureCount() const noexcept {return m_textureArray.getTextureCount();}
+
+			inline const unsigned int getNormalTextureCount() const noexcept {return m_normalTextures.size();}
+
+			inline const unsigned int getTransparentTextureCount() const noexcept {return m_transparentTextures.size();}
 		};
 
 	}
