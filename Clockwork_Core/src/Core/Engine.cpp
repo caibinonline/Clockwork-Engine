@@ -45,7 +45,7 @@ namespace clockwork {
 		graphics::openglParams();
 
 		//immer muss zuerst window erstellt werden und dann loading und dann states und dann kann in start alles verwendet werden
-		m_defaultLoading = new logics::Loading();//hier loadingstate und alle anderen state objekte erstellen, die game spezifischen initialisierungen finden dann in start statt, aber hier schonmal die objekte erstellen, damit auf sie zugegriffen werden kann | in den states die verschiedenen gameobjekt listen, etc ggf mit nullptr initialisieren und erst von loading mit start initialisieren lassen, z.b. chunksystem
+		//m_defaultLoading = new logics::Loading();//hier loadingstate und alle anderen state objekte erstellen, die game spezifischen initialisierungen finden dann in start statt, aber hier schonmal die objekte erstellen, damit auf sie zugegriffen werden kann | in den states die verschiedenen gameobjekt listen, etc ggf mit nullptr initialisieren und erst von loading mit start initialisieren lassen, z.b. chunksystem
 		//die richtigen game objekte, etc, die lange dauern werden hier nicht erstellt, sondern im loading state zusammen mit den grafischen elementen und der server initialisierung
 	}
 
@@ -63,6 +63,7 @@ namespace clockwork {
 		using namespace logics;
 
 		m_currentState = new TestGame();
+		m_currentState->State::enter();//hier als erstes state::enter aufrufen 
 		m_currentState->enter();
 
 		m_window->setVsync(1);//disable vsync and performancemode for most fps 
@@ -78,8 +79,8 @@ namespace clockwork {
 			timer += m_passedTime;///timefactor ist später im thread, der die threadgruppe steuert(und window updated/input updated) und dann wartet bis alle threads fertig sind, dann aktualisiert er den timefactor | vielleicht ai, etc nicht so oft we movement, etc kalkulieren | renderthread hat dann gleichen gameloop, ausser m_passedtime
 			lastTime = newTime;
 
-			m_currentState->tick();///hier physics sachen adden, wie movement, etc, aber noch zweite funktion ai, oder so und davon nur jede sekunde sachen zu den threadworkern adden und nicht jeden tick | das dann ggf im timer >= 1 if machen und dann mehrere update funktionen in objekten haben, einmal pro tick, einmal pro sekunde | ggf auch für network benutzen
-			m_currentState->render();
+			tick();///hier physics sachen adden, wie movement, etc, aber noch zweite funktion ai, oder so und davon nur jede sekunde sachen zu den threadworkern adden und nicht jeden tick | das dann ggf im timer >= 1 if machen und dann mehrere update funktionen in objekten haben, einmal pro tick, einmal pro sekunde | ggf auch für network benutzen
+			render();
 			m_window->updateWindow();
 			m_window->updateInput();
 #if CLOCKWORK_DEBUG
@@ -92,6 +93,7 @@ namespace clockwork {
 				steps = 0;
 				timer = 0;
 				std::cout << "FPS:" << fps << std::endl;//vielleicht immer laufend verändern mal ausprobieren anhand letztem loop und allen davor, damit es insgesamt flüssiger läuft
+				slowTick();
 			}
 
 			if ( performanceMode )
@@ -102,16 +104,31 @@ namespace clockwork {
 
 	}
 
+	void Engine::tick() noexcept
+	{
+		m_currentState->State::tick();
+		m_currentState->tick();
+	}
+	void Engine::slowTick() noexcept
+	{
+		m_currentState->State::slowTick();
+		m_currentState->slowTick();
+	}
+	void Engine::render() noexcept
+	{
+		m_currentState->State::render();
+		m_currentState->render();
+	}
 
 	void Engine::onResize(int width, int height, graphics::Window* window) noexcept
 	{
-		m_currentState->onResize(width, height, window);
 		LOG("RESIZE")LOG(width)LOG("___")LOG(height)LOG("\n")
+			m_currentState->State::onResize(width, height, window);
+		m_currentState->onResize(width, height, window);
 	}
 
 	void Engine::onKeyPress(int key, int scancode, int action, int mods, graphics::Window* window) noexcept
 	{
-		m_currentState->onKeyPress(key, scancode, action, mods, window);
 		if ( action == GLFW_PRESS )
 		{
 			if ( key == GLFW_KEY_F )
@@ -131,45 +148,55 @@ namespace clockwork {
 		{
 
 		}
+		m_currentState->State::onKeyPress(key, scancode, action, mods, window);
+		m_currentState->onKeyPress(key, scancode, action, mods, window);//immaer als letztes an state weiterleiten
 	}
 
 	void Engine::onCharTyped(unsigned int keycode, int mods, graphics::Window* window) noexcept
 	{
+		m_currentState->State::onCharTyped(keycode, mods, window);
 		m_currentState->onCharTyped(keycode, mods, window);
 	}
 
 	void Engine::onMousePress(int button, int action, int mods, graphics::Window* window) noexcept
 	{
+		m_currentState->State::onMousePress(button, action, mods, window);
 		m_currentState->onMousePress(button, action, mods, window);
 	}
 
 	void Engine::onMouseMove(double xoffset, double yoffset, graphics::Window* window) noexcept
 	{
+		m_currentState->State::onMouseMove(xoffset, yoffset, window);
 		m_currentState->onMouseMove(xoffset, yoffset, window);
 	}
 
 	void Engine::onScroll(int xoffset, int yoffset, graphics::Window* window) noexcept
 	{
+		m_currentState->State::onScroll(xoffset, yoffset, window);
 		m_currentState->onScroll(xoffset, yoffset, window);
 	}
 
 	void Engine::onCursorEnter(int entered, graphics::Window* window) noexcept
 	{
+		m_currentState->State::onCursorEnter(entered, window);
 		m_currentState->onCursorEnter(entered, window);
 	}
 
 	void Engine::onFileDrop(int count, const char** paths, graphics::Window* window) noexcept
 	{
+		m_currentState->State::onFileDrop(count, paths, window);
 		m_currentState->onFileDrop(count, paths, window);
 	}
 
 	void Engine::onFocus(int focus, graphics::Window* window) noexcept
 	{
+		m_currentState->State::onFocus(focus, window);
 		m_currentState->onFocus(focus, window);
 	}
 
 	void Engine::onClose(graphics::Window* window) noexcept
 	{
+		m_currentState->State::onClose(window);
 		m_currentState->onClose(window);
 		m_running = false;
 	}

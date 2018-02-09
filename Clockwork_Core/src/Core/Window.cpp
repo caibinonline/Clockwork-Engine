@@ -111,7 +111,6 @@ namespace clockwork {
 		void Window::resize_callback(GLFWwindow *window, int width, int height) noexcept
 		{
 			Window* win = static_cast<Window*>( glfwGetWindowUserPointer(window) );
-			engine->onResize(width, height, win);
 			win->m_width = width;
 			win->m_height = height;
 			int tempWidth, tempHeight;
@@ -119,6 +118,7 @@ namespace clockwork {
 			win->m_sizeRatioX = static_cast<double>( win->m_width ) / static_cast<double>( tempWidth );
 			win->m_sizeRatioY = static_cast<double>( win->m_height ) / static_cast<double>( tempHeight );
 			glViewport(0, 0, win->m_width, win->m_height);//viewport for opengl to use for drawing
+			engine->onResize(width, height, win);
 		}
 
 		void Window::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) noexcept

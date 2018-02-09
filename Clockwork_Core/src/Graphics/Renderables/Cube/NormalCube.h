@@ -52,6 +52,7 @@ namespace clockwork {
 			NormalCube& operator=(NormalCube&& other) noexcept;
 
 		public:
+			//kann durch virtual erben überschrieben werden | ggf shader anders bearbeiten vor dem rendern
 			virtual void render() noexcept;
 
 			void updateModelMatrix() noexcept;

@@ -40,6 +40,9 @@ namespace clockwork {
 
 	public:
 		virtual void start() noexcept;
+		virtual void tick() noexcept;
+		virtual void slowTick() noexcept;
+		virtual void render() noexcept;
 
 	public:
 		/*resize callback: gets called when the window size changes(fullscreen, setsize, etc) from main thread/updateInput()
@@ -126,7 +129,7 @@ namespace clockwork {
 		/*returns a pointer to the main window of the engine*/
 		graphics::Window* const getWindow() const noexcept {return m_window;}
 
-		logics::State* const getState() const noexcept {return m_currentState;}
+		logics::State* const getCurrentState() const noexcept {return m_currentState;}
 
 		/*the timefactor for operations that are relative to time, like moving objects, etc | its the time passed from the last loop(how long the last loop took)
 		its the time passed from the last loop multiplied with the count of loops that should happen per second(tps/fps)

@@ -1,3 +1,4 @@
+#pragma once
 /*************************************************************************
 * Clockwork-Engine
 * A C++/Opengl/GLFW3 game engine
@@ -10,7 +11,6 @@
 * arising from the use of this software.
 * You can use this software under the following License: https://github.com/Clock-work/Clockwork-Engine/blob/master/LICENSE
 *************************************************************************/
-#pragma once
 #include "src\Graphics\Renderer\Shader.h"
 #include "src\Logics\Camera\Camera.h"
 #include "src\Graphics\Renderables\Cube\InstancedCube.h"
@@ -41,6 +41,7 @@ namespace clockwork {
 		public:
 			Shader * instancedShader;
 			Shader* normalShader;
+
 			CubeManager cubeManager;
 
 
@@ -61,7 +62,7 @@ namespace clockwork {
 				prepare();
 			}
 
-			~Renderer() noexcept
+			virtual ~Renderer() noexcept
 			{
 				if ( m_deleteShader )
 				{
@@ -111,7 +112,7 @@ namespace clockwork {
 				normalShader->setUniform("u_texture1", 0);
 			}
 
-			void render() noexcept
+			virtual void render() noexcept
 			{
 				//und culling aktivieren für nicht transparent sachen
 				glEnable(GL_CULL_FACE);
@@ -131,7 +132,7 @@ namespace clockwork {
 
 			}
 
-			void renderTransparent() noexcept
+			virtual void renderTransparent() noexcept
 			{
 				//ggf culling deaktivieren für transparent sachen 
 				glDisable(GL_CULL_FACE);
@@ -141,7 +142,7 @@ namespace clockwork {
 				cubeManager.renderTransparentCubes();
 			}
 
-			void updateProjection() noexcept
+			virtual void updateProjection() noexcept
 			{
 				instancedShader->enable();
 				instancedShader->setUniform("u_projection", *m_currentProjection);

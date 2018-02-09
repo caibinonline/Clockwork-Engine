@@ -186,11 +186,11 @@
     <ClInclude Include="src\Maths\Vec2.h" />
     <ClInclude Include="src\Maths\Vec3.h" />
     <ClInclude Include="src\Maths\Vec4.h" />
+    <ClInclude Include="src\Physics\Colliders\Collider.h" />
     <ClInclude Include="src\Utils\File.h" />
     <ClInclude Include="src\Utils\Helper.h" />
     <ClInclude Include="src\Utils\Image.h" />
     <ClInclude Include="src\Utils\Structures\ChunkSystem.h" />
-    <ClInclude Include="src\Utils\Structures\ChunkSystem2.h" />
     <ClInclude Include="src\Utils\Structures\LinkedList.h" />
   </ItemGroup>
   <ItemGroup>

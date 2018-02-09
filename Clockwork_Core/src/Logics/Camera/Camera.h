@@ -37,6 +37,12 @@ namespace clockwork {
 			//roll would be rotation angle around the z-axis in degrees | rolling the camera
 
 		public:
+
+			float fov;
+			float nearMin;
+			float farMax;
+
+		public:
 			/*creates a camera object at the given position facing in the given direction
 			all parameters are in world space and the direction/worldUp vectors will be normalized inside
 			@param[position] the position of the camera
@@ -45,7 +51,7 @@ namespace clockwork {
 			@param[up] the y-axis of the camera | should go up to positive(y++) and should be orthogonal to the direction | should be 0,1,0 for a normal not rolled camera | the camera cant be rolled afterwards because of the fixed worldUp vector
 			with the default parameters the camera is at the origin(0,0,0) facing the negative z-axis(into the screen away from you) aligned to the y-axis(for moving upwards) */
 			Camera(const maths::Vec3f& position = { 0,0,0 }, const maths::Vec3f& direction = { 0,0,-1 }, const maths::Vec3f& up = { 0,1,0 }) noexcept
-				: m_position(position), m_direction(direction), m_worldUp(up), m_yaw(-90.0), m_pitch(0.0)
+				: m_position(position), m_direction(direction), m_worldUp(up), m_yaw(-90.0), m_pitch(0.0), fov(90.0), nearMin(0.1f), farMax(1000.0f)
 			{
 				m_direction.normalizeSelf();
 				m_worldUp.normalizeSelf();

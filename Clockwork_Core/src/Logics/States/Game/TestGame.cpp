@@ -46,38 +46,22 @@ namespace clockwork {
 
 		}
 
-		static float fov = 90.0f;
-
 		void TestGame::enter() noexcept
 		{
 			using namespace graphics;
 			using namespace utils;
 
-			m_currentCamera = new Camera({ 0,10,5 });
-
-			m_renderer = new Renderer(new graphics::Shader("res/Shaders/Default/Instancing.vs", "res/Shaders/Default/Instancing.fs"), new graphics::Shader("res/Shaders/Default/Normal.vs", "res/Shaders/Default/Normal.fs"), &m_currentCamera, &m_perspectiveProjection);
-
-		
-			if ( engine->getWindow()->getWidth() != 0 && engine->getWindow()->getHeight() != 0 )
-			{
-				m_perspectiveProjection = maths::Mat4x4<float>::perspective(maths::toRadians<float>(fov), static_cast<double>( engine->getWindow()->getWidth() ) / static_cast<double>( engine->getWindow()->getHeight() ), 0.1f, 1000.0f);//projection matrix for the scene to transform world coordinates into screen coordinates | has to be set once per update of the window size
-				m_renderer->updateProjection();
-			}
-			
-
-
-
-			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/brick.jpg").load());
-			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/stone.jpg").load());
-			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/granite.jpg").load());
-			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/moss.jpg").load());
-			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/brick2.jpg").load());
-			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/granite2.jpg").load());
-			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/wood.jpg").load());
-			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/grass.jpg").load());
-			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/blue.jpg").load());
-			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/red.jpg").load());
-			m_renderer->cubeManager.addTextureBoth(utils::Image("res/Images/purple.jpg").load());
+			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/brick.jpg").load());
+			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/stone.jpg").load());
+			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/granite.jpg").load());
+			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/moss.jpg").load());
+			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/brick2.jpg").load());
+			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/granite2.jpg").load());
+			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/wood.jpg").load());
+			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/grass.jpg").load());
+			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/blue.jpg").load());
+			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/red.jpg").load());
+			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/purple.jpg").load());
 
 
 			std::srand(engine->getWindow()->getTimer() * 10);
@@ -85,14 +69,14 @@ namespace clockwork {
 			for ( int i = 0; i < 100; ++i )//10000 objects: normal 300fps, instancing 2300fps | 1000objects: normal 2000fps, instancing 5000fps | 100 objects: normal 5500fps, instancing 6100fps | 10 objects: normal 5500fps, instancing 5500fps | 1 object: normal 6300fps, instancing 6100fps
 			{
 				maths::Vec3f pos = maths::Vec3f(-( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10);
-				graphics::InstancedCube* inst = new graphics::InstancedCube(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, m_renderer);
+				graphics::InstancedCube* inst = new graphics::InstancedCube(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, m_defaultRenderer);
 				inst->add();
 			}
 
 			for ( int i = 0; i < 100; ++i )
 			{
 				maths::Vec3f pos = maths::Vec3f(-( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10);
-				graphics::NormalCube* inst = new graphics::NormalCube("res/Images/transparent.png", maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, m_renderer);
+				graphics::NormalCube* inst = new graphics::NormalCube("res/Images/transparent.png", maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, m_defaultRenderer);
 				inst->add();
 			}
 
@@ -136,20 +120,21 @@ namespace clockwork {
 
 		}
 
+		void TestGame::slowTick() noexcept
+		{
+
+		}
+
 		void TestGame::render() noexcept
 		{
-			m_renderer->render();
-			m_renderer->renderTransparent();
+			m_defaultRenderer->render();
+			m_defaultRenderer->renderTransparent();
 		}
 
 
 		void TestGame::onResize(int width, int height, graphics::Window* window) noexcept
 		{
-			if ( width != 0 && height != 0 )
-			{
-				m_perspectiveProjection = maths::Mat4x4<float>::perspective(maths::toRadians<float>(fov), static_cast<double>( width ) / static_cast<double>( height ), 0.1f, 1000.0f);//projection matrix for the scene to transform world coordinates into screen coordinates | has to be set once per update of the window size
-				m_renderer->updateProjection();
-			}
+
 		}
 
 		void TestGame::onKeyPress(int key, int scancode, int action, int mods, graphics::Window* window) noexcept
@@ -173,20 +158,20 @@ namespace clockwork {
 					maths::Vec3f pos2 = m_currentCamera->getPosition() + m_currentCamera->getDirection() * 4;
 					maths::Vec3f pos3 = m_currentCamera->getPosition() + m_currentCamera->getDirection() * 6;
 
-					graphics::InstancedCube* inst1 = new graphics::InstancedCube(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos1, m_renderer);
+					graphics::InstancedCube* inst1 = new graphics::InstancedCube(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos1, m_defaultRenderer);
 					inst1->add();
 
-					graphics::NormalCube* inst2 = new graphics::NormalCube(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos2, m_renderer, false);
+					graphics::NormalCube* inst2 = new graphics::NormalCube(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos2, m_defaultRenderer, false);
 					inst2->add();
 
-					graphics::NormalCube* inst3 = new graphics::NormalCube(0, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos3, m_renderer, true);
+					graphics::NormalCube* inst3 = new graphics::NormalCube(0, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos3, m_defaultRenderer, true);
 					inst3->add();
 				}
 				else if ( button == CLOCKWORK_MOUSE_BUTTON_2 )
 				{
-					m_renderer->cubeManager.removeLastInstancedCube();
-					m_renderer->cubeManager.removeLastNormalCube();
-					m_renderer->cubeManager.removeLastTransparentCube();
+					m_defaultRenderer->cubeManager.removeLastInstancedCube();
+					m_defaultRenderer->cubeManager.removeLastNormalCube();
+					m_defaultRenderer->cubeManager.removeLastTransparentCube();
 				}
 			}
 
@@ -199,17 +184,13 @@ namespace clockwork {
 
 		void TestGame::onScroll(int xoffset, int yoffset, graphics::Window* window) noexcept
 		{
-			if ( fov > 120 )//zooming by changing fov and then updating projectionmatrix 
-				fov = 120;
-			else if ( fov < 1 )
-				fov = 1;
+			if ( m_currentCamera->fov> 120 )//zooming by changing fov and then updating projectionmatrix 
+				m_currentCamera->fov = 120;
+			else if ( m_currentCamera->fov < 1 )
+				m_currentCamera->fov = 1;
 			else
-				fov -= yoffset;
-			if ( engine->getWindow()->getWidth() != 0 && engine->getWindow()->getHeight() != 0 )
-			{
-				m_perspectiveProjection = maths::Mat4x4<float>::perspective(maths::toRadians<float>(fov), static_cast<double>( engine->getWindow()->getWidth() ) / static_cast<double>( engine->getWindow()->getHeight() ), 0.1f, 1000.0f);//projection matrix for the scene to transform world coordinates into screen coordinates | has to be set once per update of the window size
-				m_renderer->updateProjection();
-			}
+				m_currentCamera->fov -= yoffset;
+			updateProjection();//immer wenn werte der camera verändert werden(fov, near,far), oder wenn currentcamera pointer verändert wird(zeigt auf andere camera)
 
 		}
 
