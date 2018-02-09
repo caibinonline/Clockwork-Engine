@@ -75,6 +75,9 @@
     <ClCompile Include="src\Graphics\Renderables\Renderable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Logics\Entities\GameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Core\Engine.h">
@@ -216,6 +219,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Utils\Structures\ChunkSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Logics\Entities\Listener\RenderListener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Logics\Entities\Listener\TickListener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Logics\Entities\GameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

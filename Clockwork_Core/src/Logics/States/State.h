@@ -47,8 +47,12 @@ namespace clockwork {
 			virtual void slowTick() noexcept = 0;
 			virtual void render() noexcept = 0;
 
-			//muss nicht überschrieben werden, aber es sollte in state bei onresize, etc bei weiteren renderern auch diese danach geupdated werden | immer wenn updateProjection aufgerufen wird | nicht virtual | immer dazu kommentieren was virtual ist und was nicht
-			void updateProjection() noexcept;
+			//sollte überschrieben werden, wenn es weitere renderer gibt, aber in der methode sollte zuerst die methode der superklasse aufgerufen werdenn | immer dazu kommentieren was virtual ist und was nicht
+			//sollte aufgerufen werden, wenn camera fov, oder camera near/far verändert wird, oder beim resizen, oder beim ändern des current camera pointer
+			virtual void updateProjection() noexcept;
+
+			//nicht virtual, sollte zum ändern des camera pointers benutzt werden, da es automatisch updateprojection aufruft 
+			void setCurrentCamera(logics::Camera* camera) noexcept;
 
 		public:
 			/*resize callback: gets called when the window size changes(fullscreen, setsize, etc) from main thread/updateInput()

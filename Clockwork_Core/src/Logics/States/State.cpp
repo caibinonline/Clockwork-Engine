@@ -33,10 +33,8 @@ namespace clockwork {
 			{
 				//sachen/texturen vorbereiten/der renterwarteschlange adden 
 				m_defaultCamera = new Camera({ 0,5,5 });
-				m_currentCamera = m_defaultCamera;
 				m_defaultRenderer = new graphics::Renderer(new graphics::Shader("res/Shaders/Default/Instancing.vs", "res/Shaders/Default/Instancing.fs"), new graphics::Shader("res/Shaders/Default/Normal.vs", "res/Shaders/Default/Normal.fs"), &m_currentCamera, &m_perspectiveProjection);
-				updateProjection();//immer nach ändern des fvo, near, oder far der currentcamera aufrufen(auch ggf, wenn pointer auf andere camera zeigen wird), oder beim resizen | aber ggf dann in erbenden states auch für andere renderer updateprojection aufrufen, wenn dort nochmal currentcamera überarbeitet wird
-
+				setCurrentCamera(m_defaultCamera);
 			}
 
 			void State::leave() noexcept
@@ -69,6 +67,12 @@ namespace clockwork {
 					//auch noch orthographic updaten
 					m_defaultRenderer->updateProjection();
 				}
+			}
+
+			void State::setCurrentCamera(logics::Camera* camera) noexcept
+			{
+				m_currentCamera = camera;
+				updateProjection();
 			}
 
 			void State::onResize(int width, int height, graphics::Window* window) noexcept
