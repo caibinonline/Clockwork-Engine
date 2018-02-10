@@ -18,6 +18,8 @@
 namespace clockwork {
 	namespace logics {
 
+		class State;
+
 		/*vertex positions of world coordinates are transformed into view coordinates(in camera/view space) relative to the cameras position and direction
 		the camera is like a coordinate system with the 3 axis and itself in the origin | careful with opengls right hand coordinate system(positive z-axis is going towards you) 
 		so if you want to move the camera backwards(to you/the screen, away from the objects), you have to move it along the positive z-axis++
@@ -35,12 +37,10 @@ namespace clockwork {
 			float m_yaw;//rotation angle around y-axis in degrees | looking left/right
 			float m_pitch;//rotation angle around x-axis in degrees | looking up/down
 			//roll would be rotation angle around the z-axis in degrees | rolling the camera
-
-		public:
-
-			float fov;//auch mit gettern mit referenz, einmal const, einmal nicht machen für multithread mit mutex
-			float nearMin;
-			float farMax;
+			float m_fov;//auch mit gettern mit referenz, einmal const, einmal nicht machen für multithread mit mutex
+			float m_near;
+			float m_far;
+			State* m_state;
 
 		public:
 			/*creates a camera object at the given position facing in the given direction
@@ -50,14 +50,7 @@ namespace clockwork {
 			the direction is not a point to where the camera looking at, but an offset to the position of the camera to calculate the point the camera is looking at
 			@param[up] the y-axis of the camera | should go up to positive(y++) and should be orthogonal to the direction | should be 0,1,0 for a normal not rolled camera | the camera cant be rolled afterwards because of the fixed worldUp vector
 			with the default parameters the camera is at the origin(0,0,0) facing the negative z-axis(into the screen away from you) aligned to the y-axis(for moving upwards) */
-			Camera(const maths::Vec3f& position = { 0,0,0 }, const maths::Vec3f& direction = { 0,0,-1 }, const maths::Vec3f& up = { 0,1,0 }) noexcept
-				: m_position(position), m_direction(direction), m_worldUp(up), m_yaw(-90.0), m_pitch(0.0), fov(90.0), nearMin(0.1f), farMax(1000.0f)
-			{
-				m_direction.normalizeSelf();
-				m_worldUp.normalizeSelf();
-				m_right = m_direction.crossproduct(m_worldUp).normalizeSelf();
-				m_up = m_right.crossproduct(m_direction).normalizeSelf();
-			}
+			Camera(State* state, const maths::Vec3f& position = { 0,0,0 }, const maths::Vec3f& direction = { 0,0,-1 }, const maths::Vec3f& up = { 0,1,0 }) noexcept;
 			virtual ~Camera() noexcept = default;//ggf virtual, wenn andere cameras von dieser erben, aber vielleicht auch weg machen
 
 			/*shader has to be enabled first
@@ -221,6 +214,32 @@ namespace clockwork {
 				m_up = m_right.crossproduct(m_direction).normalizeSelf();
 			}
 
+
+// 			float fov;//auch mit gettern mit referenz, einmal const, einmal nicht machen für multithread mit mutex
+// 			float nearMin;
+// 			float farMax;
+
+
+			const float getFov() const noexcept
+			{
+				return m_fov;
+			}
+			const float getNear() const noexcept
+			{
+				return m_near;
+			}
+			const float getFar() const noexcept
+			{
+				return m_far;
+			}
+
+			void setFov(float fov) noexcept;
+			void setNear(float near_) noexcept;
+			void setFar(float far_) noexcept;
+
+			const State& getState() const noexcept;
+			//hier threadsafe machen ohne const kann state verändert werden
+			State& getState() noexcept;
 
 		};
 

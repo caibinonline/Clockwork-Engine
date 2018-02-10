@@ -137,6 +137,10 @@
     <ClCompile Include="src\Graphics\Renderables\Cube\InstancedCube.cpp" />
     <ClCompile Include="src\Graphics\Renderables\Cube\NormalCube.cpp" />
     <ClCompile Include="src\Graphics\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Graphics\Textures\TextureArray2D.cpp" />
+    <ClCompile Include="src\Logics\Camera\Camera.cpp" />
+    <ClCompile Include="src\Logics\ChunkSystem\Chunk.cpp" />
+    <ClCompile Include="src\Logics\ChunkSystem\ChunkSystem.cpp" />
     <ClCompile Include="src\Logics\Entities\GameObject.cpp" />
     <ClCompile Include="src\Logics\States\Game\TestGame.cpp" />
     <ClCompile Include="src\Logics\States\Loading\Loading.cpp" />
@@ -146,6 +150,7 @@
     <ClCompile Include="src\Utils\Image.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Graphics\Buffers\FrameBuffer.h" />
     <ClInclude Include="src\Graphics\Renderables\Renderable.h" />
     <ClInclude Include="src\Core\Engine.h" />
     <ClInclude Include="src\Core\ExampleGame.h" />
@@ -170,6 +175,7 @@
     <ClInclude Include="src\Graphics\Textures\Texture2D.h" />
     <ClInclude Include="src\Graphics\Textures\TextureArray2D.h" />
     <ClInclude Include="src\Logics\Camera\Camera.h" />
+    <ClInclude Include="src\Logics\ChunkSystem\Chunk.h" />
     <ClInclude Include="src\Logics\Entities\GameObject.h" />
     <ClInclude Include="src\Logics\Entities\Listener\RenderListener.h" />
     <ClInclude Include="src\Logics\Entities\Listener\TickListener.h" />
@@ -195,7 +201,7 @@
     <ClInclude Include="src\Utils\File.h" />
     <ClInclude Include="src\Utils\Helper.h" />
     <ClInclude Include="src\Utils\Image.h" />
-    <ClInclude Include="src\Utils\Structures\ChunkSystem.h" />
+    <ClInclude Include="src\Logics\ChunkSystem\ChunkSystem.h" />
     <ClInclude Include="src\Utils\Structures\LinkedList.h" />
   </ItemGroup>
   <ItemGroup>

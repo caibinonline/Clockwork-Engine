@@ -34,8 +34,8 @@
 #include "src\Maths\Vec3.h"
 
 
-
 #include "src\Logics\Entities\Test.h"
+#include "src\Logics\ChunkSystem\ChunkSystem.h"
 
 
 namespace clockwork {
@@ -55,6 +55,7 @@ namespace clockwork {
 		{
 			using namespace graphics;
 			using namespace utils;
+			//m_chunkSystem = new ChunkSystem({ -500,-500,-500 }, { 500,500,500 }, { 100,100,100 }, this);//chunksystem in erbenden states mit den jeweiligenn größen erstellen 
 
 			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/brick.jpg").load());
 			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/stone.jpg").load());
@@ -183,14 +184,12 @@ namespace clockwork {
 
 		void TestGame::onScroll(int xoffset, int yoffset, graphics::Window* window) noexcept
 		{
-			if ( m_currentCamera->fov> 120 )//zooming by changing fov and then updating projectionmatrix 
-				m_currentCamera->fov = 120;
-			else if ( m_currentCamera->fov < 1 )
-				m_currentCamera->fov = 1;
+			if ( m_currentCamera->getFov()> 120 )//zooming by changing fov and then updating projectionmatrix 
+				m_currentCamera->setFov(120);
+			else if ( m_currentCamera->getFov() < 1 )
+				m_currentCamera->setFov(1);
 			else
-				m_currentCamera->fov -= yoffset;
-			updateProjection();//immer wenn werte der camera verändert werden(fov, near,far), oder wenn currentcamera pointer verändert wird(zeigt auf andere camera)
-
+				m_currentCamera->setFov(m_currentCamera->getFov() - yoffset);
 		}
 
 		void TestGame::onCursorEnter(int entered, graphics::Window* window) noexcept

@@ -77,6 +77,7 @@ namespace clockwork {
 				else
 					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_image.getWidth(), m_image.getHeight(), 0, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, static_cast<void*>( m_image.getData() ));//1. texture target(mostly texture_2d, so 1d and 3d are not affected), 2. mipmap lvl to create the texture for(base lvl at 0), 3. output colour format of the image(RGB/RGBA), 4./5. width/height of the image, 6. always 0(legacy opengl)
 				glGenerateMipmap(GL_TEXTURE_2D);//activate mipmaps for the currently bound texture object | like calling the function from above with diffrent positions for the mipmap as second parameter instead of 0 and changing width/height
+				m_image.clearData();
 			}
 
 			/*creates an empty texture with no texturedata and no id*/
@@ -111,7 +112,6 @@ namespace clockwork {
 			}
 
 		public:
-
 			/*binds the current texture2d object to the selected texture slot where the default slot is 0 | there can only be one texture bound per texture slot at the same time | so there can be 32 textures be bound at the same time to use for rendering a single model
 			the shader has to be enabled first, but the texture should be bound before binding the model, so the texture can be applied to the model | the texture bind call is just for this texture kind(GL_TEXTURE_2D)
 			there can be multiple textures bound at the same time(even of the same texture kind), if they are bound at a diffrent location(number) | the location is shared with all the other texture kinds, so you cant bind 2 diffrent texturekinds to the same location
@@ -132,11 +132,7 @@ namespace clockwork {
 			}
 
 		public:
-
 			const utils::Image& getImage() const noexcept {return m_image;}
-
-
-
 
 		};
 

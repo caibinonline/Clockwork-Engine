@@ -83,5 +83,15 @@ namespace clockwork {
 			this->onMatrixChange();
 		}
 
+		const State& GameObject::getState() const noexcept
+		{
+			return *m_state;
+		}
+
+		State& GameObject::getState() noexcept
+		{
+			return *m_state;
+		}
+
 	}
 }

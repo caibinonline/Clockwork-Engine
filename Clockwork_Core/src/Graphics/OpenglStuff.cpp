@@ -14,6 +14,7 @@
 #include "Buffers\VertexBuffer.h"
 #include "Buffers\CopyBuffer.h"
 #include "Buffers\InternalCopyBuffer.h"
+#include "src\Graphics\Textures\TextureArray2D.h"
 
 namespace clockwork {
 	namespace graphics {
@@ -37,6 +38,12 @@ namespace clockwork {
 			glEnable(GL_BLEND);
 			glBlendEquation(blendFunc);
 			glBlendFunc(blendSourceFactor, blendDestinationFactor);
+		}
+
+		void initTextures()
+		{
+			TextureArray2D::m_readBuffer = new FrameBuffer(GL_READ_FRAMEBUFFER);
+			TextureArray2D::m_drawBuffer = new FrameBuffer(GL_DRAW_FRAMEBUFFER);
 		}
 
 	}

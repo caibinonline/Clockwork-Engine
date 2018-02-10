@@ -18,6 +18,12 @@
 #include "FreeImage\FreeImage.h"
 #include "src\Graphics\Textures\SpriteSheet.h"
 #include "src\Maths\MathFunctions.h"
+#include "src\Graphics\Buffers\FrameBuffer.h"
+
+
+#include "src\Core\Engine.h"///NUR ZUM TEST
+#include "src\Core\Window.h"
+
 
 namespace clockwork {
 	namespace graphics {
@@ -36,6 +42,13 @@ namespace clockwork {
 		private:
 			GLuint m_id;
 			std::vector<utils::Image> m_images;
+			unsigned int m_bufferSize;
+			GLint m_textureRepeat; 
+			maths::Vec4f m_borderColour;
+			GLint m_textureFilterUpscale;
+			GLint m_textureFilterDownscale;
+			static FrameBuffer* m_readBuffer;
+			static FrameBuffer* m_drawBuffer;
 
 		public:
 			/*creates an empty texturearray2d where you can add images to and binds it, so another bind() call is unnecessary
@@ -61,6 +74,7 @@ namespace clockwork {
 			GL_NEAREST_MIPMAP_LINEAR=9986 mixes the two closest mipmaps to the pixel size(linearly interpolates between the two mipmaps) and chooses the nearest pixel like GL_NEAREST
 			GL_LINEAR_MIPMAP_LINEAR=9987 mixes the two closest mipmaps to the pixel size(linearly interpolates between the two mipmaps) and mixes the nearest pixel like GL_LINEAR*/
 			explicit TextureArray2D(unsigned int reserved, GLint textureRepeat = GL_CLAMP_TO_EDGE, const maths::Vec4<float>& borderColour = maths::Vec4<float>(0, 0, 0, 0), GLint textureFilterUpscale = GL_LINEAR, GLint textureFilterDownscale = GL_NEAREST_MIPMAP_LINEAR) noexcept
+				: m_textureRepeat(textureRepeat), m_borderColour(borderColour), m_textureFilterUpscale(textureFilterUpscale), m_textureFilterDownscale(textureFilterDownscale)
 			{
 				glGenTextures(1, &m_id);//generate texture in opengl state machine and save id 
 				glBindTexture(GL_TEXTURE_2D_ARRAY, m_id);//like other objects bind the texture array to modify and access it 
@@ -73,24 +87,26 @@ namespace clockwork {
 				glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, textureFilterDownscale);
 
 				m_images.reserve(reserved);
+				m_bufferSize = reserved;
 			}
 
 			/*creates an empty texturearray2d with no data and no id*/
 			TextureArray2D() noexcept
-				: m_id(0)
+				: m_id(0), m_bufferSize(0)
 			{}
 
 			/*deletes the TextureArrayId in the opengl state machine*/
 			~TextureArray2D() noexcept
 			{
-				glDeleteTextures(1, &m_id);
+				if(m_id!=0 )
+					glDeleteTextures(1, &m_id);
 			}
 
 			TextureArray2D(const TextureArray2D&) = delete;
 
 			/*copies the unique id and resets the id of the moved object*/
 			TextureArray2D(TextureArray2D&& other) noexcept
-				: m_id(other.m_id), m_images(std::move(other.m_images))
+				: m_id(other.m_id), m_images(std::move(other.m_images)), m_bufferSize(other.m_bufferSize), m_textureRepeat(other.m_textureRepeat), m_borderColour(other.m_borderColour), m_textureFilterUpscale(other.m_textureFilterUpscale), m_textureFilterDownscale(other.m_textureFilterDownscale)
 			{
 				other.m_id = 0;
 			}
@@ -100,13 +116,137 @@ namespace clockwork {
 			/*copies the unique id and resets the id of the moved object*/
 			TextureArray2D& operator=(TextureArray2D&& other) noexcept
 			{
+				if(m_id!=0 )
+					glDeleteTextures(1, &m_id);
 				m_id = other.m_id;
 				other.m_id = 0;
 				m_images = std::move(other.m_images);
+				m_bufferSize = other.m_bufferSize;
+				m_textureRepeat = other.m_textureRepeat;
+				m_borderColour = other.m_borderColour;
+				m_textureFilterUpscale = other.m_textureFilterUpscale;
+				m_textureFilterDownscale = other.m_textureFilterDownscale;
 				return *this;
 			}
 
+		private:
+			void addImage(const utils::Image& image) noexcept
+			{
+// 				m_images.push_back(image);
+// 				glBindTexture(GL_TEXTURE_2D_ARRAY, m_id);
+// 				if ( image.hasAlpha() )//look at pixelsize to guess the colour format for the image
+// 				{
+// 					glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, nullptr);
+// 					for ( unsigned int img = 0; img < m_images.size(); ++img )
+// 					{
+// 						glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
+// 					}
+// 				}
+// 				else
+// 				{
+// 					glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, nullptr);
+// 					for ( unsigned int img = 0; img < m_images.size(); ++img )
+// 					{
+// 						glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, m_images.at(img).getData());//GEHT NICHT WEGEN CLEAR
+// 					}
+// 				}
+// 				glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+
+
+
+
+				if ( image.hasAlpha() )//look at pixelsize to guess the colour format for the image
+				{
+					if ( m_images.empty() )
+					{
+						glBindTexture(GL_TEXTURE_2D_ARRAY, m_id);
+						glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, image.getWidth(), image.getHeight(), m_bufferSize, 0, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, nullptr);
+					}
+					else if ( m_images.size() >= m_bufferSize )
+					{
+						++m_bufferSize;
+						m_bufferSize *= 2;
+
+						TextureArray2D temp { 0,m_textureRepeat,m_borderColour,m_textureFilterUpscale,m_textureFilterDownscale };
+						glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, image.getWidth(), image.getHeight(), m_bufferSize, 0, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, nullptr);
+						m_readBuffer->bind();
+						glFramebufferTexture3D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_3D, m_id, 0, 0);//letzte 0 muss ggf m_buffersize sein 
+						m_drawBuffer->bind();
+						glFramebufferTexture3D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_3D, temp.m_id, 0, 0);//letzte 0 muss ggf m_buffersize sein 
+						glBlitFramebuffer(0, 0, image.getWidth(), image.getHeight(), 0, 0, image.getWidth(), image.getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+						this->m_id = temp.m_id;
+						temp.m_id = 0;
+						m_readBuffer->unbind();
+						m_drawBuffer->unbind();
+					}
+					glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, m_images.size(), image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, image.getData());
+				}
+				else
+				{
+					if ( m_images.empty() )
+					{
+						glBindTexture(GL_TEXTURE_2D_ARRAY, m_id);
+						glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, image.getWidth(), image.getHeight(), m_bufferSize, 0, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, nullptr);
+						engine->getWindow()->checkError();
+					}
+					else if ( m_images.size() >= m_bufferSize )
+					{
+						++m_bufferSize;
+						m_bufferSize *= 2;
+
+						TextureArray2D temp { 0,m_textureRepeat,m_borderColour,m_textureFilterUpscale,m_textureFilterDownscale };
+						glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, image.getWidth(), image.getHeight(), m_bufferSize, 0, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, nullptr);
+						engine->getWindow()->checkError();
+						m_readBuffer->bind();
+						glFramebufferTexture3D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_3D, m_id, 0, 0);//letzte 0 muss ggf m_buffersize sein 
+						engine->getWindow()->checkError();
+						m_drawBuffer->bind();
+						glFramebufferTexture3D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_3D, temp.m_id, 0, m_bufferSize);//letzte 0 muss ggf m_buffersize sein 
+						engine->getWindow()->checkError();
+						glBlitFramebuffer(0, 0, image.getWidth(), image.getHeight(), 0, 0, image.getWidth(), image.getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+						engine->getWindow()->checkError();
+						this->m_id = temp.m_id;
+						temp.m_id = 0;
+						m_readBuffer->unbind();
+						m_drawBuffer->unbind();
+
+
+						/*oben die sachen http://docs.gl/gl4/glBlitFramebuffer     http://docs.gl/gl4/glFramebufferTexture
+						https://www.khronos.org/opengl/wiki/Framebuffer_Object_Extension_Examples
+						https://www.khronos.org/opengl/wiki/Texture_Storage#Texture_copy
+						https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glFramebufferTextureLayer.xhtml
+
+
+						WICHTIG ALTERNATIVE http://docs.gl/gl4/glCopyImageSubData GEHT NUR FÜR OPENGL 4.3 oder höher kopiert images |  
+						
+						andere ALTERNATIVE FBO MACHEN DANN GLFRAMEBUFFERTEXTURELAYER BENUTZEN UND DANN READPIXEL BENUTZEN FÜR OPENGL 3.2
+						
+						GLuint fboId = 0;
+glGenFramebuffers(1, &fboId);
+glBindFramebuffer(GL_READ_FRAMEBUFFER, fboId);
+
+glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+						  textureId, 0, layer);
+
+glReadPixels(...);
+
+glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);*/
+
+
+
+					}
+					glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, m_images.size(), image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, image.getData());
+					engine->getWindow()->checkError();
+				}
+				glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+				m_images.push_back(image);
+				//m_images.back().clearData();//erst wieder ent ausklammern, wenn die 2. variante benutzt wird
+			}
+
 		public:
+
+			friend void initTextures();
+
 			/*binds the current texturearray2d object to the selected texture slot where the default slot is 0 | there can only be one texture bound per texture slot at the same time | so there can be 32 textures be bound at the same time to use for rendering a single model
 			the shader has to be enabled first, but the texture should be bound before binding the model, so the texture can be applied to the model | the texture bind call is just for this texture kind(GL_TEXTURE_2D_ARRAY)
 			there can be multiple textures bound at the same time(even of the same texture kind), if they are bound at a diffrent location(number) | the location is shared with all the other texture kinds, so you cant bind 2 diffrent texturekinds to the same location
@@ -146,25 +286,7 @@ namespace clockwork {
 					if ( m_images.at(i).getFilepath() == image.getFilepath() )
 						return i;
 				}
-				m_images.push_back(image);
-				glBindTexture(GL_TEXTURE_2D_ARRAY, m_id);
-				if ( image.hasAlpha() )//look at pixelsize to guess the colour format for the image
-				{
-					glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, nullptr);
-					for ( unsigned int img = 0; img < m_images.size(); ++img )
-					{
-						glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
-					}
-				}
-				else
-				{
-					glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, nullptr);
-					for ( unsigned int img = 0; img < m_images.size(); ++img )
-					{
-						glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
-					}
-				}
-				glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+				addImage(image);
 				return m_images.size() - 1;
 			}
 
@@ -190,25 +312,7 @@ namespace clockwork {
 				if ( m_images.size() > 0 && m_images.at(0).getSize() != image.getSize() )
 					std::cout << "Error TextureArray2D::getTextureId(): the new image has not the same size as the other images in the texturearray" << std::endl;
 #endif 
-				m_images.push_back(image);
-				glBindTexture(GL_TEXTURE_2D_ARRAY, m_id);
-				if ( image.hasAlpha() )//look at pixelsize to guess the colour format for the image
-				{
-					glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, nullptr);
-					for ( unsigned int img = 0; img < m_images.size(); ++img )
-					{
-						glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
-					}
-				}
-				else
-				{
-					glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, nullptr);
-					for ( unsigned int img = 0; img < m_images.size(); ++img )
-					{
-						glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
-					}
-				}
-				glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+				addImage(image);
 				return m_images.size() - 1;
 			}
 
@@ -235,25 +339,7 @@ namespace clockwork {
 					}
 				}
 #endif 
-				m_images.push_back(image);
-				glBindTexture(GL_TEXTURE_2D_ARRAY, m_id);
-				if ( image.hasAlpha() )//look at pixelsize to guess the colour format for the image
-				{
-					glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, nullptr);
-					for ( unsigned int img = 0; img < m_images.size(); ++img )
-					{
-						glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
-					}
-				}
-				else
-				{
-					glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, nullptr);
-					for ( unsigned int img = 0; img < m_images.size(); ++img )
-					{
-						glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
-					}
-				}
-				glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+				addImage(image);
 			}
 
 			/*adds an image/texture(that is not in the texturearray) to the texturearray2d | dont add an image that already is in the texturearray, because then 2 identical images/textures would be in the texturearray2d 
@@ -281,25 +367,7 @@ namespace clockwork {
 				if ( m_images.size() > 0 && m_images.at(0).getSize() != image.getSize() )
 					std::cout << "Error TextureArray2D::addTexture(): the new image has not the same size as the other images in the texturearray" << std::endl;
 #endif 
-				m_images.push_back(image);
-				glBindTexture(GL_TEXTURE_2D_ARRAY, m_id);
-				if ( image.hasAlpha() )//look at pixelsize to guess the colour format for the image
-				{
-					glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, nullptr);
-					for ( unsigned int img = 0; img < m_images.size(); ++img )
-					{
-						glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
-					}
-				}
-				else
-				{
-					glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, nullptr);
-					for ( unsigned int img = 0; img < m_images.size(); ++img )
-					{
-						glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
-					}
-				}
-				glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+				addImage(image);
 			}
 
 			/*removes a texture/image out of the texturearray at the given position*/
@@ -385,7 +453,10 @@ namespace clockwork {
 			}
 
 			/*returns the number of images in the texturearray2d*/
-			unsigned int getTextureCount() const noexcept{return m_images.size();}
+			const unsigned int getTextureCount() const noexcept{return m_images.size();}
+
+			/*returns the opengl unique id of the texturearray*/
+			const GLuint getId() const noexcept {return m_id;}
 
 		};
 

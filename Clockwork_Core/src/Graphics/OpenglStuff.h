@@ -98,5 +98,8 @@ namespace clockwork {
 		@param[blendFunc] the kind of function used to calculate the colour | default is GL_FUNC_ADD = 32774 | GL_FUNC_SUBSTRACT = 32778 | GL_FUNC_REVERSE_SUBSTRACT = 32779*/
 		void openglParams(int cullFace = 1029, int windingOrder = 2305, int depthCompare = 515, int blendSourceFactor = 770, int blendDestinationFactor= 771, int blendFunc = 32774) noexcept;
 
+		/*kommentieren | erstellt immoment nur framebuffers in texturearray2d | auch in texturearray2d bei friend deklaration kommentieren*/
+		void initTextures();
+
 	}
 }

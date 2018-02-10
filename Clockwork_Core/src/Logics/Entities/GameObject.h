@@ -45,11 +45,12 @@ namespace clockwork {
 			virtual void onMatrixChange() noexcept = 0;
 
 		public:
-			//updated modelmatrix und ruft onMatrixChange auf
+			//updated modelmatrix und ruft onMatrixChange auf | immer nach verändern der vektoren irgendwann updatemodelmatrix aufrufen
 			void updateModelMatrix() noexcept;
 
-			inline const State& getState() const noexcept {return *m_state;}
-			inline State& getState() noexcept {return *m_state;}//hier threadsafe machen ohne const kann state verändert werden
+			const State& getState() const noexcept;
+			//hier threadsafe machen ohne const kann state verändert werden
+			State& getState() noexcept;
 
 			inline const maths::Mat4f& getModelMatrix() const noexcept {return m_modelMatrix;}
 			inline const maths::Mat4f* getModelMatrixMemoryLocation() const noexcept {return &m_modelMatrix;}

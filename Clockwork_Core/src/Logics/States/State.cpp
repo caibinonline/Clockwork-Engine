@@ -15,6 +15,7 @@
 #include "src\Core\Window.h"
 #include "src\Logics\Camera\Camera.h"
 #include "src\Graphics\Renderer\Renderer.h"
+#include "src\Logics\ChunkSystem\ChunkSystem.h"
 
 namespace clockwork {
 	namespace logics {
@@ -32,7 +33,7 @@ namespace clockwork {
 			void State::enter() noexcept
 			{
 				//sachen/texturen vorbereiten/der renterwarteschlange adden 
-				m_defaultCamera = new Camera({ 0,5,5 });
+				m_defaultCamera = new Camera(this, { 0,5,5 });
 				m_defaultRenderer = new graphics::Renderer(new graphics::Shader("res/Shaders/Default/Instancing.vs", "res/Shaders/Default/Instancing.fs"), new graphics::Shader("res/Shaders/Default/Normal.vs", "res/Shaders/Default/Normal.fs"), &m_currentCamera, &m_perspectiveProjection);
 				setCurrentCamera(m_defaultCamera);
 			}
@@ -41,6 +42,7 @@ namespace clockwork {
 			{
 				delete m_defaultCamera;
 				delete m_defaultRenderer;
+				delete m_chunkSystem;
 				//sachen/texturen löschen
 			}
 
@@ -68,11 +70,28 @@ namespace clockwork {
 			{
 				if ( engine->getWindow()->getWidth() != 0 && engine->getWindow()->getHeight() != 0 )
 				{
-					m_perspectiveProjection = maths::Mat4x4<float>::perspective(maths::toRadians<float>(m_currentCamera->fov), static_cast<double>( engine->getWindow()->getWidth() ) / static_cast<double>( engine->getWindow()->getHeight() ), m_currentCamera->nearMin, m_currentCamera->farMax);//projection matrix for the scene to transform world coordinates into screen coordinates | has to be set once per update of the window size
+					m_perspectiveProjection = maths::Mat4x4<float>::perspective(maths::toRadians<float>(m_currentCamera->getFov()), static_cast<double>( engine->getWindow()->getWidth() ) / static_cast<double>( engine->getWindow()->getHeight() ), m_currentCamera->getNear(), m_currentCamera->getFar());//projection matrix for the scene to transform world coordinates into screen coordinates | has to be set once per update of the window size
 					//auch noch orthographic updaten
 					m_defaultRenderer->updateProjection();
 				}
 				updateProjection2();
+			}
+
+			logics::Camera& State::getCurrentCamera() noexcept
+			{
+				return *m_currentCamera;
+			}
+			const logics::Camera& State::getCurrentCamera() const noexcept
+			{
+				return *m_currentCamera;
+			}
+			logics::ChunkSystem& State::getChunkSystem() noexcept
+			{
+				return *m_chunkSystem;
+			}
+			const logics::ChunkSystem& State::getChunkSystem() const noexcept
+			{
+				return *m_chunkSystem;
 			}
 
 			void State::setCurrentCamera(logics::Camera* camera) noexcept

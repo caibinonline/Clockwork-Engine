@@ -17,26 +17,24 @@ namespace clockwork {
 	namespace utils {
 
 		Image::Image() noexcept
-			: m_img(nullptr), m_format(FIF_UNKNOWN), m_subImageCount(0)
+			: m_img(nullptr), m_format(FIF_UNKNOWN), m_subImageCount(0), m_width(0), m_height(0), m_pixelSize(0), m_hasAlpha(false)
 		{}
 
 		Image::Image(const std::string& filepath) noexcept
-			: m_img(nullptr), m_format(FIF_UNKNOWN), m_filepath(filepath), m_subImageCount(0)
+			: m_img(nullptr), m_format(FIF_UNKNOWN), m_filepath(filepath), m_subImageCount(0), m_width(0), m_height(0), m_pixelSize(0), m_hasAlpha(false)
 		{
 
 		}
 
 		Image::Image(const Image& other) noexcept
-			: m_img(FreeImage_Copy(other.m_img, 0, 0, other.getWidth(), other.getHeight())), m_format(other.m_format), m_filepath(other.m_filepath), m_subImageCount(other.m_subImageCount)
+			: m_img(FreeImage_Copy(other.m_img, 0, 0, other.getWidth(), other.getHeight())), m_format(other.m_format), m_filepath(other.m_filepath), m_subImageCount(other.m_subImageCount), m_width(other.m_width), m_height(other.m_height), m_pixelSize(other.m_pixelSize), m_hasAlpha(other.m_hasAlpha)
 		{}
 
 		Image::Image(Image&& other) noexcept
-			: m_img(other.m_img), m_format(other.m_format), m_filepath(other.m_filepath), m_subImageCount(other.m_subImageCount)
+			: m_img(other.m_img), m_format(other.m_format), m_filepath(other.m_filepath), m_subImageCount(other.m_subImageCount), m_width(other.m_width), m_height(other.m_height), m_pixelSize(other.m_pixelSize), m_hasAlpha(other.m_hasAlpha)
 		{
 			other.m_img = nullptr;
 			other.m_format = FIF_UNKNOWN;
-			other.m_filepath = "";
-			other.m_subImageCount = 0;
 		}
 
 		Image::~Image() noexcept
@@ -47,10 +45,14 @@ namespace clockwork {
 
 		Image& Image::operator=(const Image& other) noexcept
 		{
-			m_img = FreeImage_Copy(other.m_img, 0, 0, other.getWidth(), other.getHeight());
+			m_img = FreeImage_Copy(other.m_img, 0, 0, other.m_width, other.m_height);
 			m_format = other.m_format;
 			m_filepath = other.m_filepath;
 			m_subImageCount = other.m_subImageCount;
+			m_width = other.m_width;
+			m_height = other.m_height;
+			m_pixelSize = other.m_pixelSize;
+			m_hasAlpha = other.m_hasAlpha;
 			return *this;
 		}
 
@@ -60,10 +62,12 @@ namespace clockwork {
 			m_format = other.m_format;
 			m_filepath = other.m_filepath;
 			m_subImageCount = other.m_subImageCount;
+			m_width = other.m_width;
+			m_height = other.m_height;
+			m_pixelSize = other.m_pixelSize;
+			m_hasAlpha = other.m_hasAlpha;
 			other.m_img = nullptr;
 			other.m_format = FIF_UNKNOWN;
-			other.m_filepath = "";
-			other.m_subImageCount = 0;
 			return *this;
 		}
 
@@ -104,6 +108,10 @@ namespace clockwork {
 			if ( !m_img )
 				std::cout << "Failed to load Image(unknown error): " << m_filepath << std::endl;
 #endif
+			m_width = FreeImage_GetWidth(m_img);
+			m_height = FreeImage_GetHeight(m_img);
+			m_pixelSize = FreeImage_GetBPP(m_img);
+			m_hasAlpha = m_pixelSize > 24;
 			return *this;
 		}
 
@@ -128,6 +136,10 @@ namespace clockwork {
 
 		unsigned char* const Image::getData() const noexcept
 		{
+#if CLOCKWORK_DEBUG
+			if(m_img==nullptr )
+				std::cout << "Error Image::getData: the image has no data " << m_filepath << std::endl;
+#endif
 			return FreeImage_GetBits(m_img);
 		}
 
@@ -139,27 +151,27 @@ namespace clockwork {
 
 		const unsigned int Image::getWidth() const noexcept
 		{
-			return FreeImage_GetWidth(m_img);
+			return m_width;
 		}
 
 		const unsigned int Image::getHeight() const noexcept
 		{
-			return FreeImage_GetHeight(m_img);
+			return m_height;
 		}
 
 		const unsigned int Image::getPixelSize() const noexcept
 		{
-			return FreeImage_GetBPP(m_img);
+			return m_pixelSize;
 		}
 
 		const unsigned int Image::getSize() const noexcept
 		{
-			return FreeImage_GetWidth(m_img)*FreeImage_GetHeight(m_img)*FreeImage_GetBPP(m_img);
+			return m_width * m_height*m_pixelSize;
 		}
 
 		const bool Image::hasAlpha() const noexcept
 		{
-			return FreeImage_GetBPP(m_img) > 24;
+			return m_hasAlpha;
 		}
 
 		Image& Image::setFilepath(const std::string& filepath) noexcept
@@ -172,6 +184,15 @@ namespace clockwork {
 		{
 			m_format = static_cast< FREE_IMAGE_FORMAT >( format );
 			return *this;
+		}
+
+		void Image::clearData() noexcept
+		{
+			if ( m_img )
+			{
+				FreeImage_Unload(m_img);//free FreeImages copy of the image data
+				m_img = nullptr;
+			}
 		}
 
 		bool operator==(const Image& img1, const Image& img2) noexcept

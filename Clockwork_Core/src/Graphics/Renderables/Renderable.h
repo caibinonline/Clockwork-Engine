@@ -37,7 +37,8 @@ namespace clockwork {
 			Renderable& operator=(Renderable&& other) noexcept;
 
 		public:
-			logics::GameObject* const getGameObject() const noexcept;
+			const logics::GameObject& getGameObject() const noexcept;
+			logics::GameObject& getGameObject() noexcept;
 			void setGameObject(logics::GameObject* gameObject) noexcept;
 			inline const int getTextureId() const noexcept{return m_textureId;}
 

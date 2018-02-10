@@ -44,6 +44,7 @@ namespace clockwork {
 		graphics::Window::init();//hier ggf noch andere libs initialisieren, oder im window initialisieren | modelloader, fonts, etc
 		m_window = new graphics::Window(title,800,800,1,false,0);//später size von static configmanager nehmen genau wie welcher screen benutzt wird ob fullscreen und vsync etc, sonst von screen ablesen | wird später alles hier dem window von configmanager übergeben | standard ist hier alles 0 in configmanager, wie bei window | beim ersten starten wird das window mit default sachen fullscreen mit size des primären monitors erstellt und config saved einmal, wenn game gestartet ist
 		graphics::initBuffers(10);///später nach testen wieder zu 100000 bytes machen, genau wie cube mit mehr bytes reservieren | jede funktion, die mit grafik objekten arbeitet MUSS VOM RENDERING THREAD AUFGERUFEN WERDEN, also bei allen buffer sachen, etc hinzuschreiben, dass sie nur vom renderthread mit opengl context aufgerufen werden können, wie bei initbuffers
+		graphics::initTextures();
 		graphics::openglParams();
 
 		//immer muss zuerst window erstellt werden und dann loading und dann states und dann kann in start alles verwendet werden
@@ -65,7 +66,7 @@ namespace clockwork {
 		using namespace logics;
 
 		m_currentState = new TestGame();
-		m_currentState->State::enter();//hier als erstes state::enter aufrufen 
+		m_currentState->State::enter();//hier als erstes state::enter aufrufen | auch bei leave machen, etc | für alles bei state, oder auch ausgangsmethode machen, die weitergeleitet wird
 		m_currentState->enter();
 
 #if HIGH_FPS

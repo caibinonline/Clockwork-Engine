@@ -30,9 +30,14 @@ namespace clockwork {
 			m_gameObject = other.m_gameObject;
 			return *this;
 		}
-		logics::GameObject* const Renderable::getGameObject() const noexcept
+		const logics::GameObject& Renderable::getGameObject() const noexcept
 		{
-			return m_gameObject;
+			return *m_gameObject;
+		}
+
+		logics::GameObject& Renderable::getGameObject() noexcept
+		{
+			return *m_gameObject;
 		}
 		void Renderable::setGameObject(logics::GameObject* gameObject) noexcept
 		{

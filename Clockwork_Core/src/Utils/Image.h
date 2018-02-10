@@ -26,6 +26,10 @@ namespace clockwork {
 			FREE_IMAGE_FORMAT m_format;//image format(png,jpg,etc)
 			std::string m_filepath;//filepath to compare
 			mutable unsigned int m_subImageCount;//for subimage filepath
+			unsigned int m_width;
+			unsigned int m_height;
+			unsigned int m_pixelSize;
+			bool m_hasAlpha;
 
 		public:
 			/*creates an empty image with no filepath and no image data and no format*/
@@ -71,7 +75,8 @@ namespace clockwork {
 
 			/*returns an image cut out of the current image with the specified rectangle dimension | width and height are the count of pixels and x and y are the start positions of the new image | the image coordinate space starts at the top left 0,0 to the bottom right
 			positions: pixel at position x,y to pixel at position x+width-1,y+height-1 | the positions are from 0 to width/height-1 where 0,0 is the first pixel of the image and width-1,height-1 is the last pixel of the image
-			the filepath of the subimage will be the same as the filepath of the parent image with the subimagecount of the parent image added as a number to the string | the subimagecount of the image object will raise from 0 per subimage taken */
+			the filepath of the subimage will be the same as the filepath of the parent image with the subimagecount of the parent image added as a number to the string | the subimagecount of the image object will raise from 0 per subimage taken 
+			you have to load the new image after calling this method with load(), otherwise it will not have any data*/
 			Image subImage(unsigned int x, unsigned int y, unsigned int width, unsigned int height) const noexcept;
 
 			/*returns the data of the image as an unsigned char pointer(==bytes) | array of pixel with size of width*height representing the colour values in either RGB/RGBA, or BGR/BGRA plattform dependant(BGR for little endian processor windows/linux and RGB for big endian processor linux/unix/mac)*/
@@ -152,6 +157,9 @@ namespace clockwork {
 	FIF_WEBP	= 35,
 	FIF_JXR		= 36*/
 			Image& setFormat(int format) noexcept;
+
+			/*clears the image data, so you have more free space | you can not use the image data anymore, but you can still use the size/filepath for textures */
+			void clearData() noexcept;
 
 		};
 

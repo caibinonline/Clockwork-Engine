@@ -22,6 +22,7 @@ namespace clockwork {
 	namespace logics {
 
 		class Camera;
+		class ChunkSystem;
 
 		class State
 		{
@@ -34,6 +35,7 @@ namespace clockwork {
 			logics::Camera* m_currentCamera;
 			graphics::Renderer* m_defaultRenderer;
 			logics::Camera* m_defaultCamera;
+			logics::ChunkSystem* m_chunkSystem;
 
 		public:
 			State() noexcept;
@@ -52,11 +54,21 @@ namespace clockwork {
 			virtual void render() noexcept = 0;
 
 			//ruft die zu überschreibende methode auf | die hier ist nicht virtual
-			//sollte aufgerufen werden, wenn camera fov, oder camera near/far verändert wird, oder beim resizen, oder beim ändern des current camera pointer
+			//sollte aufgerufen werden, wenn camera fov, oder camera near/far verändert wird, oder beim resizen, oder beim ändern des current camera pointer | also ggf camera auch pointer auf state mitgeben und dann updateprojection aufrufen wenn fov/etc verändert wird 
+			//habe ich jetzt alles schon gemacht
 			void updateProjection() noexcept;
+
+			logics::Camera& getCurrentCamera() noexcept;
+			const logics::Camera& getCurrentCamera() const noexcept;
+
+			logics::ChunkSystem& getChunkSystem() noexcept;
+			const logics::ChunkSystem& getChunkSystem() const noexcept;
 
 			//nicht virtual, sollte zum ändern des camera pointers benutzt werden, da es automatisch updateprojection aufruft 
 			void setCurrentCamera(logics::Camera* camera) noexcept;
+
+
+
 
 		public:///KOMMENTAR aktualisieren, aber engine durch state ersetzen
 			/*resize callback: gets called when the window size changes(fullscreen, setsize, etc) from main thread/updateInput()
