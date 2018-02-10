@@ -173,6 +173,7 @@
     <ClInclude Include="src\Logics\Entities\GameObject.h" />
     <ClInclude Include="src\Logics\Entities\Listener\RenderListener.h" />
     <ClInclude Include="src\Logics\Entities\Listener\TickListener.h" />
+    <ClInclude Include="src\Logics\Entities\Test.h" />
     <ClInclude Include="src\Logics\States\Game\TestGame.h" />
     <ClInclude Include="src\Logics\States\Loading\Loading.h" />
     <ClInclude Include="src\Logics\States\State.h" />

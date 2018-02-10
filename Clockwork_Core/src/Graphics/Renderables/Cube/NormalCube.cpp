@@ -13,18 +13,13 @@
 #include "CubeManager.h"
 #include "NormalCube.h"
 #include "src\Graphics\Renderer\Renderer.h"
+#include "src\Logics\Entities\GameObject.h"
 
 namespace clockwork {
 	namespace graphics {
 
-
-		NormalCube::NormalCube(Renderer* renderer, bool transparent) noexcept
-			: Renderable(), m_visible(false), m_transparent(transparent), m_pos(-1), m_manager(&renderer->cubeManager)
-		{
-		}
-
-		NormalCube::NormalCube(int textureId, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer, bool transparent) noexcept
-			: Renderable(textureId, size, rotation, position), m_visible(true), m_transparent(transparent), m_pos(-1), m_manager(&renderer->cubeManager)
+		NormalCube::NormalCube(int textureId, bool transparent, logics::GameObject* gameObject, Renderer* renderer) noexcept
+			: Renderable(textureId, gameObject), m_visible(true), m_transparent(transparent), m_pos(-1), m_manager(&renderer->cubeManager)
 		{
 #if CLOCKWORK_DEBUG
 			if ( m_transparent )
@@ -34,11 +29,10 @@ namespace clockwork {
 					if ( m_manager->m_normalTextures.size() <= textureId )
 						std::cout << "Error NormalCube::NormalCube(): TextureId is not in the texture list of the cubemanager" << std::endl;
 #endif
-			updateModelMatrix();
 		}
 
-		NormalCube::NormalCube(const std::string& imagePath, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept
-			: Renderable(0, size, rotation, position), m_visible(true), m_pos(-1), m_manager(&renderer->cubeManager)
+		NormalCube::NormalCube(const std::string& imagePath, logics::GameObject* gameObject, Renderer* renderer) noexcept
+			: Renderable(0, gameObject), m_visible(true), m_pos(-1), m_manager(&renderer->cubeManager)
 		{
 			if ( m_manager->containsNormalTexture(imagePath) )
 			{
@@ -65,11 +59,10 @@ namespace clockwork {
 					m_transparent = false;
 				}
 			}
-			updateModelMatrix();
 		}
 
-		NormalCube::NormalCube(const utils::Image& image, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept
-			: Renderable(0, size, rotation, position), m_visible(true), m_pos(-1), m_manager(&renderer->cubeManager)
+		NormalCube::NormalCube(const utils::Image& image, logics::GameObject* gameObject, Renderer* renderer) noexcept
+			: Renderable(0, gameObject), m_visible(true), m_pos(-1), m_manager(&renderer->cubeManager)
 		{
 			if ( image.hasAlpha() )
 			{
@@ -81,7 +74,6 @@ namespace clockwork {
 				m_textureId = m_manager->getNormalTextureId(image);
 				m_transparent = false;
 			}
-			updateModelMatrix();
 		}
 
 		NormalCube::~NormalCube() noexcept
@@ -128,19 +120,7 @@ namespace clockwork {
 		void NormalCube::render() noexcept
 		{
 			Shader* shader = m_manager->m_renderer->normalShader;
-			shader->setUniform("u_model",m_modelMatrix);
-		}
-
-		void NormalCube::updateModelMatrix() noexcept
-		{
-			m_modelMatrix = maths::Mat4f::scaling(size);
-			if ( rotation.x > 0 )
-				m_modelMatrix.rotateXD(rotation.x);
-			if ( rotation.y > 0 )
-				m_modelMatrix.rotateYD(rotation.y);
-			if ( rotation.z > 0 )
-				m_modelMatrix.rotateZD(rotation.z);
-			m_modelMatrix.translate(position);
+			shader->setUniform("u_model",m_gameObject->getModelMatrix());
 		}
 
 		void NormalCube::remove() noexcept

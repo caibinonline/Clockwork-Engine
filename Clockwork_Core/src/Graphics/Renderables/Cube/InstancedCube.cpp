@@ -13,35 +13,30 @@
 #include "CubeManager.h"
 #include "InstancedCube.h"
 #include "src\Graphics\Renderer\Renderer.h"
+#include "src\Logics\Entities\GameObject.h"
 
 namespace clockwork {
 	namespace graphics {
-		
-		InstancedCube::InstancedCube(Renderer* renderer) noexcept
-			: Renderable(), m_changed(false), m_pos(-1), m_manager(&renderer->cubeManager)
-		{
-		}
 
-		InstancedCube::InstancedCube(int textureId, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept
-			: Renderable(textureId, size, rotation, position), m_changed(false), m_pos(-1), m_manager(&renderer->cubeManager)
+		InstancedCube::InstancedCube(int textureId, logics::GameObject* gameObject, Renderer* renderer) noexcept
+			: Renderable(textureId, gameObject), m_changed(true), m_pos(-1), m_manager(&renderer->cubeManager)
 		{
 #if CLOCKWORK_DEBUG
 			if ( m_manager->m_textureArray.getTextureCount() <= textureId )
 				std::cout << "Error InstancedCube::InstancedCube(): TextureId is not in the texturearray2d of the cubemanager" << std::endl;
 #endif
-			updateModelMatrix();
 		}
 
-		InstancedCube::InstancedCube(const std::string& imagePath, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept
-			: Renderable(renderer->cubeManager.m_textureArray.getTextureId(imagePath), size, rotation, position), m_changed(false), m_pos(-1), m_manager(&renderer->cubeManager)
+		InstancedCube::InstancedCube(const std::string& imagePath, logics::GameObject* gameObject, Renderer* renderer) noexcept
+			: Renderable(renderer->cubeManager.m_textureArray.getTextureId(imagePath), gameObject), m_changed(true), m_pos(-1), m_manager(&renderer->cubeManager)
 		{
-			updateModelMatrix();
+
 		}
 
-		InstancedCube::InstancedCube(const utils::Image& image, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept
-			: Renderable(renderer->cubeManager.m_textureArray.getTextureId(image), size, rotation, position), m_changed(false), m_pos(-1), m_manager(&renderer->cubeManager)
+		InstancedCube::InstancedCube(const utils::Image& image, logics::GameObject* gameObject, Renderer* renderer) noexcept
+			: Renderable(renderer->cubeManager.m_textureArray.getTextureId(image), gameObject), m_changed(true), m_pos(-1), m_manager(&renderer->cubeManager)
 		{
-			updateModelMatrix();
+
 		}
 
 		InstancedCube::~InstancedCube() noexcept
@@ -74,24 +69,12 @@ namespace clockwork {
 			return *this;
 		}
 
-		void InstancedCube::updateModelMatrix() noexcept
-		{
-			m_modelMatrix = maths::Mat4f::scaling(size);
-			if ( rotation.x > 0 )
-				m_modelMatrix.rotateXD(rotation.x);
-			if ( rotation.y > 0 )
-				m_modelMatrix.rotateYD(rotation.y);
-			if ( rotation.z > 0 )
-				m_modelMatrix.rotateZD(rotation.z);
-			m_modelMatrix.translate(position);
-			m_changed = true;
-		}
-
 		void InstancedCube::updateBufferData() noexcept
 		{
 			if ( m_changed )
 			{
-				m_manager->m_copyBuffer.setData(&m_textureId, ( sizeof(int) + sizeof(maths::Mat4f) ), m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ));
+				m_manager->m_copyBuffer.setData(&m_textureId, sizeof(int), m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ));
+				m_manager->m_copyBuffer.setData(m_gameObject->getModelMatrixMemoryLocation(), +sizeof(maths::Mat4f), m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ) + sizeof(int));
 				m_changed = false;
 			}
 		}

@@ -14,6 +14,9 @@
 #include "src\Graphics\Renderables\Renderable.h"
 
 namespace clockwork {
+	namespace logics {
+		class GameObject;
+	}
 	namespace graphics {
 
 		class Renderer;
@@ -39,11 +42,6 @@ namespace clockwork {
 
 		public:
 
-			///neu kommentieren, auch bei denen mit textureid, muss angegeben werden, ob transparentmanager, oder nicht trannsparentmanager 
-			/*creates an empty instancedcube data = 0 that is not added to the cubemanager and will not be rendered | so you have to call add after the constructor to render it 
-			@param[renderer] a pointer to an instancedrenderer where the cubemanager is stored*/
-			explicit InstancedCube(Renderer* renderer) noexcept;
-
 			/*creates an instancedcube that is not added to the cubemanager and will not be rendered | so you have to call add after the constructor to render it 
 			dont use this constructor, if the count of textures/images in the texturearray2d of the cubemanager is equal or less than the textureID, because it will give an error
 			@param[textureId] the id of the texture in the texturearray2d of the cubemanager that will be used for this model
@@ -53,7 +51,7 @@ namespace clockwork {
 			@param[position] the position of the model
 			the modelmatrix of the instance/object will be created out of the 3 vectors and will transform the model into the world
 			@param[renderer] a pointer to an instancedrenderer where the cubemanager is stored*/
-			InstancedCube(int textureId, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept;
+			InstancedCube(int textureId, logics::GameObject* gameObject, Renderer* renderer) noexcept;
 
 			/*creates an instancedcube that is not added to the cubemanager and will not be rendered | so you have to call add after the constructor to render it 
 			@param[imagePath] the path of a texture/image that will be used for this model
@@ -64,7 +62,7 @@ namespace clockwork {
 			@param[position] the position of the model
 			the modelmatrix of the instance/object will be created out of the 3 vectors and will transform the model into the world
 			@param[renderer] a pointer to an instancedrenderer where the cubemanager is stored*/
-			InstancedCube(const std::string& imagePath, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept;
+			InstancedCube(const std::string& imagePath, logics::GameObject* gameObject, Renderer* renderer) noexcept;
 
 			/*creates an instancedcube that is not added to the cubemanager and will not be rendered | so you have to call add after the constructor to render it 
 			@param[image] the texture/image that will be used for this model
@@ -75,7 +73,7 @@ namespace clockwork {
 			@param[position] the position of the model
 			the modelmatrix of the instance/object will be created out of the 3 vectors and will transform the model into the world
 			@param[renderer] a pointer to an instancedrenderer where the cubemanager is stored*/
-			InstancedCube(const utils::Image& image, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept;
+			InstancedCube(const utils::Image& image, logics::GameObject* gameObject, Renderer* renderer) noexcept;
 
 			/*removes the instancedcube from the cubemanager, if its currently added to it*/
 			~InstancedCube() noexcept;
@@ -91,9 +89,6 @@ namespace clockwork {
 			InstancedCube& operator=(InstancedCube&& other) noexcept;
 
 		public:
-
-			//ggf private machen(auch in normalcube) | sollte immer aufgerufen werden, nachdem vektoren verändert wurden
-			void updateModelMatrix() noexcept;
 
 			//wird nur von transparentmanager aufgerufen, auch ggf private |  copybuffer muss vorher gebindet werden und es wird ja eh automatisch gemacht vor dem rendern
 			void updateBufferData() noexcept;
@@ -139,7 +134,7 @@ namespace clockwork {
 		public:
 			inline const bool isAdded() const noexcept {return m_pos!=-1;}
 			inline const bool hasChanged() const noexcept {return m_changed;}//wahrscheinlich wird es nicht gebraucht
-	
+			inline void setChanged(bool changed) noexcept{m_changed=changed;}
 
 		};
 

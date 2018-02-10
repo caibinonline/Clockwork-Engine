@@ -28,6 +28,8 @@
 #include "src\Maths\MathFunctions.h"
 #include <thread>
 
+#define HIGH_FPS 0
+
 namespace clockwork {
 
 	Engine::Engine(const char* title) noexcept
@@ -66,8 +68,15 @@ namespace clockwork {
 		m_currentState->State::enter();//hier als erstes state::enter aufrufen 
 		m_currentState->enter();
 
+#if HIGH_FPS
+		m_window->setVsync(0);//disable vsync and performancemode for most fps 
+		bool performanceMode = false;
+#else
 		m_window->setVsync(1);//disable vsync and performancemode for most fps 
 		bool performanceMode = true;
+#endif
+
+
 		m_window->hideCursor(true);
 
 		int steps { 0 }, targetFps { 144 }, fps { targetFps };//you have to set your desired targetfps and you can then later see the true fps of your gameloop

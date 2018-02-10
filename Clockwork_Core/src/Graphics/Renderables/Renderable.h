@@ -16,6 +16,9 @@
 #include "src\Utils\Image.h"
 
 namespace clockwork {
+	namespace logics {
+		class GameObject;
+	}
 	namespace graphics {
 
 		class Renderable
@@ -23,16 +26,10 @@ namespace clockwork {
 
 		protected:
 			int m_textureId;///später wahrscheinlich materialid mit materialarray benutzen | dann auch materialarray, etc machen 
-			maths::Mat4f m_modelMatrix;
+			logics::GameObject* m_gameObject;
 
 		public:
-			maths::Vec3f size;
-			maths::Vec3f rotation;
-			maths::Vec3f position;
-
-		public:
-			Renderable() noexcept;
-			Renderable(int textureId, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position) noexcept;
+			Renderable(int textureId, logics::GameObject* gameObject) noexcept;
 			~Renderable() noexcept;
 			Renderable(const Renderable& other) = delete;
 			Renderable(Renderable&& other) noexcept;
@@ -40,8 +37,9 @@ namespace clockwork {
 			Renderable& operator=(Renderable&& other) noexcept;
 
 		public:
+			logics::GameObject* const getGameObject() const noexcept;
+			void setGameObject(logics::GameObject* gameObject) noexcept;
 			inline const int getTextureId() const noexcept{return m_textureId;}
-			inline const maths::Mat4f& getModelMatrix() const noexcept{return m_modelMatrix;}
 
 		};
 

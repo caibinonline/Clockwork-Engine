@@ -11,29 +11,32 @@
 * You can use this software under the following License: https://github.com/Clock-work/Clockwork-Engine/blob/master/LICENSE
 *************************************************************************/
 #include "Renderable.h"
+#include "src\Logics\Entities\GameObject.h"
 
 namespace clockwork {
 	namespace graphics {
 
-		Renderable::Renderable() noexcept
-			: m_textureId(0), m_modelMatrix(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-		{}
-		Renderable::Renderable(int textureId, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position) noexcept
-			: m_textureId(textureId), size(size), rotation(rotation), position(position)
+		Renderable::Renderable(int textureId, logics::GameObject* gameObject) noexcept
+			: m_textureId(textureId), m_gameObject(gameObject)
 		{}
 		Renderable::~Renderable() noexcept
 		{}
 		Renderable::Renderable(Renderable&& other) noexcept
-			: m_textureId(other.m_textureId), m_modelMatrix(std::move(other.m_modelMatrix)), size(std::move(other.size)), rotation(std::move(other.rotation)), position(std::move(other.position))
+			: m_textureId(other.m_textureId), m_gameObject(other.m_gameObject)
 		{}
 		Renderable& Renderable::operator=(Renderable&& other) noexcept
 		{
 			m_textureId = other.m_textureId;
-			m_modelMatrix = std::move(other.m_modelMatrix);
-			size = std::move(other.size);
-			rotation = std::move(other.rotation);
-			position = std::move(other.position);
+			m_gameObject = other.m_gameObject;
 			return *this;
+		}
+		logics::GameObject* const Renderable::getGameObject() const noexcept
+		{
+			return m_gameObject;
+		}
+		void Renderable::setGameObject(logics::GameObject* gameObject) noexcept
+		{
+			m_gameObject = gameObject;
 		}
 
 	}

@@ -39,6 +39,10 @@ namespace clockwork {
 			State() noexcept;
 			virtual ~State() noexcept = 0;
 
+		protected:
+			//sollte überschrieben werden, wenn es weitere renderer gibt| immer dazu kommentieren was virtual ist und was nicht 
+			virtual void updateProjection2() noexcept;
+
 		public:
 			virtual void enter() noexcept = 0;
 			virtual void leave() noexcept = 0;
@@ -47,14 +51,14 @@ namespace clockwork {
 			virtual void slowTick() noexcept = 0;
 			virtual void render() noexcept = 0;
 
-			//sollte überschrieben werden, wenn es weitere renderer gibt, aber in der methode sollte zuerst die methode der superklasse aufgerufen werdenn | immer dazu kommentieren was virtual ist und was nicht
+			//ruft die zu überschreibende methode auf | die hier ist nicht virtual
 			//sollte aufgerufen werden, wenn camera fov, oder camera near/far verändert wird, oder beim resizen, oder beim ändern des current camera pointer
-			virtual void updateProjection() noexcept;
+			void updateProjection() noexcept;
 
 			//nicht virtual, sollte zum ändern des camera pointers benutzt werden, da es automatisch updateprojection aufruft 
 			void setCurrentCamera(logics::Camera* camera) noexcept;
 
-		public:
+		public:///KOMMENTAR aktualisieren, aber engine durch state ersetzen
 			/*resize callback: gets called when the window size changes(fullscreen, setsize, etc) from main thread/updateInput()
 			updates the window size and its ratios to the new width and height in pixels
 			calls glViewport(0, 0, width, height) and engine->onResize(width,height,window)

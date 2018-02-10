@@ -59,6 +59,11 @@ namespace clockwork {
 
 			}
 
+			void State::updateProjection2() noexcept
+			{
+
+			}
+
 			void State::updateProjection() noexcept
 			{
 				if ( engine->getWindow()->getWidth() != 0 && engine->getWindow()->getHeight() != 0 )
@@ -67,6 +72,7 @@ namespace clockwork {
 					//auch noch orthographic updaten
 					m_defaultRenderer->updateProjection();
 				}
+				updateProjection2();
 			}
 
 			void State::setCurrentCamera(logics::Camera* camera) noexcept

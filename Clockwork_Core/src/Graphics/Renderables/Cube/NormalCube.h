@@ -14,6 +14,9 @@
 #include "src\Graphics\Renderables\Renderable.h"
 
 namespace clockwork {
+	namespace logics {
+		class GameObject;
+	}
 	namespace graphics {
 
 		class Renderer;
@@ -27,19 +30,19 @@ namespace clockwork {
 		protected:
 			friend class CubeManager;
 			friend class Renderer;
+			friend class TransparentCubeCompare;
 			int m_pos;
 			bool m_visible;
 			bool m_transparent;
 			CubeManager* m_manager;
 
 		public:
-			explicit NormalCube(Renderer* renderer, bool transparent) noexcept;
 
-			NormalCube(int textureId, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer, bool transparent) noexcept;
+			NormalCube(int textureId, bool transparent, logics::GameObject* gameObject, Renderer* renderer) noexcept;
 
-			NormalCube(const std::string& imagePath, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept;
+			NormalCube(const std::string& imagePath, logics::GameObject* gameObject, Renderer* renderer) noexcept;
 
-			NormalCube(const utils::Image& image, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, Renderer* renderer) noexcept;
+			NormalCube(const utils::Image& image, logics::GameObject* gameObject, Renderer* renderer) noexcept;
 
 			virtual ~NormalCube() noexcept;
 
@@ -54,8 +57,6 @@ namespace clockwork {
 		public:
 			//kann durch virtual erben überschrieben werden | ggf shader anders bearbeiten vor dem rendern
 			virtual void render() noexcept;
-
-			void updateModelMatrix() noexcept;
 
 			void remove() noexcept;
 

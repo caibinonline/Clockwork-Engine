@@ -15,6 +15,7 @@
 #include "NormalCube.h"
 #include "CubeManager.h"
 #include "src\Graphics\Renderer\Renderer.h"
+#include "src\Logics\Entities\GameObject.h"
 
 namespace clockwork {
 	namespace graphics {
@@ -27,7 +28,7 @@ namespace clockwork {
 			{}
 			inline bool operator()(NormalCube* ptr1, NormalCube* ptr2)
 			{
-				return ptr1->position.distance(( *m_manager->m_renderer->m_currentCamera )->getPosition()) > ptr2->position.distance(( *m_manager->m_renderer->m_currentCamera )->getPosition());
+				return ptr1->m_gameObject->getPosition().distance(( *m_manager->m_renderer->m_currentCamera )->getPosition()) > ptr2->m_gameObject->getPosition().distance(( *m_manager->m_renderer->m_currentCamera )->getPosition());
 			}
 		};
 
@@ -336,7 +337,7 @@ namespace clockwork {
 					m_transparentTextures.at(cube->m_textureId).bind();
 					cube->render();
 
-					maths::Vec3f distToCamera = ( *m_renderer->m_currentCamera )->getPosition() - cube->position;
+					maths::Vec3f distToCamera = ( *m_renderer->m_currentCamera )->getPosition() - cube->m_gameObject->getPosition();
 
 					if ( distToCamera.x > 0 )//camera is on the right side of the cube 
 						m_indexBuffer.drawParts(30, 6);//left
@@ -455,10 +456,8 @@ namespace clockwork {
 
 		void CubeManager::removeInstancedCubesAt(int pos) noexcept
 		{
-			m_copyBuffer.bind();
-			m_copyBuffer.setData(&m_instanceCubes.back()->m_textureId, ( sizeof(int) + sizeof(maths::Mat4f) ), pos * ( sizeof(int) + sizeof(maths::Mat4f) ));
-			m_copyBuffer.setData(nullptr, ( sizeof(int) + sizeof(maths::Mat4f) ), ( m_instanceCubes.size() - 1 ) * ( sizeof(int) + sizeof(maths::Mat4f) ));
 			m_instanceCubes.back()->m_pos = pos;
+			m_instanceCubes.back()->m_changed = true;
 			m_instanceCubes.at(pos)->m_pos = -1;
 			m_instanceCubes.at(pos) = m_instanceCubes.back();
 			m_instanceCubes.erase(m_instanceCubes.end() - 1);
@@ -466,8 +465,6 @@ namespace clockwork {
 
 		void CubeManager::removeLastInstancedCube() noexcept
 		{
-			m_copyBuffer.bind();
-			m_copyBuffer.setData(nullptr, ( sizeof(int) + sizeof(maths::Mat4f) ), ( m_instanceCubes.size() - 1 ) * ( sizeof(int) + sizeof(maths::Mat4f) ));
 			m_instanceCubes.back()->m_pos = -1;
 			m_instanceCubes.erase(m_instanceCubes.end() - 1);
 		}
@@ -604,12 +601,12 @@ namespace clockwork {
 				if ( m_instanceCubes.at(i)->m_textureId == textureId )
 				{
 					m_instanceCubes.at(i)->m_textureId = 0;
-					m_copyBuffer.setData(&m_instanceCubes.at(i)->m_textureId, sizeof(int), m_instanceCubes.at(i)->m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ));
+					m_instanceCubes.at(i)->m_changed = true;
 				}
 				else if ( m_instanceCubes.at(i)->m_textureId > textureId )
 				{
 					--m_instanceCubes.at(i)->m_textureId;
-					m_copyBuffer.setData(&m_instanceCubes.at(i)->m_textureId, sizeof(int), m_instanceCubes.at(i)->m_pos * ( sizeof(int) + sizeof(maths::Mat4f) ));
+					m_instanceCubes.at(i)->m_changed = true;
 				}
 			}
 		}

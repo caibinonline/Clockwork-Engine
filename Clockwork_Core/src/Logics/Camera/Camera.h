@@ -38,7 +38,7 @@ namespace clockwork {
 
 		public:
 
-			float fov;
+			float fov;//auch mit gettern mit referenz, einmal const, einmal nicht machen für multithread mit mutex
 			float nearMin;
 			float farMax;
 
