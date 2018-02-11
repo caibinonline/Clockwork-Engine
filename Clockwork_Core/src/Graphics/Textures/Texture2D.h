@@ -132,6 +132,7 @@ namespace clockwork {
 			}
 
 		public:
+			/*returns the image of the texture with the filepath, size, etc | CAREFUL: the image will have no imagedata, because it will have been cleared*/
 			const utils::Image& getImage() const noexcept {return m_image;}
 
 		};

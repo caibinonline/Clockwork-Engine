@@ -125,6 +125,7 @@ namespace clockwork {
 			every texture/image has to be the same size(same resolution and same pixelkind(rgb/rgba), so you have to use the transparentinstancedcube and transparentinstancedcubemanager for transparency textures*/
 			void setTexture(const std::string& imagePath) noexcept;
 
+			/*returns the image of the texture in the texturearray at the textureid with size, imagepath, etc | CAREFUL: the image has no imagedata, because it has been cleared*/
 			const utils::Image& getTextureImage() noexcept;
 
 			void changeRenderer(Renderer* renderer) noexcept;///changerenderer auch in normalcube machen

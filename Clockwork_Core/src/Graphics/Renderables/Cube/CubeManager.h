@@ -78,10 +78,6 @@ namespace clockwork {
 			int getNormalTextureId(const std::string& imagePath) noexcept;
 			int getTransparentTextureId(const utils::Image& image) noexcept;
 			int getTransparentTextureId(const std::string& imagePath) noexcept;
-			int containsNormalTexture(const utils::Image& image) noexcept;
-			int containsNormalTexture(const std::string& imagePath) noexcept;
-			int containsTransparentTexture(const utils::Image& image) noexcept;
-			int containsTransparentTexture(const std::string& imagePath) noexcept;
 
 		public:
 
@@ -136,6 +132,18 @@ namespace clockwork {
 			void removeNormalTexture(const utils::Image& image) noexcept;
 
 			void removeNormalTexture(const std::string& imagePath) noexcept;
+
+			bool containsInstancedTexture(const utils::Image& image) noexcept;
+
+			bool containsInstancedTexture(const std::string& imagePath) noexcept;
+
+			bool containsNormalTexture(const utils::Image& image) noexcept;
+
+			bool containsNormalTexture(const std::string& imagePath) noexcept;
+			
+			bool containsTransparentTexture(const utils::Image& image) noexcept;
+			
+			bool containsTransparentTexture(const std::string& imagePath) noexcept;
 
 			const Renderer* const getRenderer() const noexcept;
 

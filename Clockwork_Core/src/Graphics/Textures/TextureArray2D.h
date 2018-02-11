@@ -21,10 +21,6 @@
 #include "src\Graphics\Buffers\FrameBuffer.h"
 
 
-#include "src\Core\Engine.h"///NUR ZUM TEST
-#include "src\Core\Window.h"
-
-
 namespace clockwork {
 	namespace graphics {
 
@@ -132,29 +128,6 @@ namespace clockwork {
 		private:
 			void addImage(const utils::Image& image) noexcept
 			{
-// 				m_images.push_back(image);
-// 				glBindTexture(GL_TEXTURE_2D_ARRAY, m_id);
-// 				if ( image.hasAlpha() )//look at pixelsize to guess the colour format for the image
-// 				{
-// 					glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, nullptr);
-// 					for ( unsigned int img = 0; img < m_images.size(); ++img )
-// 					{
-// 						glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, m_images.at(img).getData());
-// 					}
-// 				}
-// 				else
-// 				{
-// 					glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, image.getWidth(), image.getHeight(), m_images.size(), 0, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, nullptr);
-// 					for ( unsigned int img = 0; img < m_images.size(); ++img )
-// 					{
-// 						glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, img, image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, m_images.at(img).getData());//GEHT NICHT WEGEN CLEAR
-// 					}
-// 				}
-// 				glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
-
-
-
-
 				if ( image.hasAlpha() )//look at pixelsize to guess the colour format for the image
 				{
 					if ( m_images.empty() )
@@ -166,14 +139,17 @@ namespace clockwork {
 					{
 						++m_bufferSize;
 						m_bufferSize *= 2;
-
 						TextureArray2D temp { 0,m_textureRepeat,m_borderColour,m_textureFilterUpscale,m_textureFilterDownscale };
 						glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, image.getWidth(), image.getHeight(), m_bufferSize, 0, utils::Image::getColourOrderRGBA(), GL_UNSIGNED_BYTE, nullptr);
+
 						m_readBuffer->bind();
-						glFramebufferTexture3D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_3D, m_id, 0, 0);//letzte 0 muss ggf m_buffersize sein 
 						m_drawBuffer->bind();
-						glFramebufferTexture3D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_3D, temp.m_id, 0, 0);//letzte 0 muss ggf m_buffersize sein 
-						glBlitFramebuffer(0, 0, image.getWidth(), image.getHeight(), 0, 0, image.getWidth(), image.getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+						for ( unsigned int i = 0; i < m_images.size(); ++i )
+						{
+							glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_id, 0, i);
+							glFramebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, temp.m_id, 0, i);
+							glBlitFramebuffer(0, 0, image.getWidth(), image.getHeight(), 0, 0, image.getWidth(), image.getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+						}
 						this->m_id = temp.m_id;
 						temp.m_id = 0;
 						m_readBuffer->unbind();
@@ -187,60 +163,32 @@ namespace clockwork {
 					{
 						glBindTexture(GL_TEXTURE_2D_ARRAY, m_id);
 						glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, image.getWidth(), image.getHeight(), m_bufferSize, 0, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, nullptr);
-						engine->getWindow()->checkError();
 					}
 					else if ( m_images.size() >= m_bufferSize )
 					{
 						++m_bufferSize;
 						m_bufferSize *= 2;
-
 						TextureArray2D temp { 0,m_textureRepeat,m_borderColour,m_textureFilterUpscale,m_textureFilterDownscale };
 						glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, image.getWidth(), image.getHeight(), m_bufferSize, 0, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, nullptr);
-						engine->getWindow()->checkError();
+
 						m_readBuffer->bind();
-						glFramebufferTexture3D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_3D, m_id, 0, 0);//letzte 0 muss ggf m_buffersize sein 
-						engine->getWindow()->checkError();
 						m_drawBuffer->bind();
-						glFramebufferTexture3D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_3D, temp.m_id, 0, m_bufferSize);//letzte 0 muss ggf m_buffersize sein 
-						engine->getWindow()->checkError();
-						glBlitFramebuffer(0, 0, image.getWidth(), image.getHeight(), 0, 0, image.getWidth(), image.getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
-						engine->getWindow()->checkError();
+						for ( unsigned int i = 0; i < m_images.size(); ++i )
+						{
+							glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_id, 0, i); 
+							glFramebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, temp.m_id, 0, i);
+							glBlitFramebuffer(0, 0, image.getWidth(), image.getHeight(), 0, 0, image.getWidth(), image.getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+						}
 						this->m_id = temp.m_id;
 						temp.m_id = 0;
 						m_readBuffer->unbind();
 						m_drawBuffer->unbind();
-
-
-						/*oben die sachen http://docs.gl/gl4/glBlitFramebuffer     http://docs.gl/gl4/glFramebufferTexture
-						https://www.khronos.org/opengl/wiki/Framebuffer_Object_Extension_Examples
-						https://www.khronos.org/opengl/wiki/Texture_Storage#Texture_copy
-						https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glFramebufferTextureLayer.xhtml
-
-
-						WICHTIG ALTERNATIVE http://docs.gl/gl4/glCopyImageSubData GEHT NUR FÜR OPENGL 4.3 oder höher kopiert images |  
-						
-						andere ALTERNATIVE FBO MACHEN DANN GLFRAMEBUFFERTEXTURELAYER BENUTZEN UND DANN READPIXEL BENUTZEN FÜR OPENGL 3.2
-						
-						GLuint fboId = 0;
-glGenFramebuffers(1, &fboId);
-glBindFramebuffer(GL_READ_FRAMEBUFFER, fboId);
-
-glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-						  textureId, 0, layer);
-
-glReadPixels(...);
-
-glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);*/
-
-
-
 					}
 					glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, m_images.size(), image.getWidth(), image.getHeight(), 1, utils::Image::getColourOrderRGB(), GL_UNSIGNED_BYTE, image.getData());
-					engine->getWindow()->checkError();
 				}
 				glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 				m_images.push_back(image);
-				//m_images.back().clearData();//erst wieder ent ausklammern, wenn die 2. variante benutzt wird
+				m_images.back().clearData();
 			}
 
 		public:
@@ -378,6 +326,16 @@ glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);*/
 					std::cout << "Error TextureArray2D::removeTexture(): TextureId is not in the texturearray2d" << std::endl;
 #endif
 				m_images.erase(m_images.begin() + textureId);
+				m_readBuffer->bind();
+				m_drawBuffer->bind();
+				for ( unsigned int i = textureId; i < m_images.size(); ++i )
+				{
+					glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_id, 0, i + 1);
+					glFramebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_id, 0, i);
+					glBlitFramebuffer(0, 0, m_images.front().getWidth(), m_images.front().getHeight(), 0, 0, m_images.front().getWidth(), m_images.front().getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+				}
+				m_readBuffer->unbind();
+				m_drawBuffer->unbind();
 			}
 
 			/*removes a texture/image with the same filepath out of the texturearray*/
@@ -391,7 +349,7 @@ glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);*/
 				{
 					if ( m_images.at(i).getFilepath() == image.getFilepath() )
 					{
-						m_images.erase(m_images.begin() + i);
+						removeTexture(i);
 						return;
 					}
 				}
@@ -407,7 +365,7 @@ glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);*/
 				{
 					if ( m_images.at(i).getFilepath() == imagePath )
 					{
-						m_images.erase(m_images.begin() + i);
+						removeTexture(i);
 						return;
 					}
 				}
@@ -442,7 +400,8 @@ glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);*/
 				return false;
 			}
 
-			/*returns the image at the given imageId/textureid | this image will be visible when using the imageId in the fragment shader*/
+			/*returns the image at the given imageId/textureid | this image will be visible when using the imageId in the fragment shader
+			CAREFUL: this image will have no imagedata, because it will have been cleared!*/
 			const utils::Image& getTexture(int textureId) const noexcept
 			{
 #if CLOCKWORK_DEBUG

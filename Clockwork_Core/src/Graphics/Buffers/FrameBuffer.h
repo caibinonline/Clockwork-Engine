@@ -30,7 +30,7 @@ namespace clockwork {
 			/*das gleiche wie bei anderen buffern kommentieren | buffer ist bufferart kann GL_READ_FRAMEBUFFER, oder GL_DRAW_FRAMEBUFFER sein, oder GL_FRAMEBUFFER für beide
 			die beiden sind seperat für bind calls(können also gleichzeitig bound sein) 
 			buffer ist nicht bound nach konstruktor */
-			explicit FrameBuffer(GLenum buffer = GL_READ_FRAMEBUFFER) noexcept
+			explicit FrameBuffer(GLenum buffer = GL_FRAMEBUFFER) noexcept
 				: m_size(0), m_buffer(buffer)
 			{
 				glGenFramebuffers(1, &m_id);

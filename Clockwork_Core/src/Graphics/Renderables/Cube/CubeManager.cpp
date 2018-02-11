@@ -247,54 +247,6 @@ namespace clockwork {
 			return m_transparentTextures.size() - 1;
 		}
 
-		int CubeManager::containsNormalTexture(const utils::Image& image) noexcept
-		{
-#if CLOCKWORK_DEBUG
-			if ( image.getData() == nullptr )
-				std::cout << "Error CubeManager::containsNormalTexture(): Image has no data" << std::endl;
-#endif
-			for ( unsigned int i = 0; i < m_normalTextures.size(); ++i )
-			{
-				if ( m_normalTextures.at(i).getImage().getFilepath() == image.getFilepath() )
-					return true;
-			}
-			return false;
-		}
-
-		int CubeManager::containsNormalTexture(const std::string& imagePath) noexcept
-		{
-			for ( unsigned int i = 0; i < m_normalTextures.size(); ++i )
-			{
-				if ( m_normalTextures.at(i).getImage().getFilepath() == imagePath )
-					return true;
-			}
-			return false;
-		}
-
-		int CubeManager::containsTransparentTexture(const utils::Image& image) noexcept
-		{
-#if CLOCKWORK_DEBUG
-			if ( image.getData() == nullptr )
-				std::cout << "Error CubeManager::containsNormalTexture(): Image has no data" << std::endl;
-#endif
-			for ( unsigned int i = 0; i < m_transparentTextures.size(); ++i )
-			{
-				if ( m_transparentTextures.at(i).getImage().getFilepath() == image.getFilepath() )
-					return true;
-			}
-			return false;
-		}
-
-		int CubeManager::containsTransparentTexture(const std::string& imagePath) noexcept
-		{
-			for ( unsigned int i = 0; i < m_transparentTextures.size(); ++i )
-			{
-				if ( m_transparentTextures.at(i).getImage().getFilepath() == imagePath )
-					return true;
-			}
-			return false;
-		}
-
 		void CubeManager::renderInstancedCubes() noexcept
 		{
 			m_textureArray.bind();
@@ -701,6 +653,56 @@ namespace clockwork {
 					break;
 				}
 			}
+		}
+
+		bool CubeManager::containsInstancedTexture(const utils::Image& image) noexcept
+		{
+			return m_textureArray.contains(image);
+		}
+
+		bool CubeManager::containsInstancedTexture(const std::string& imagePath) noexcept
+		{
+			return m_textureArray.contains(imagePath);
+		}
+
+		bool CubeManager::containsNormalTexture(const utils::Image& image) noexcept
+		{
+			for ( unsigned int i = 0; i < m_normalTextures.size(); ++i )
+			{
+				if ( m_normalTextures.at(i).getImage().getFilepath() == image.getFilepath() )
+					return true;
+			}
+			return false;
+		}
+
+		bool CubeManager::containsNormalTexture(const std::string& imagePath) noexcept
+		{
+			for ( unsigned int i = 0; i < m_normalTextures.size(); ++i )
+			{
+				if ( m_normalTextures.at(i).getImage().getFilepath() == imagePath )
+					return true;
+			}
+			return false;
+		}
+
+		bool CubeManager::containsTransparentTexture(const utils::Image& image) noexcept
+		{
+			for ( unsigned int i = 0; i < m_transparentTextures.size(); ++i )
+			{
+				if ( m_transparentTextures.at(i).getImage().getFilepath() == image.getFilepath() )
+					return true;
+			}
+			return false;
+		}
+
+		bool CubeManager::containsTransparentTexture(const std::string& imagePath) noexcept
+		{
+			for ( unsigned int i = 0; i < m_transparentTextures.size(); ++i )
+			{
+				if ( m_transparentTextures.at(i).getImage().getFilepath() == imagePath )
+					return true;
+			}
+			return false;
 		}
 
 		const Renderer* const CubeManager::getRenderer() const noexcept
