@@ -65,7 +65,7 @@ namespace clockwork {
 					chunk.renderAdd();
 				}
 			};
-			passFunctionToChunks<RenderAddFunctor>(m_currentChunk->getId(), m_renderDistance);
+			passFunctionToChunks<RenderAddFunctor>(m_currentChunk->getId() - m_tickDistance, m_currentChunk->getId() + m_tickDistance);
 		}
 
 		ChunkSystem::~ChunkSystem() noexcept
@@ -121,9 +121,17 @@ namespace clockwork {
 			{
 				Chunk& oldChunk = *m_currentChunk;
 				Chunk& newChunk = getChunkAt(m_state->getCurrentCamera().getPosition());
-				maths::Vec3i diffrence = oldChunk.getId() - newChunk.getId();
+				maths::Vec3i diffrence = newChunk.getId() - oldChunk.getId();
+				std::cout << diffrence << std::endl;
 
-
+// 				struct RenderAddFunctor
+// 				{
+// 					void function(Chunk& chunk) noexcept
+// 					{
+// 						chunk.renderAdd();
+// 					}
+// 				};
+// 				passFunctionToChunks<RenderAddFunctor>(m_currentChunk->getId() - m_tickDistance, m_currentChunk->getId() + m_tickDistance);
 
 				//hier renderadd/renderremove mit currentchunklist vergleichen, etc ... | am besten gucken wie id ist was schon in renderrange liegt und was dann nicht mehr, etc | WICHTIG auch bei setrenderdistance, etc verändern 
 
@@ -161,7 +169,7 @@ namespace clockwork {
 					chunk.tick();
 				}
 			};
-			passFunctionToChunks<TickFunctor>(m_currentChunk->getId(), m_tickDistance);
+			passFunctionToChunks<TickFunctor>(m_currentChunk->getId() - m_tickDistance, m_currentChunk->getId() + m_tickDistance);
 		}
 
 		void ChunkSystem::slowTickAll() noexcept
@@ -187,21 +195,18 @@ namespace clockwork {
 					chunk.slowTick();
 				}
 			};
-			passFunctionToChunks<SlowTickFunctor>(m_currentChunk->getId(), m_tickDistance);
+			passFunctionToChunks<SlowTickFunctor>(m_currentChunk->getId() - m_tickDistance, m_currentChunk->getId() + m_tickDistance);
 		}
 
-		template<typename functor>void ChunkSystem::passFunctionToChunks(const maths::Vec3<int>& startId, const maths::Vec3<int>& range) noexcept
+		template<typename functor>void ChunkSystem::passFunctionToChunks(const maths::Vec3<int>& pos1, const maths::Vec3<int>& pos2) noexcept
 		{
 			functor funct { };
 
-			int maxX = startId.x + range.x + 1;
-			int maxY = startId.y + range.y + 1;
-			int maxZ = startId.z + range.z + 1;
-			for ( int x = startId.x - range.x; x < maxX; ++x )
+			for ( int x = pos1.x; x <= pos2.x; ++x )
 			{
-				for ( int y = startId.y - range.y; y < maxY; ++y )
+				for ( int y = pos1.y; y <= pos2.y; ++y )
 				{
-					for ( int z = startId.z - range.z; z < maxZ; ++z )
+					for ( int z = pos1.z; z <= pos2.z; ++z )
 					{
 						if ( x < 0 )
 						{

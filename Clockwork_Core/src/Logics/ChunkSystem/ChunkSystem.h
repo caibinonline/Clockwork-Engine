@@ -56,7 +56,8 @@ namespace clockwork {
 			void tick() noexcept;
 			void slowTickAll() noexcept;
 			void slowTick() noexcept;
-			/*passes a function to chunks at the given position(id) with the given range(id) | you have to call this method with a functor struct layout like the following 
+			/*passes a function to chunks in the given range | you have to call this method with a functor struct layout like the following 
+			the function is passed to the chunks between and at the 2 positions 
 			struct SlowTickFunctor
 			{
 				void function(Chunk& chunk) noexcept
@@ -64,9 +65,9 @@ namespace clockwork {
 					chunk.slowTick();
 				}
 			};
-			passFunction<SlowTickFunctor>(m_currentChunk->getId(), m_tickDistance);
+			passFunction<SlowTickFunctor>(m_currentChunk->getId()-m_tickDistance, m_currentChunk->getId()+m_tickDistance);
 			*/
-			template<typename functor>void passFunctionToChunks(const maths::Vec3<int>& startId, const maths::Vec3<int>& range) noexcept;
+			template<typename functor>void passFunctionToChunks(const maths::Vec3<int>& pos1, const maths::Vec3<int>& pos2) noexcept;
 
 		};
 

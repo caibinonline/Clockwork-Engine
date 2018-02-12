@@ -19,19 +19,19 @@ namespace clockwork {
 	namespace logics {
 
 		class State;
+		class Chunk;
 
 		class GameObject
 		{
 
 		protected://auch in subklassen immer erst mutex locken, etc | oder getter/setter nehmen 
-			State * m_state;
+			Chunk * m_chunk;
 			maths::Mat4f m_modelMatrix;
 			maths::Vec3f m_size;
 			maths::Vec3f m_rotation;
 			maths::Vec3f m_position;
 
 		public:
-			GameObject(State* state) noexcept;
 			GameObject(const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, State* state) noexcept;
 			virtual ~GameObject() noexcept;
 			GameObject(const GameObject& other) noexcept;
@@ -48,9 +48,9 @@ namespace clockwork {
 			//updated modelmatrix und ruft onMatrixChange auf | immer nach verändern der vektoren irgendwann updatemodelmatrix aufrufen
 			void updateModelMatrix() noexcept;
 
-			const State& getState() const noexcept;
+			const Chunk& getChunk() const noexcept;
 			//hier threadsafe machen ohne const kann state verändert werden
-			State& getState() noexcept;
+			Chunk& getChunk() noexcept;
 
 			inline const maths::Mat4f& getModelMatrix() const noexcept {return m_modelMatrix;}
 			inline const maths::Mat4f* getModelMatrixMemoryLocation() const noexcept {return &m_modelMatrix;}

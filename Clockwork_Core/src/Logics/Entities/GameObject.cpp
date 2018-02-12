@@ -11,16 +11,15 @@
 * You can use this software under the following License: https://github.com/Clock-work/Clockwork-Engine/blob/master/LICENSE
 *************************************************************************/
 #include "GameObject.h"
+#include "src\Logics\States\State.h"
+#include "src\Logics\ChunkSystem\ChunkSystem.h"
+#include "src\Logics\ChunkSystem\Chunk.h"
 
 namespace clockwork {
 	namespace logics {
 
-		GameObject::GameObject(State* state) noexcept
-			: m_state(state)
-		{}
-
 		GameObject::GameObject(const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, State* state) noexcept
-			: m_size(size), m_rotation(rotation), m_position(position), m_modelMatrix(maths::Mat4f::scaling(size)), m_state(state)
+			: m_size(size), m_rotation(rotation), m_position(position), m_modelMatrix(maths::Mat4f::scaling(size)), m_chunk(&state->getChunkSystem().getChunkAt(position))
 		{
 			if ( rotation.x > 0 )
 				m_modelMatrix.rotateXD(rotation.x);
@@ -37,15 +36,15 @@ namespace clockwork {
 		}
 
 		GameObject::GameObject(const GameObject& other) noexcept
-			: m_size(other.m_size), m_rotation(other.m_rotation), m_position(other.m_position), m_modelMatrix(other.m_modelMatrix), m_state(other.m_state)
+			: m_size(other.m_size), m_rotation(other.m_rotation), m_position(other.m_position), m_modelMatrix(other.m_modelMatrix), m_chunk(other.m_chunk)
 		{
 
 		}
 
 		GameObject::GameObject(GameObject&& other) noexcept
-			: m_size(other.m_size), m_rotation(other.m_rotation), m_position(other.m_position), m_modelMatrix(other.m_modelMatrix), m_state(other.m_state)
+			: m_size(other.m_size), m_rotation(other.m_rotation), m_position(other.m_position), m_modelMatrix(other.m_modelMatrix), m_chunk(other.m_chunk)
 		{
-
+			other.m_chunk = nullptr;//auch hier bei listenern add/remove/etc
 		}
 
 		GameObject& GameObject::operator=(const GameObject& other) noexcept
@@ -54,7 +53,7 @@ namespace clockwork {
 			m_rotation = other.m_rotation;
 			m_position = other.m_position;
 			m_modelMatrix = other.m_modelMatrix;
-			m_state = other.m_state;
+			m_chunk = other.m_chunk;
 			this->onMatrixChange();
 			return *this;
 		}
@@ -65,7 +64,9 @@ namespace clockwork {
 			m_rotation = other.m_rotation;
 			m_position = other.m_position;
 			m_modelMatrix = other.m_modelMatrix;
-			m_state = other.m_state;
+			m_chunk = other.m_chunk;
+			//hier ggf auch add/remove sachen in den listenern
+			other.m_chunk = nullptr;
 			this->onMatrixChange();
 			return *this;
 		}
@@ -83,14 +84,14 @@ namespace clockwork {
 			this->onMatrixChange();
 		}
 
-		const State& GameObject::getState() const noexcept
+		const Chunk& GameObject::getChunk() const noexcept
 		{
-			return *m_state;
+			return *m_chunk;
 		}
 
-		State& GameObject::getState() noexcept
+		Chunk& GameObject::getChunk() noexcept
 		{
-			return *m_state;
+			return *m_chunk;
 		}
 
 	}
