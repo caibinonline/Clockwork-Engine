@@ -18,7 +18,7 @@
 namespace clockwork {
 	namespace logics {
 
-		void Chunk::init(const maths::Vec3<float>& min, const maths::Vec3<float>& max, int idX, int idY, int idZ, ChunkSystem* chunkSystem) noexcept
+		void Chunk::init(const maths::Vec3f& min, const maths::Vec3f& max, int idX, int idY, int idZ, ChunkSystem* chunkSystem) noexcept
 		{
 			m_min = min;
 			m_max = max;

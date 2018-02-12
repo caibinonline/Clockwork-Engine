@@ -21,7 +21,7 @@ namespace clockwork {
 
 
 
-		ChunkSystem::ChunkSystem(const maths::Vec3<float>& min, const maths::Vec3<float>& max, const maths::Vec3<float>& chunkSize, const maths::Vec3<int>& renderDistance, const maths::Vec3<int>& tickDistance, State* state) noexcept
+		ChunkSystem::ChunkSystem(const maths::Vec3f& min, const maths::Vec3f& max, const maths::Vec3f& chunkSize, const maths::Vec3i& renderDistance, const maths::Vec3i& tickDistance, State* state) noexcept
 			: m_min(min), m_max(max), m_chunkSize(chunkSize), m_state(state), m_renderDistance(renderDistance), m_tickDistance(tickDistance)
 		{
 			maths::Vec3<float> count = ( max - min ) / chunkSize;
@@ -58,176 +58,14 @@ namespace clockwork {
 				std::cout << "Error ChunkSystem::ChunkSystem(): TickDistance too big" << std::endl;
 #endif
 			m_currentChunk = &getChunkAt(m_state->getCurrentCamera().getPosition());
-			const maths::Vec3<int>& chunkid = m_currentChunk->getId();
-
-			for ( int x = chunkid.x - m_renderDistance.x; x < chunkid.x + m_renderDistance.x + 1; ++x )
+			struct RenderAddFunctor
 			{
-				for ( int y = chunkid.y - m_renderDistance.y; y < chunkid.y + m_renderDistance.y + 1; ++y )
+				void function(Chunk& chunk) noexcept
 				{
-					for ( int z = chunkid.z - m_renderDistance.z; z < chunkid.z + m_renderDistance.z + 1; ++z )
-					{
-						if ( x < 0 )
-						{
-							int newX = m_count.x + x;
-							if ( y < 0 )
-							{
-								int newY = m_count.y + y;
-								if ( z < 0 )
-								{
-									int newZ = m_count.z + z;
-									m_chunks[newX][newY][newZ].renderAdd();
-								}
-								else if ( z >= m_count.z )
-								{
-									int newZ = z - m_count.z;
-									m_chunks[newX][newY][newZ].renderAdd();
-								}
-								else
-								{
-									m_chunks[newX][newY][z].renderAdd();
-								}
-							}
-							else if ( y >= m_count.y )
-							{
-								int newY = y - m_count.y;
-								if ( z < 0 )
-								{
-									int newZ = m_count.z + z;
-									m_chunks[newX][newY][newZ].renderAdd();
-								}
-								else if ( z >= m_count.z )
-								{
-									int newZ = z - m_count.z;
-									m_chunks[newX][newY][newZ].renderAdd();
-								}
-								else
-								{
-									m_chunks[newX][newY][z].renderAdd();
-								}
-							}
-							else if ( z < 0 )
-							{
-								int newZ = m_count.z + z;
-								m_chunks[newX][y][newZ].renderAdd();
-							}
-							else if ( z >= m_count.z )
-							{
-								int newZ = z - m_count.z;
-								m_chunks[newX][y][newZ].renderAdd();
-							}
-							else
-							{
-								m_chunks[newX][y][z].renderAdd();
-							}
-						}
-						else if ( x >= m_count.x )
-						{
-							int newX = x - m_count.x;
-							if ( y < 0 )
-							{
-								int newY = m_count.y + y;
-								if ( z < 0 )
-								{
-									int newZ = m_count.z + z;
-									m_chunks[newX][newY][newZ].renderAdd();
-								}
-								else if ( z >= m_count.z )
-								{
-									int newZ = z - m_count.z;
-									m_chunks[newX][newY][newZ].renderAdd();
-								}
-								else
-								{
-									m_chunks[newX][newY][z].renderAdd();
-								}
-							}
-							else if ( y >= m_count.y )
-							{
-								int newY = y - m_count.y;
-								if ( z < 0 )
-								{
-									int newZ = m_count.z + z;
-									m_chunks[newX][newY][newZ].renderAdd();
-								}
-								else if ( z >= m_count.z )
-								{
-									int newZ = z - m_count.z;
-									m_chunks[newX][newY][newZ].renderAdd();
-								}
-								else
-								{
-									m_chunks[newX][newY][z].renderAdd();
-								}
-							}
-							else if ( z < 0 )
-							{
-								int newZ = m_count.z + z;
-								m_chunks[newX][y][newZ].renderAdd();
-							}
-							else if ( z >= m_count.z )
-							{
-								int newZ = z - m_count.z;
-								m_chunks[newX][y][newZ].renderAdd();
-							}
-							else
-							{
-								m_chunks[newX][y][z].renderAdd();
-							}
-						}
-						else if ( y < 0 )
-						{
-							int newY = m_count.y + y;
-							if ( z < 0 )
-							{
-								int newZ = m_count.z + z;
-								m_chunks[x][newY][newZ].renderAdd();
-							}
-							else if ( z >= m_count.z )
-							{
-								int newZ = z - m_count.z;
-								m_chunks[x][newY][newZ].renderAdd();
-							}
-							else
-							{
-								m_chunks[x][newY][z].renderAdd();
-							}
-						}
-						else if ( y >= m_count.y )
-						{
-							int newY = y - m_count.y;
-							if ( z < 0 )
-							{
-								int newZ = m_count.z + z;
-								m_chunks[x][newY][newZ].renderAdd();
-							}
-							else if ( z >= m_count.z )
-							{
-								int newZ = z - m_count.z;
-								m_chunks[x][newY][newZ].renderAdd();
-							}
-							else
-							{
-								m_chunks[x][newY][z].renderAdd();
-							}
-						}
-						else if ( z < 0 )
-						{
-							int newZ = m_count.z + z;
-							m_chunks[x][y][newZ].renderAdd();
-						}
-						else if ( z >= m_count.z )
-						{
-							int newZ = z - m_count.z;
-							m_chunks[x][y][newZ].renderAdd();
-						}
-						else
-						{
-							m_chunks[x][y][z].renderAdd();
-						}
-					}
+					chunk.renderAdd();
 				}
-			}
-
+			};
+			passFunctionToChunks<RenderAddFunctor>(m_currentChunk->getId(), m_renderDistance);
 		}
 
 		ChunkSystem::~ChunkSystem() noexcept
@@ -243,11 +81,11 @@ namespace clockwork {
 			delete[] m_chunks;
 		}
 
-		const Chunk& ChunkSystem::getChunk(const maths::Vec3<int>& id) const noexcept
+		const Chunk& ChunkSystem::getChunk(const maths::Vec3i& id) const noexcept
 		{
 			return m_chunks[id.x][id.y][id.z];
 		}
-		Chunk& ChunkSystem::getChunk(const maths::Vec3<int>& id) noexcept
+		Chunk& ChunkSystem::getChunk(const maths::Vec3i& id) noexcept
 		{
 			return m_chunks[id.x][id.y][id.z];
 		}
@@ -281,9 +119,22 @@ namespace clockwork {
 		{
 			if ( *m_currentChunk != getChunkAt(m_state->getCurrentCamera().getPosition()) )
 			{
+				Chunk& oldChunk = *m_currentChunk;
+				Chunk& newChunk = getChunkAt(m_state->getCurrentCamera().getPosition());
+				maths::Vec3i diffrence = oldChunk.getId() - newChunk.getId();
+
+
+
 				//hier renderadd/renderremove mit currentchunklist vergleichen, etc ... | am besten gucken wie id ist was schon in renderrange liegt und was dann nicht mehr, etc | WICHTIG auch bei setrenderdistance, etc verändern 
 
-				m_currentChunk = &getChunkAt(m_state->getCurrentCamera().getPosition());
+				//beim erstellen müssen die einzelnen renderlistener objekte sich aber auch schon renderAdd von sich aufrufen, wenn der chunk, dem sie hinzugefügt werden in renderrange vom currentchunk ist(ggf methode in chunk machen inRenderRange() ) | das darf aber nicht im konstruktor von renderlistener geschehen, da renderadd wahrscheinlich virtuelle methode ist und der subklassenanteil noch nicht erstellt ist 
+				//ggf aus subklassenkonstruktor von dem erbenden gameobject check methode, oder so der superklasse aufrufen(ist dann protected methode) | renderadd und renderremove werden ja dann virtuell überschrieben und werden von den modellen add und remove aufrufen(immer) | bei den modell methoden add/remove wird intern dann noch getestet, ob sie schon added/removed wurden und dann wird dies nicht ausgeführt
+				//visible bool, etc von gameobject muss dann in renderadd/renderremove von gameobject geregelt werden, wo es an die modelle weitergeleitet wird 
+				//gameobject hat dann wahrscheinlich auch nur noch einen chunk pointer auf aktuellen chunk und eine move funktion zu neuem chunk(von allen pointer listen render/tick/etc entfernen und beim neuen adden(ggf renderadd/renderremove aufrufen, wenn in rendersichtweite)
+				//alwaysactive chunk nicht vergessen | dafür ggf noch bool in konstruktor von gameobject mitgeben, ob alwaysactive, oder nicht und dementsprechend wird es hinzugefügt | alwaysactivechunk kann auch von einer anderen klasse sein mit nur den listen ohne position, id, etc
+				//von normalem chunk zu alwaysactive chunk und andersherum moven wird schwer
+
+				m_currentChunk = &newChunk;
 			}
 		}
 
@@ -303,176 +154,14 @@ namespace clockwork {
 
 		void ChunkSystem::tick() noexcept
 		{
-			const maths::Vec3<int>& chunkid = m_currentChunk->getId();
-			for ( int x = chunkid.x - m_tickDistance.x; x < chunkid.x + m_tickDistance.x + 1; ++x )
+			struct TickFunctor
 			{
-				for ( int y = chunkid.y - m_tickDistance.y; y < chunkid.y + m_tickDistance.y + 1; ++y )
+				void function(Chunk& chunk) noexcept
 				{
-					for ( int z = chunkid.z - m_tickDistance.z; z < chunkid.z + m_tickDistance.z + 1; ++z )
-					{
-						if ( x < 0 )
-						{
-							int newX = m_count.x + x;
-							if ( y < 0 )
-							{
-								int newY = m_count.y + y;
-								if ( z < 0 )
-								{
-									int newZ = m_count.z + z;
-									m_chunks[newX][newY][newZ].tick();
-								}
-								else if ( z >= m_count.z )
-								{
-									int newZ = z - m_count.z;
-									m_chunks[newX][newY][newZ].tick();
-								}
-								else
-								{
-									m_chunks[newX][newY][z].tick();
-								}
-							}
-							else if ( y >= m_count.y )
-							{
-								int newY = y - m_count.y;
-								if ( z < 0 )
-								{
-									int newZ = m_count.z + z;
-									m_chunks[newX][newY][newZ].tick();
-								}
-								else if ( z >= m_count.z )
-								{
-									int newZ = z - m_count.z;
-									m_chunks[newX][newY][newZ].tick();
-								}
-								else
-								{
-									m_chunks[newX][newY][z].tick();
-								}
-							}
-							else if ( z < 0 )
-							{
-								int newZ = m_count.z + z;
-								m_chunks[newX][y][newZ].tick();
-							}
-							else if ( z >= m_count.z )
-							{
-								int newZ = z - m_count.z;
-								m_chunks[newX][y][newZ].tick();
-							}
-							else
-							{
-								m_chunks[newX][y][z].tick();
-							}
-
-						}
-						else if ( x >= m_count.x )
-						{
-							int newX = x - m_count.x;
-							if ( y < 0 )
-							{
-								int newY = m_count.y + y;
-								if ( z < 0 )
-								{
-									int newZ = m_count.z + z;
-									m_chunks[newX][newY][newZ].tick();
-								}
-								else if ( z >= m_count.z )
-								{
-									int newZ = z - m_count.z;
-									m_chunks[newX][newY][newZ].tick();
-								}
-								else
-								{
-									m_chunks[newX][newY][z].tick();
-								}
-							}
-							else if ( y >= m_count.y )
-							{
-								int newY = y - m_count.y;
-								if ( z < 0 )
-								{
-									int newZ = m_count.z + z;
-									m_chunks[newX][newY][newZ].tick();
-								}
-								else if ( z >= m_count.z )
-								{
-									int newZ = z - m_count.z;
-									m_chunks[newX][newY][newZ].tick();
-								}
-								else
-								{
-									m_chunks[newX][newY][z].tick();
-								}
-							}
-							else if ( z < 0 )
-							{
-								int newZ = m_count.z + z;
-								m_chunks[newX][y][newZ].tick();
-							}
-							else if ( z >= m_count.z )
-							{
-								int newZ = z - m_count.z;
-								m_chunks[newX][y][newZ].tick();
-							}
-							else
-							{
-								m_chunks[newX][y][z].tick();
-							}
-
-						}
-						else if ( y < 0 )
-						{
-							int newY = m_count.y + y;
-							if ( z < 0 )
-							{
-								int newZ = m_count.z + z;
-								m_chunks[x][newY][newZ].tick();
-							}
-							else if ( z >= m_count.z )
-							{
-								int newZ = z - m_count.z;
-								m_chunks[x][newY][newZ].tick();
-							}
-							else
-							{
-								m_chunks[x][newY][z].tick();
-							}
-						}
-						else if ( y >= m_count.y )
-						{
-							int newY = y - m_count.y;
-							if ( z < 0 )
-							{
-								int newZ = m_count.z + z;
-								m_chunks[x][newY][newZ].tick();
-							}
-							else if ( z >= m_count.z )
-							{
-								int newZ = z - m_count.z;
-								m_chunks[x][newY][newZ].tick();
-							}
-							else
-							{
-								m_chunks[x][newY][z].tick();
-							}
-						}
-						else if ( z < 0 )
-						{
-							int newZ = m_count.z + z;
-							m_chunks[x][y][newZ].tick();
-						}
-						else if ( z >= m_count.z )
-						{
-							int newZ = z - m_count.z;
-							m_chunks[x][y][newZ].tick();
-						}
-						else
-						{
-							m_chunks[x][y][z].tick();
-						}
-					}
+					chunk.tick();
 				}
-			}
+			};
+			passFunctionToChunks<TickFunctor>(m_currentChunk->getId(), m_tickDistance);
 		}
 
 		void ChunkSystem::slowTickAll() noexcept
@@ -491,12 +180,28 @@ namespace clockwork {
 
 		void ChunkSystem::slowTick() noexcept
 		{
-			const maths::Vec3<int>& chunkid = m_currentChunk->getId();
-			for ( int x = chunkid.x - m_tickDistance.x; x < chunkid.x + m_tickDistance.x + 1; ++x )
+			struct SlowTickFunctor
 			{
-				for ( int y = chunkid.y - m_tickDistance.y; y < chunkid.y + m_tickDistance.y + 1; ++y )
+				void function(Chunk& chunk) noexcept
 				{
-					for ( int z = chunkid.z - m_tickDistance.z; z < chunkid.z + m_tickDistance.z + 1; ++z )
+					chunk.slowTick();
+				}
+			};
+			passFunctionToChunks<SlowTickFunctor>(m_currentChunk->getId(), m_tickDistance);
+		}
+
+		template<typename functor>void ChunkSystem::passFunctionToChunks(const maths::Vec3<int>& startId, const maths::Vec3<int>& range) noexcept
+		{
+			functor funct { };
+
+			int maxX = startId.x + range.x + 1;
+			int maxY = startId.y + range.y + 1;
+			int maxZ = startId.z + range.z + 1;
+			for ( int x = startId.x - range.x; x < maxX; ++x )
+			{
+				for ( int y = startId.y - range.y; y < maxY; ++y )
+				{
+					for ( int z = startId.z - range.z; z < maxZ; ++z )
 					{
 						if ( x < 0 )
 						{
@@ -507,16 +212,16 @@ namespace clockwork {
 								if ( z < 0 )
 								{
 									int newZ = m_count.z + z;
-									m_chunks[newX][newY][newZ].slowTick();
+									funct.function(m_chunks[newX][newY][newZ]);
 								}
 								else if ( z >= m_count.z )
 								{
 									int newZ = z - m_count.z;
-									m_chunks[newX][newY][newZ].slowTick();
+									funct.function(m_chunks[newX][newY][newZ]);
 								}
 								else
 								{
-									m_chunks[newX][newY][z].slowTick();
+									funct.function(m_chunks[newX][newY][z]);
 								}
 							}
 							else if ( y >= m_count.y )
@@ -525,33 +230,32 @@ namespace clockwork {
 								if ( z < 0 )
 								{
 									int newZ = m_count.z + z;
-									m_chunks[newX][newY][newZ].slowTick();
+									funct.function(m_chunks[newX][newY][newZ]);
 								}
 								else if ( z >= m_count.z )
 								{
 									int newZ = z - m_count.z;
-									m_chunks[newX][newY][newZ].slowTick();
+									funct.function(m_chunks[newX][newY][newZ]);
 								}
 								else
 								{
-									m_chunks[newX][newY][z].slowTick();
+									funct.function(m_chunks[newX][newY][z]);
 								}
 							}
 							else if ( z < 0 )
 							{
 								int newZ = m_count.z + z;
-								m_chunks[newX][y][newZ].slowTick();
+								funct.function(m_chunks[newX][y][newZ]);
 							}
 							else if ( z >= m_count.z )
 							{
 								int newZ = z - m_count.z;
-								m_chunks[newX][y][newZ].slowTick();
+								funct.function(m_chunks[newX][y][newZ]);
 							}
 							else
 							{
-								m_chunks[newX][y][z].slowTick();
+								funct.function(m_chunks[newX][y][z]);
 							}
-
 						}
 						else if ( x >= m_count.x )
 						{
@@ -562,16 +266,16 @@ namespace clockwork {
 								if ( z < 0 )
 								{
 									int newZ = m_count.z + z;
-									m_chunks[newX][newY][newZ].slowTick();
+									funct.function(m_chunks[newX][newY][newZ]);
 								}
 								else if ( z >= m_count.z )
 								{
 									int newZ = z - m_count.z;
-									m_chunks[newX][newY][newZ].slowTick();
+									funct.function(m_chunks[newX][newY][newZ]);
 								}
 								else
 								{
-									m_chunks[newX][newY][z].slowTick();
+									funct.function(m_chunks[newX][newY][z]);
 								}
 							}
 							else if ( y >= m_count.y )
@@ -580,33 +284,32 @@ namespace clockwork {
 								if ( z < 0 )
 								{
 									int newZ = m_count.z + z;
-									m_chunks[newX][newY][newZ].slowTick();
+									funct.function(m_chunks[newX][newY][newZ]);
 								}
 								else if ( z >= m_count.z )
 								{
 									int newZ = z - m_count.z;
-									m_chunks[newX][newY][newZ].slowTick();
+									funct.function(m_chunks[newX][newY][newZ]);
 								}
 								else
 								{
-									m_chunks[newX][newY][z].slowTick();
+									funct.function(m_chunks[newX][newY][z]);
 								}
 							}
 							else if ( z < 0 )
 							{
 								int newZ = m_count.z + z;
-								m_chunks[newX][y][newZ].slowTick();
+								funct.function(m_chunks[newX][y][newZ]);
 							}
 							else if ( z >= m_count.z )
 							{
 								int newZ = z - m_count.z;
-								m_chunks[newX][y][newZ].slowTick();
+								funct.function(m_chunks[newX][y][newZ]);
 							}
 							else
 							{
-								m_chunks[newX][y][z].slowTick();
+								funct.function(m_chunks[newX][y][z]);
 							}
-
 						}
 						else if ( y < 0 )
 						{
@@ -614,16 +317,16 @@ namespace clockwork {
 							if ( z < 0 )
 							{
 								int newZ = m_count.z + z;
-								m_chunks[x][newY][newZ].slowTick();
+								funct.function(m_chunks[x][newY][newZ]);
 							}
 							else if ( z >= m_count.z )
 							{
 								int newZ = z - m_count.z;
-								m_chunks[x][newY][newZ].slowTick();
+								funct.function(m_chunks[x][newY][newZ]);
 							}
 							else
 							{
-								m_chunks[x][newY][z].slowTick();
+								funct.function(m_chunks[x][newY][z]);
 							}
 						}
 						else if ( y >= m_count.y )
@@ -632,31 +335,31 @@ namespace clockwork {
 							if ( z < 0 )
 							{
 								int newZ = m_count.z + z;
-								m_chunks[x][newY][newZ].slowTick();
+								funct.function(m_chunks[x][newY][newZ]);
 							}
 							else if ( z >= m_count.z )
 							{
 								int newZ = z - m_count.z;
-								m_chunks[x][newY][newZ].slowTick();
+								funct.function(m_chunks[x][newY][newZ]);
 							}
 							else
 							{
-								m_chunks[x][newY][z].slowTick();
+								funct.function(m_chunks[x][newY][z]);
 							}
 						}
 						else if ( z < 0 )
 						{
 							int newZ = m_count.z + z;
-							m_chunks[x][y][newZ].slowTick();
+							funct.function(m_chunks[x][y][newZ]);
 						}
 						else if ( z >= m_count.z )
 						{
 							int newZ = z - m_count.z;
-							m_chunks[x][y][newZ].slowTick();
+							funct.function(m_chunks[x][y][newZ]);
 						}
 						else
 						{
-							m_chunks[x][y][z].slowTick();
+							funct.function(m_chunks[x][y][z]);
 						}
 					}
 				}

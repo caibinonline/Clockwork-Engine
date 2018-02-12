@@ -95,13 +95,13 @@ namespace clockwork {
 
 
 			/*removes the instancedcube from the cubemanager in the instancedrender | the last instancedcube in the list of the cubemanager will swap positions with this instancedcube and then this instancedcube(then the last instancedcube in the list) will be removed from the list
-			dont call the remove function again if the instancedcube is already removed | you have to call add first | the destructor will also call remove
+			calling remove twice will have no effect, because it will check if the cube already is removed | the destructor will also call remove
 			use add()/remove() for few changes with many models to hide/show objects/instances and use setVisible(true/false) for many changes with few models
 			BUT setvisible will not give a huge performance boost, because the render call will still happen | add/remove will give a performanceboost, because the render call will not happen*/
 			void remove() noexcept;
 
 			/*adds the instancedcube to the cubemanager in the instancedrender | the instancedcube will be added to the end of the list
-			dont call the add function again if the instancedcube is already added | you have to call remove first | the constructor will not automaticly call add()
+			calling add twice will have no effect, because it will check if the cube already is added | the constructor will not automaticly call add()
 			use add()/remove() for few changes with many models to hide/show objects/instances and use setVisible(true/false) for many changes with few models
 			BUT setvisible will not give a huge performance boost, because the render call will still happen | add/remove will give a performanceboost, because the render call will not happen*/
 			void add() noexcept;

@@ -58,6 +58,7 @@ namespace clockwork {
 			//kann durch virtual erben überschrieben werden | ggf shader anders bearbeiten vor dem rendern
 			virtual void render() noexcept;
 
+			//wie bei instancedcube kommentieren | es wird intern überprüft, ob cube schon removed/added ist
 			void remove() noexcept;
 
 			void add() noexcept;

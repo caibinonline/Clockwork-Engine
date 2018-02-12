@@ -78,8 +78,7 @@ namespace clockwork {
 
 		NormalCube::~NormalCube() noexcept
 		{
-			if ( m_pos!=-1 )
-				this->remove();
+			this->remove();
 		}
 
 		NormalCube::NormalCube(NormalCube&& other) noexcept
@@ -98,8 +97,7 @@ namespace clockwork {
 
 		NormalCube& NormalCube::operator=(NormalCube&& other) noexcept
 		{
-			if ( m_pos != -1 )
-				this->remove();
+			this->remove();
 			m_visible = other.m_visible;
 			m_transparent = other.m_transparent;
 			m_pos = other.m_pos;
@@ -125,41 +123,47 @@ namespace clockwork {
 
 		void NormalCube::remove() noexcept
 		{
-#if CLOCKWORK_DEBUG
+#if CLOCKWORK_DEBUG == 2
 			if ( m_pos == -1 )
-				std::cout << "Error NormalCube::remove(): NormalCube was already removed" << std::endl;
+				std::cout << "Info NormalCube::remove(): NormalCube was already removed" << std::endl;
 #endif
-			if ( m_transparent )
+			if ( m_pos != -1 )
 			{
-				m_manager->m_transparentCubes.back()->m_pos = m_pos;
-				m_manager->m_transparentCubes.at(m_pos) = m_manager->m_transparentCubes.back();
-				m_pos = -1;
-				m_manager->m_transparentCubes.erase(m_manager->m_transparentCubes.end() - 1);
-			}
-			else
-			{
-				m_manager->m_normalCubes.back()->m_pos = m_pos;
-				m_manager->m_normalCubes.at(m_pos) = m_manager->m_normalCubes.back();
-				m_pos = -1;
-				m_manager->m_normalCubes.erase(m_manager->m_normalCubes.end() - 1);
+				if ( m_transparent )
+				{
+					m_manager->m_transparentCubes.back()->m_pos = m_pos;
+					m_manager->m_transparentCubes.at(m_pos) = m_manager->m_transparentCubes.back();
+					m_pos = -1;
+					m_manager->m_transparentCubes.erase(m_manager->m_transparentCubes.end() - 1);
+				}
+				else
+				{
+					m_manager->m_normalCubes.back()->m_pos = m_pos;
+					m_manager->m_normalCubes.at(m_pos) = m_manager->m_normalCubes.back();
+					m_pos = -1;
+					m_manager->m_normalCubes.erase(m_manager->m_normalCubes.end() - 1);
+				}
 			}
 		}
 
 		void NormalCube::add() noexcept
 		{
-#if CLOCKWORK_DEBUG
+#if CLOCKWORK_DEBUG == 2
 			if ( m_pos != -1 )
-				std::cout << "Error NormalCube::add(): NormalCube was already added" << std::endl;
+				std::cout << "Info NormalCube::add(): NormalCube was already added" << std::endl;
 #endif
-			if ( m_transparent )
+			if ( m_pos == -1 )
 			{
-				m_pos = m_manager->m_transparentCubes.size();
-				m_manager->m_transparentCubes.push_back(this);
-			}
-			else
-			{
-				m_pos = m_manager->m_normalCubes.size();
-				m_manager->m_normalCubes.push_back(this);
+				if ( m_transparent )
+				{
+					m_pos = m_manager->m_transparentCubes.size();
+					m_manager->m_transparentCubes.push_back(this);
+				}
+				else
+				{
+					m_pos = m_manager->m_normalCubes.size();
+					m_manager->m_normalCubes.push_back(this);
+				}
 			}
 		}
 

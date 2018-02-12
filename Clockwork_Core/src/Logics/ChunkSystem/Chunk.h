@@ -29,7 +29,7 @@ namespace clockwork {
 		private:
 			maths::Vec3f m_min;
 			maths::Vec3f m_max;
-			maths::Vec3<int> m_id;//id is 0 to chunksize-1
+			maths::Vec3i m_id;//id is 0 to chunksize-1
 			ChunkSystem* m_chunkSystem;
 
 		public:
@@ -37,14 +37,14 @@ namespace clockwork {
 			~Chunk() noexcept = default;//hier später wahrscheinlich alle gameobjects löschen
 
 		private:
-			void init(const maths::Vec3<float>& min, const maths::Vec3<float>& max, int idX, int idY, int idZ, ChunkSystem* chunkSystem) noexcept;
+			void init(const maths::Vec3f& min, const maths::Vec3f& max, int idX, int idY, int idZ, ChunkSystem* chunkSystem) noexcept;
 
 		public:
 			void renderAdd() noexcept;
 			void renderRemove() noexcept;
 			void tick() noexcept;
 			void slowTick() noexcept;
-			const maths::Vec3<int> getId() const noexcept{return m_id;}//braucht wahrscheinlich keine mutex, da es nur beim erstellen der chunks verändert wird und dann nicht mehr
+			const maths::Vec3i getId() const noexcept{return m_id;}//braucht wahrscheinlich keine mutex, da es nur beim erstellen der chunks verändert wird und dann nicht mehr
 
 		public:
 			friend bool operator==(const Chunk& c1, const Chunk& c2) noexcept;

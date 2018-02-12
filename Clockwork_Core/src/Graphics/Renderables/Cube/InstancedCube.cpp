@@ -41,8 +41,7 @@ namespace clockwork {
 
 		InstancedCube::~InstancedCube() noexcept
 		{
-			if ( m_pos != -1 )
-				this->remove();
+			this->remove();
 		}
 
 		InstancedCube::InstancedCube(InstancedCube&& other) noexcept
@@ -56,8 +55,7 @@ namespace clockwork {
 
 		InstancedCube& InstancedCube::operator=(InstancedCube&& other) noexcept
 		{
-			if ( m_pos != -1 )
-				this->remove();
+			this->remove();
 			m_changed = true;
 			m_pos = other.m_pos;
 			m_manager = other.m_manager;
@@ -81,31 +79,37 @@ namespace clockwork {
 
 		void InstancedCube::remove() noexcept
 		{
-#if CLOCKWORK_DEBUG
+#if CLOCKWORK_DEBUG == 2
 			if ( m_pos == -1 )
-				std::cout << "Error InstancedCube::remove(): InstancedCube was already removed" << std::endl;
+				std::cout << "Info InstancedCube::remove(): InstancedCube was already removed" << std::endl;
 #endif
-			m_manager->m_instanceCubes.back()->m_pos = m_pos;
-			m_manager->m_instanceCubes.back()->m_changed = true;
-			m_manager->m_instanceCubes.at(m_pos) = m_manager->m_instanceCubes.back();
-			m_pos = -1;
-			m_manager->m_instanceCubes.erase(m_manager->m_instanceCubes.end() - 1);
+			if ( m_pos != -1 )
+			{
+				m_manager->m_instanceCubes.back()->m_pos = m_pos;
+				m_manager->m_instanceCubes.back()->m_changed = true;
+				m_manager->m_instanceCubes.at(m_pos) = m_manager->m_instanceCubes.back();
+				m_pos = -1;
+				m_manager->m_instanceCubes.erase(m_manager->m_instanceCubes.end() - 1);
+			}
 		}
 
 		void InstancedCube::add() noexcept
 		{
-#if CLOCKWORK_DEBUG
+#if CLOCKWORK_DEBUG == 2
 			if ( m_pos != -1 )
-				std::cout << "Error InstancedCube::add(): InstancedCube was already added" << std::endl;
+				std::cout << "Info InstancedCube::add(): InstancedCube was already added" << std::endl;
 #endif
-			unsigned int instanceCount = m_manager->m_instanceCubes.size();
-			m_pos = instanceCount;
-			m_manager->m_instanceCubes.push_back(this);
-			m_changed = true;
-			if ( instanceCount * ( sizeof(int) + sizeof(maths::Mat4f) ) + ( sizeof(int) + sizeof(maths::Mat4f) ) >= m_manager->m_copyBuffer.getSize() )
+			if ( m_pos == -1 )
 			{
-				m_manager->m_copyBuffer.bind();
-				m_manager->m_copyBuffer.setSize(instanceCount * ( sizeof(int) + sizeof(maths::Mat4f) ) * 2);
+				unsigned int instanceCount = m_manager->m_instanceCubes.size();
+				m_pos = instanceCount;
+				m_manager->m_instanceCubes.push_back(this);
+				m_changed = true;
+				if ( instanceCount * ( sizeof(int) + sizeof(maths::Mat4f) ) + ( sizeof(int) + sizeof(maths::Mat4f) ) >= m_manager->m_copyBuffer.getSize() )
+				{
+					m_manager->m_copyBuffer.bind();
+					m_manager->m_copyBuffer.setSize(instanceCount * ( sizeof(int) + sizeof(maths::Mat4f) ) * 2);
+				}
 			}
 		}
 
