@@ -55,7 +55,9 @@ namespace clockwork {
 		{
 			using namespace graphics;
 			using namespace utils;
-			//m_chunkSystem = new ChunkSystem({ -500,-500,-500 }, { 500,500,500 }, { 100,100,100 }, this);//chunksystem in erbenden states mit den jeweiligenn größen erstellen 
+			setCurrentCamera(m_defaultCamera);//muss aufgerufen werden, nachdem alle renderer erstellt wurden, aber vor chunksystem
+			m_chunkSystem = new ChunkSystem({ -500,-500,-500 }, { 500,500,500 }, { 100,100,100 }, { 2,2,2 }, { 2,2,2 }, this);//chunksystem in erbenden states mit den jeweiligenn größen erstellen | nachdem camera und renderer erstellt wurden, aber bevor gameobjects hinzugefügt werden 
+
 
 			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/brick.jpg").load());
 			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/stone.jpg").load());
@@ -122,16 +124,19 @@ namespace clockwork {
 				m_currentCamera->moveY(5 * time);
 			}
 
+			m_chunkSystem->tick();
+
 		}
 
 		void TestGame::slowTick() noexcept
 		{
-
+			m_chunkSystem->slowTick();
 		}
 
 		void TestGame::render() noexcept
 		{
-			m_defaultRenderer->render();
+			m_chunkSystem->update();
+			m_defaultRenderer->render();//ggf in state render verschieben
 			m_defaultRenderer->renderTransparent();
 		}
 

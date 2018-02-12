@@ -233,9 +233,6 @@
     <ClInclude Include="src\Logics\Entities\Listener\RenderListener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Logics\Entities\Listener\TickListener.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Logics\Entities\GameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -249,6 +246,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Buffers\FrameBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Logics\Entities\Listener\MovingTickListener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Logics\Entities\Listener\StaticTickListener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Logics\Entities\Listener\KeyListener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Logics\Entities\Listener\MouseListener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

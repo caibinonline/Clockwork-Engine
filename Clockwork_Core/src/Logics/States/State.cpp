@@ -35,7 +35,6 @@ namespace clockwork {
 				//sachen/texturen vorbereiten/der renterwarteschlange adden 
 				m_defaultCamera = new Camera(this, { 0,5,5 });
 				m_defaultRenderer = new graphics::Renderer(new graphics::Shader("res/Shaders/Default/Instancing.vs", "res/Shaders/Default/Instancing.fs"), new graphics::Shader("res/Shaders/Default/Normal.vs", "res/Shaders/Default/Normal.fs"), &m_currentCamera, &m_perspectiveProjection);
-				setCurrentCamera(m_defaultCamera);
 			}
 
 			void State::leave() noexcept

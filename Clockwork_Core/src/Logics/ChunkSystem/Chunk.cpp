@@ -28,14 +28,39 @@ namespace clockwork {
 			m_chunkSystem = chunkSystem;
 		}
 
-		void Chunk::tick() noexcept
+		void Chunk::renderAdd() noexcept
 		{
 			std::cout << m_id << std::endl;
+		}
+
+		void Chunk::renderRemove() noexcept
+		{
+
+		}
+
+		void Chunk::tick() noexcept
+		{
+
 		}
 
 		void Chunk::slowTick() noexcept
 		{
 
+		}
+
+
+
+
+
+
+		bool operator==(const Chunk& c1, const Chunk& c2) noexcept
+		{
+			return c1.m_id == c2.m_id;
+		}
+
+		bool operator!=(const Chunk& c1, const Chunk& c2) noexcept
+		{
+			return c1.m_id != c2.m_id;
 		}
 
 	}

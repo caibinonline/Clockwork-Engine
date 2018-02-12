@@ -27,24 +27,34 @@ namespace clockwork {
 			maths::Vec3f m_min;
 			maths::Vec3f m_max;
 			maths::Vec3f m_chunkSize;
-			maths::Vec3<int> m_count;
+			maths::Vec3<int> m_count;//neue größe machen ist noch nicht vorgesehen
+			maths::Vec3<int> m_renderDistance;///noch miteinbeziehen KONSTRUKTOR | getter/setter(mit debug test) | ist wichtig für renderadd/renderremove | wird für tick nicht benötigt, da dort die range mitgegeben werden kann
+			maths::Vec3<int> m_tickDistance;///sollte nicht größer als count sein ggf in debug abfragen | braucht noch getter und setter, bei setter natürlich auch mutex setzten, da es in tick/render gebraucht wird
 			Chunk*** m_chunks;
 			Chunk* m_currentChunk;
 			State* m_state;
 
 		public:
-			ChunkSystem(const maths::Vec3<float>& min, const maths::Vec3<float>& max, const maths::Vec3<float>& chunkSize, State* state) noexcept;
+			ChunkSystem(const maths::Vec3<float>& min, const maths::Vec3<float>& max, const maths::Vec3<float>& chunkSize, const maths::Vec3<int>& renderDistance, const maths::Vec3<int>& tickDistance, State* state) noexcept;
 			~ChunkSystem() noexcept;
 
 		public:
+			const Chunk& getChunk(const maths::Vec3<int>& id) const noexcept;
+			Chunk& getChunk(const maths::Vec3<int>& id) noexcept;
+			const Chunk& getChunk(int idX, int idY, int idZ) const noexcept;
+			Chunk& getChunk(int idX, int idY, int idZ) noexcept;
+			const Chunk& getChunkAt(const maths::Vec3f& position) const noexcept;
+			Chunk& getChunkAt(const maths::Vec3f& position) noexcept;
+
 			const unsigned int getBytes() const noexcept;
 			const unsigned int getChunkCount() const noexcept;
 
 		public:
+			void update() noexcept;
 			void tickAll() noexcept;
-			void tick(const maths::Vec3<int>& chunkid, int range) noexcept;
+			void tick() noexcept;
 			void slowTickAll() noexcept;
-			void slowTick(const maths::Vec3<int>& chunkid, int range) noexcept;
+			void slowTick() noexcept;
 
 		};
 

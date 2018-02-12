@@ -177,8 +177,11 @@
     <ClInclude Include="src\Logics\Camera\Camera.h" />
     <ClInclude Include="src\Logics\ChunkSystem\Chunk.h" />
     <ClInclude Include="src\Logics\Entities\GameObject.h" />
+    <ClInclude Include="src\Logics\Entities\Listener\KeyListener.h" />
+    <ClInclude Include="src\Logics\Entities\Listener\MouseListener.h" />
+    <ClInclude Include="src\Logics\Entities\Listener\MovingTickListener.h" />
     <ClInclude Include="src\Logics\Entities\Listener\RenderListener.h" />
-    <ClInclude Include="src\Logics\Entities\Listener\TickListener.h" />
+    <ClInclude Include="src\Logics\Entities\Listener\StaticTickListener.h" />
     <ClInclude Include="src\Logics\Entities\Test.h" />
     <ClInclude Include="src\Logics\States\Game\TestGame.h" />
     <ClInclude Include="src\Logics\States\Loading\Loading.h" />

@@ -54,17 +54,43 @@ namespace clockwork {
 		{
 			return value > compare ? value : compare;
 		}
-		/*round up a float/double value to the upper integer*/
-		template<typename type> inline constexpr int ceil(type value) noexcept
+		/*round up a float/double value to the upper integer
+		2.2 = 3.0 | -2.2 = -2.0*/
+		template<typename type> inline constexpr type ceil(type value) noexcept
 		{
-			return static_cast<int>( value ) + 1;
+			int ival = static_cast<int>( value );
+			if ( value < 0 )
+				return ival;
+			else
+			{
+				if ( value == static_cast<float>( ival ) )
+					return ival;
+				else
+					return ival + 1;
+			}
 		}
-		/*round down a float/double value to the lower integer*/
-		template<typename type> inline constexpr int floor(type value) noexcept
+		/*round down a float/double value to the lower integer
+		2.2 = 2.0 | -2.2 = -3.0*/
+		template<typename type> inline constexpr type floor(type value) noexcept
 		{
-			return static_cast<int>( value );
+			if ( value < 0 )
+			{
+				int ival = static_cast<int>( value );
+				if ( value == static_cast<float>( ival ) )
+					return ival;
+				else
+					return ival - 1;
+			}
+			else
+				return static_cast<int>( value );
 		}
-
+		/*breaks the value into an integral and a fractional part where the fractional part is returned and the integral part is stored in the integralStorage pointer
+		both path will have the same sign as the value | both paths will be the same type as the value(so the storagePointer also has to be of the same type)
+		value 3.102139 will return 0.102139 and the integralStorage will be 3.0*/
+		template<typename type> inline constexpr int modf(type value, type* integralStorage) noexcept
+		{
+			return std::modf(value, integralStorage);
+		}
 
 
 		/*rounds a value of float, or double to the nearest given decimal value(always rounding halfway cases(.5) away from zeor regardless of the current rounding direction) | the template parameter decimal = 0 is for integer values 1, 1 is for one decimal 1.1, etc*/
@@ -180,7 +206,7 @@ namespace clockwork {
 			return std::atan2(r1, r2);
 		}
 
-
+		//auch noch machen für alle
 		template<typename type> inline constexpr type log2(type value) noexcept
 		{
 			return 0;
