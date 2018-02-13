@@ -22,6 +22,25 @@ namespace clockwork {
 
 		class ChunkSystem
 		{
+
+		private:
+			friend class Chunk;
+			struct RenderAddFunctor
+			{
+				void function(Chunk& chunk) noexcept;
+			};
+			struct RenderRemoveFunctor
+			{
+				void function(Chunk& chunk) noexcept;
+			};
+			struct TickFunctor
+			{
+				void function(Chunk& chunk) noexcept;
+			};
+			struct SlowTickFunctor
+			{
+				void function(Chunk& chunk) noexcept;
+			};
 			
 		private:
 			maths::Vec3f m_min;
@@ -57,7 +76,7 @@ namespace clockwork {
 			void slowTickAll() noexcept;
 			void slowTick() noexcept;
 			/*passes a function to chunks in the given range | you have to call this method with a functor struct layout like the following 
-			the function is passed to the chunks between and at the 2 positions 
+			the function is passed to the chunks between and at the 2 positions | the positions can be negative below 0, or above the count and the method will cut it into the range
 			struct SlowTickFunctor
 			{
 				void function(Chunk& chunk) noexcept

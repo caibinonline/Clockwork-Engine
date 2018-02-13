@@ -30,12 +30,12 @@ namespace clockwork {
 
 		void Chunk::renderAdd() noexcept
 		{
-			std::cout << m_id << std::endl;
+			//std::cout << "RenderAdd: " << m_id << std::endl;
 		}
 
 		void Chunk::renderRemove() noexcept
 		{
-
+			//std::cout << "RenderRemove: " << m_id << std::endl;
 		}
 
 		void Chunk::tick() noexcept
@@ -49,7 +49,10 @@ namespace clockwork {
 		}
 
 
-
+		template<typename functor>void Chunk::passFunctionToArea() noexcept
+		{
+			m_chunkSystem->passFunctionToChunks<functor>(m_id - 1, m_id + 1);
+		}
 
 
 

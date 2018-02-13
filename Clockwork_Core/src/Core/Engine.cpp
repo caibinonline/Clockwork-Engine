@@ -29,6 +29,7 @@
 #include <thread>
 
 #define HIGH_FPS 0
+#define LOGFPS 1
 
 namespace clockwork {
 
@@ -102,7 +103,9 @@ namespace clockwork {
 				fps = steps;
 				steps = 0;
 				timer = 0;
+#if LOGFPS
 				std::cout << "FPS:" << fps << std::endl;//vielleicht immer laufend verändern mal ausprobieren anhand letztem loop und allen davor, damit es insgesamt flüssiger läuft
+#endif
 				slowTick();
 			}
 

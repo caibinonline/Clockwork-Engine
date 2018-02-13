@@ -58,14 +58,7 @@ namespace clockwork {
 				std::cout << "Error ChunkSystem::ChunkSystem(): TickDistance too big" << std::endl;
 #endif
 			m_currentChunk = &getChunkAt(m_state->getCurrentCamera().getPosition());
-			struct RenderAddFunctor
-			{
-				void function(Chunk& chunk) noexcept
-				{
-					chunk.renderAdd();
-				}
-			};
-			passFunctionToChunks<RenderAddFunctor>(m_currentChunk->getId() - m_tickDistance, m_currentChunk->getId() + m_tickDistance);
+			passFunctionToChunks<RenderAddFunctor>(m_currentChunk->getId() - m_renderDistance, m_currentChunk->getId() + m_renderDistance);
 		}
 
 		ChunkSystem::~ChunkSystem() noexcept
@@ -119,19 +112,116 @@ namespace clockwork {
 		{
 			if ( *m_currentChunk != getChunkAt(m_state->getCurrentCamera().getPosition()) )
 			{
-				Chunk& oldChunk = *m_currentChunk;
 				Chunk& newChunk = getChunkAt(m_state->getCurrentCamera().getPosition());
-				maths::Vec3i diffrence = newChunk.getId() - oldChunk.getId();
-				std::cout << diffrence << std::endl;
+				const maths::Vec3i& oldId = m_currentChunk->getId();
+				const maths::Vec3i& newId = getChunkAt(m_state->getCurrentCamera().getPosition()).getId();
 
-// 				struct RenderAddFunctor
-// 				{
-// 					void function(Chunk& chunk) noexcept
-// 					{
-// 						chunk.renderAdd();
-// 					}
-// 				};
-// 				passFunctionToChunks<RenderAddFunctor>(m_currentChunk->getId() - m_tickDistance, m_currentChunk->getId() + m_tickDistance);
+				maths::Vec3i diffrence = newChunk.getId() - m_currentChunk->getId();
+				maths::Vec3i defaultRemoveLeft(oldId.x - m_renderDistance.x, oldId.y - m_renderDistance.y, oldId.z - m_renderDistance.z);///sollte eigentlich funktionieren, nur gucken, ob das erhöhen/verringern von defaultRemoveLeft/Right auch richtig ist und funktioniert, wenn eine richtung der bewegung positiv ist und eine andere negativ(1,-2,3)
+				maths::Vec3i defaultRemoveRight(oldId.x + m_renderDistance.x, oldId.y + m_renderDistance.y, oldId.z + m_renderDistance.z);
+				maths::Vec3i defaultAddLeft(newId.x - m_renderDistance.x, newId.y - m_renderDistance.y, newId.z - m_renderDistance.z);///keine ahnung, ob es funktioniert
+				maths::Vec3i defaultAddRight(newId.x + m_renderDistance.x, newId.y + m_renderDistance.y, newId.z + m_renderDistance.z);
+
+#if CLOCKWORK_DEBUG
+				std::cout << std::endl << "Diffrence: " << diffrence << " Old Chunk: " << oldId << " New Chunk: " << newId << std::endl;
+#endif
+
+				if ( diffrence.x > 0 )//right side of chunk cube added and left side of chunk cube removed
+				{
+					maths::Vec3i xRemoveRight(maths::min(newId.x - m_renderDistance.x - 1, oldId.x + m_renderDistance.x), defaultRemoveRight.y, defaultRemoveRight.z);//left=inner/closer to oldchunk | right=outer/closer to newchunk
+#if CLOCKWORK_DEBUG
+					std::cout << "X-Axis: " << defaultRemoveLeft << " to " << xRemoveRight << " is removed" << std::endl;
+#endif
+					passFunctionToChunks<RenderRemoveFunctor>(defaultRemoveLeft, xRemoveRight);
+					++defaultRemoveLeft.x;//preperation for y and z
+
+					maths::Vec3i xAddLeft(maths::max(oldId.x + m_renderDistance.x + 1, newId.x - m_renderDistance.x), defaultAddLeft.y, defaultAddLeft.z);//left=inner/closer to oldchunk | right=outer/closer to newchunk
+#if CLOCKWORK_DEBUG
+					std::cout << "X-Axis: " << xAddLeft << " to " << defaultAddRight << " is added" << std::endl;
+#endif
+					passFunctionToChunks<RenderAddFunctor>(xAddLeft, defaultAddRight);
+					--defaultAddRight.x;//preperation for y and z
+				}
+				else if ( diffrence.x < 0 )//left side of chunk cube added and right side of chunk cube removed | reverse order, because its moving towards negative x
+				{
+					maths::Vec3i xRemoveLeft(maths::max(newId.x + m_renderDistance.x + 1, oldId.x - m_renderDistance.x), defaultRemoveLeft.y, defaultRemoveLeft.z);//right=inner/closer to oldchunk | left=outer/closer to newchunk
+#if CLOCKWORK_DEBUG
+					std::cout << "X-Axis: " << xRemoveLeft << " to " << defaultRemoveRight << " is removed" << std::endl;
+#endif
+					passFunctionToChunks<RenderRemoveFunctor>(xRemoveLeft, defaultRemoveRight);
+					--defaultRemoveRight.x;//preperation for y and z
+
+					maths::Vec3i xAddRight(maths::min(oldId.x - m_renderDistance.x - 1, newId.x + m_renderDistance.x), defaultAddRight.y, defaultAddRight.z);//left=inner/closer to oldchunk | right=outer/closer to newchunk
+#if CLOCKWORK_DEBUG
+					std::cout << "X-Axis: " << defaultAddLeft << " to " << xAddRight << " is added" << std::endl;
+#endif
+					passFunctionToChunks<RenderAddFunctor>(defaultAddLeft, xAddRight);
+					++defaultAddLeft.x;//preperation for y and z
+				}
+
+				if ( diffrence.y > 0 )//right side of chunk cube added and left side of chunk cube removed
+				{
+					maths::Vec3i yRemoveRight(defaultRemoveRight.x, maths::min(newId.y - m_renderDistance.y - 1, oldId.y + m_renderDistance.y), defaultRemoveRight.z);//left=inner/closer to oldchunk | right=outer/closer to newchunk
+#if CLOCKWORK_DEBUG
+					std::cout << "Y-Axis: " << defaultRemoveLeft << " to " << yRemoveRight << " is removed" << std::endl;
+#endif
+					passFunctionToChunks<RenderRemoveFunctor>(defaultRemoveLeft, yRemoveRight);
+					++defaultRemoveLeft.y;//preperation for z
+
+					maths::Vec3i yAddLeft(defaultAddLeft.x, maths::max(oldId.y + m_renderDistance.y + 1, newId.y - m_renderDistance.y), defaultAddLeft.z);//left=inner/closer to oldchunk | right=outer/closer to newchunk
+#if CLOCKWORK_DEBUG
+					std::cout << "Y-Axis: " << yAddLeft << " to " << defaultAddRight << " is added" << std::endl;
+#endif
+					passFunctionToChunks<RenderAddFunctor>(yAddLeft, defaultAddRight);
+					--defaultAddRight.y;//preperation for y and z
+				}
+				else if ( diffrence.y < 0 )//left side of chunk cube added and right side of chunk cube removed | reverse order, because its moving towards negative y
+				{
+					maths::Vec3i yRemoveLeft(defaultRemoveLeft.x, maths::max(newId.y + m_renderDistance.y + 1, oldId.y - m_renderDistance.y), defaultRemoveLeft.z);//right=inner/closer to oldchunk | left=outer/closer to newchunk
+#if CLOCKWORK_DEBUG
+					std::cout << "Y-Axis: " << yRemoveLeft << " to " << defaultRemoveRight << " is removed" << std::endl;
+#endif
+					passFunctionToChunks<RenderRemoveFunctor>(yRemoveLeft, defaultRemoveRight);
+					--defaultRemoveRight.y;//preperation for z
+
+					maths::Vec3i yAddRight(defaultAddRight.x, maths::min(oldId.y - m_renderDistance.y - 1, newId.y + m_renderDistance.y), defaultAddRight.z);//left=inner/closer to oldchunk | right=outer/closer to newchunk
+#if CLOCKWORK_DEBUG
+					std::cout << "Y-Axis: " << defaultAddLeft << " to " << yAddRight << " is added" << std::endl;
+#endif
+					passFunctionToChunks<RenderAddFunctor>(defaultAddLeft, yAddRight);
+					++defaultAddLeft.y;//preperation for y and z
+				}
+
+				if ( diffrence.z > 0 )//right side of chunk cube added and left side of chunk cube removed
+				{
+					maths::Vec3i zRemoveRight(defaultRemoveRight.x, defaultRemoveRight.y, maths::min(newId.z - m_renderDistance.z - 1, oldId.z + m_renderDistance.z));//left=inner/closer to oldchunk | right=outer/closer to newchunk
+#if CLOCKWORK_DEBUG
+					std::cout << "Z-Axis: " << defaultRemoveLeft << " to " << zRemoveRight << " is removed" << std::endl;
+#endif
+					passFunctionToChunks<RenderRemoveFunctor>(defaultRemoveLeft, zRemoveRight);
+
+					maths::Vec3i zAddLeft(defaultAddLeft.x, defaultAddLeft.y, maths::max(oldId.z + m_renderDistance.z + 1, newId.z - m_renderDistance.z));//left=inner/closer to oldchunk | right=outer/closer to newchunk
+#if CLOCKWORK_DEBUG
+					std::cout << "Z-Axis: " << zAddLeft << " to " << defaultAddRight << " is added" << std::endl;
+#endif
+					passFunctionToChunks<RenderAddFunctor>(zAddLeft, defaultAddRight);
+				}
+				else if ( diffrence.z < 0 )//left side of chunk cube added and right side of chunk cube removed | reverse order, because its moving towards negative z
+				{
+					maths::Vec3i zRemoveLeft(defaultRemoveLeft.x, defaultRemoveLeft.y, maths::max(newId.z + m_renderDistance.z + 1, oldId.z - m_renderDistance.z));//right=inner/closer to oldchunk | left=outer/closer to newchunk
+#if CLOCKWORK_DEBUG
+					std::cout << "Z-Axis: " << zRemoveLeft << " to " << defaultRemoveRight << " is removed" << std::endl;
+#endif
+					passFunctionToChunks<RenderRemoveFunctor>(zRemoveLeft, defaultRemoveRight);
+
+					maths::Vec3i zAddRight(defaultAddRight.x, defaultAddRight.y, maths::min(oldId.z - m_renderDistance.z - 1, newId.z + m_renderDistance.z));//left=inner/closer to oldchunk | right=outer/closer to newchunk
+#if CLOCKWORK_DEBUG
+					std::cout << "Z-Axis: " << defaultAddLeft << " to " << zAddRight << " is added" << std::endl << std::endl;
+#endif
+					passFunctionToChunks<RenderAddFunctor>(defaultAddLeft, zAddRight);
+				}
+
+
 
 				//hier renderadd/renderremove mit currentchunklist vergleichen, etc ... | am besten gucken wie id ist was schon in renderrange liegt und was dann nicht mehr, etc | WICHTIG auch bei setrenderdistance, etc verändern 
 
@@ -162,13 +252,6 @@ namespace clockwork {
 
 		void ChunkSystem::tick() noexcept
 		{
-			struct TickFunctor
-			{
-				void function(Chunk& chunk) noexcept
-				{
-					chunk.tick();
-				}
-			};
 			passFunctionToChunks<TickFunctor>(m_currentChunk->getId() - m_tickDistance, m_currentChunk->getId() + m_tickDistance);
 		}
 
@@ -188,19 +271,18 @@ namespace clockwork {
 
 		void ChunkSystem::slowTick() noexcept
 		{
-			struct SlowTickFunctor
-			{
-				void function(Chunk& chunk) noexcept
-				{
-					chunk.slowTick();
-				}
-			};
 			passFunctionToChunks<SlowTickFunctor>(m_currentChunk->getId() - m_tickDistance, m_currentChunk->getId() + m_tickDistance);
 		}
 
 		template<typename functor>void ChunkSystem::passFunctionToChunks(const maths::Vec3<int>& pos1, const maths::Vec3<int>& pos2) noexcept
 		{
 			functor funct { };
+#if CLOCKWORK_DEBUG
+			if ( pos1.x < 0 || pos1.y < 0 || pos1.z < 0 )
+				std::cout << "Error ChunkSystem::passFunctionToChunks(): pos1 is below 0" << std::endl;
+			if ( pos2.x >=m_count.x || pos2.y >= m_count.y || pos2.z >= m_count.z )
+				std::cout << "Error ChunkSystem::passFunctionToChunks(): pos2 is above, or equal to count of the chunksystem" << std::endl;
+#endif
 
 			for ( int x = pos1.x; x <= pos2.x; ++x )
 			{
@@ -208,167 +290,30 @@ namespace clockwork {
 				{
 					for ( int z = pos1.z; z <= pos2.z; ++z )
 					{
-						if ( x < 0 )
-						{
-							int newX = m_count.x + x;
-							if ( y < 0 )
-							{
-								int newY = m_count.y + y;
-								if ( z < 0 )
-								{
-									int newZ = m_count.z + z;
-									funct.function(m_chunks[newX][newY][newZ]);
-								}
-								else if ( z >= m_count.z )
-								{
-									int newZ = z - m_count.z;
-									funct.function(m_chunks[newX][newY][newZ]);
-								}
-								else
-								{
-									funct.function(m_chunks[newX][newY][z]);
-								}
-							}
-							else if ( y >= m_count.y )
-							{
-								int newY = y - m_count.y;
-								if ( z < 0 )
-								{
-									int newZ = m_count.z + z;
-									funct.function(m_chunks[newX][newY][newZ]);
-								}
-								else if ( z >= m_count.z )
-								{
-									int newZ = z - m_count.z;
-									funct.function(m_chunks[newX][newY][newZ]);
-								}
-								else
-								{
-									funct.function(m_chunks[newX][newY][z]);
-								}
-							}
-							else if ( z < 0 )
-							{
-								int newZ = m_count.z + z;
-								funct.function(m_chunks[newX][y][newZ]);
-							}
-							else if ( z >= m_count.z )
-							{
-								int newZ = z - m_count.z;
-								funct.function(m_chunks[newX][y][newZ]);
-							}
-							else
-							{
-								funct.function(m_chunks[newX][y][z]);
-							}
-						}
-						else if ( x >= m_count.x )
-						{
-							int newX = x - m_count.x;
-							if ( y < 0 )
-							{
-								int newY = m_count.y + y;
-								if ( z < 0 )
-								{
-									int newZ = m_count.z + z;
-									funct.function(m_chunks[newX][newY][newZ]);
-								}
-								else if ( z >= m_count.z )
-								{
-									int newZ = z - m_count.z;
-									funct.function(m_chunks[newX][newY][newZ]);
-								}
-								else
-								{
-									funct.function(m_chunks[newX][newY][z]);
-								}
-							}
-							else if ( y >= m_count.y )
-							{
-								int newY = y - m_count.y;
-								if ( z < 0 )
-								{
-									int newZ = m_count.z + z;
-									funct.function(m_chunks[newX][newY][newZ]);
-								}
-								else if ( z >= m_count.z )
-								{
-									int newZ = z - m_count.z;
-									funct.function(m_chunks[newX][newY][newZ]);
-								}
-								else
-								{
-									funct.function(m_chunks[newX][newY][z]);
-								}
-							}
-							else if ( z < 0 )
-							{
-								int newZ = m_count.z + z;
-								funct.function(m_chunks[newX][y][newZ]);
-							}
-							else if ( z >= m_count.z )
-							{
-								int newZ = z - m_count.z;
-								funct.function(m_chunks[newX][y][newZ]);
-							}
-							else
-							{
-								funct.function(m_chunks[newX][y][z]);
-							}
-						}
-						else if ( y < 0 )
-						{
-							int newY = m_count.y + y;
-							if ( z < 0 )
-							{
-								int newZ = m_count.z + z;
-								funct.function(m_chunks[x][newY][newZ]);
-							}
-							else if ( z >= m_count.z )
-							{
-								int newZ = z - m_count.z;
-								funct.function(m_chunks[x][newY][newZ]);
-							}
-							else
-							{
-								funct.function(m_chunks[x][newY][z]);
-							}
-						}
-						else if ( y >= m_count.y )
-						{
-							int newY = y - m_count.y;
-							if ( z < 0 )
-							{
-								int newZ = m_count.z + z;
-								funct.function(m_chunks[x][newY][newZ]);
-							}
-							else if ( z >= m_count.z )
-							{
-								int newZ = z - m_count.z;
-								funct.function(m_chunks[x][newY][newZ]);
-							}
-							else
-							{
-								funct.function(m_chunks[x][newY][z]);
-							}
-						}
-						else if ( z < 0 )
-						{
-							int newZ = m_count.z + z;
-							funct.function(m_chunks[x][y][newZ]);
-						}
-						else if ( z >= m_count.z )
-						{
-							int newZ = z - m_count.z;
-							funct.function(m_chunks[x][y][newZ]);
-						}
-						else
-						{
-							funct.function(m_chunks[x][y][z]);
-						}
+						funct.function(m_chunks[x][y][z]);
 					}
 				}
 			}
+		}
+
+		void ChunkSystem::RenderAddFunctor::function(Chunk& chunk) noexcept
+		{
+			chunk.renderAdd();
+		}
+
+		void ChunkSystem::RenderRemoveFunctor::function(Chunk& chunk) noexcept
+		{
+			chunk.renderRemove();
+		}
+		
+		void ChunkSystem::TickFunctor::function(Chunk& chunk) noexcept
+		{
+			chunk.tick();
+		}
+
+		void ChunkSystem::SlowTickFunctor::function(Chunk& chunk) noexcept
+		{
+			chunk.slowTick();
 		}
 
 	}

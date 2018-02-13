@@ -44,11 +44,26 @@ namespace clockwork {
 			void renderRemove() noexcept;
 			void tick() noexcept;
 			void slowTick() noexcept;
-			const maths::Vec3i getId() const noexcept{return m_id;}//braucht wahrscheinlich keine mutex, da es nur beim erstellen der chunks verändert wird und dann nicht mehr
+			/*passes a function to the chunk itself and the sorrounding chunks(3x3 cube) | you have to call this method with a functor struct layout like the following
+			the positions can be negative below 0, or above the count and the method will cut it into the range
+			struct SlowTickFunctor
+			{
+			void function(Chunk& chunk) noexcept
+			{
+			chunk.slowTick();
+			}
+			};
+			passFunctionToArea<SlowTickFunctor>();
+			*/
+			template<typename functor>void passFunctionToArea() noexcept;
 
 		public:
 			friend bool operator==(const Chunk& c1, const Chunk& c2) noexcept;
 			friend bool operator!=(const Chunk& c1, const Chunk& c2) noexcept;
+
+		public:
+			const maths::Vec3i getId() const noexcept{return m_id;}//braucht wahrscheinlich keine mutex, da es nur beim erstellen der chunks verändert wird und dann nicht mehr
+
 		};
 
 	}

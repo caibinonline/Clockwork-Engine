@@ -56,7 +56,8 @@ namespace clockwork {
 			using namespace graphics;
 			using namespace utils;
 			setCurrentCamera(m_defaultCamera);//muss aufgerufen werden, nachdem alle renderer erstellt wurden, aber vor chunksystem
-			m_chunkSystem = new ChunkSystem({ -500,-500,-500 }, { 500,500,500 }, { 100,100,100 }, { 2,2,2 }, { 2,2,2 }, this);//chunksystem in erbenden states mit den jeweiligenn größen erstellen | nachdem camera und renderer erstellt wurden, aber bevor gameobjects hinzugefügt werden 
+			m_chunkSystem = new ChunkSystem({ -5000,-5000,-5000 }, { 5000,5000,5000 }, { 100,100,100 }, { 1,1,1 }, { 2,2,2 }, this);//chunksystem in erbenden states mit den jeweiligenn größen erstellen | nachdem camera und renderer erstellt wurden, aber bevor gameobjects hinzugefügt werden 
+			///immoment nur renderdistance 1 zum testen | später auch chunkdistanz erhöhen, da man immoment error bekommt, wenn camerapos ausserhalb des chunks ist | auch gucken wie z is(negativ/nicht) wegen opengl right hand system
 
 
 			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/brick.jpg").load());
@@ -148,8 +149,10 @@ namespace clockwork {
 
 		void TestGame::onKeyPress(int key, int scancode, int action, int mods, graphics::Window* window) noexcept
 		{
-			if ( key == CLOCKWORK_KEY_J && action == CLOCKWORK_PRESS )
-				m_currentCamera->setDirection({ -1,-1,-1 });
+			if ( key == CLOCKWORK_KEY_X && action == CLOCKWORK_PRESS )
+				m_currentCamera->movePos({ +50, +50, +50 });
+			else if ( key == CLOCKWORK_KEY_C && action == CLOCKWORK_PRESS )
+				m_currentCamera->movePos({ -50, -50, -50 });
 		}
 
 		void TestGame::onCharTyped(unsigned int keycode, int mods, graphics::Window* window) noexcept
