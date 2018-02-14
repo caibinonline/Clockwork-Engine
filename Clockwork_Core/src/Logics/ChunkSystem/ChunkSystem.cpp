@@ -310,7 +310,9 @@ namespace clockwork {
 
 		void ChunkSystem::BorderFunctor::function(Chunk& chunk) noexcept
 		{
+#if CHUNK_BORDER
 			chunk.initBorder();
+#endif
 		}
 
 	}

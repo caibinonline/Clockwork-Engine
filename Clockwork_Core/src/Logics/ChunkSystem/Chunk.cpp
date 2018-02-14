@@ -16,7 +16,7 @@
 #include "src\Logics\Entities\Listener\RenderListener.h"
 #include "ChunkTemplates.h"
 
-#if CHUNK_BORDER
+#if CHUNK_BORDER 
 #include "src\Logics\Entities\Test.h"
 #endif
 
@@ -31,13 +31,16 @@ namespace clockwork {
 			m_id.y = idY;
 			m_id.z = idZ;
 			m_chunkSystem = chunkSystem;
+#if CHUNK_BORDER
 			m_border = nullptr;
+#endif
 		}
 
 #if CHUNK_BORDER
 		void Chunk::initBorder() noexcept
 		{
 			m_border = new TransparentTest("res/Images/chunk.png", m_chunkSystem->m_chunkSize*0.5, { 0,0,0 }, m_min + ( m_max - m_min ) / 2, m_chunkSystem->m_state, &m_chunkSystem->m_state->getDefaultRenderer());//nur test | muss auch im destruktor gelöscht werden
+			//WICHTIG SPÄTER NICHT MEHR CUBES MACHEN, sondern squares, da transparent cubes nicht von einem chunk bis zum nächsten gesehen werden 
 		}
 #endif
 
