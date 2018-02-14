@@ -100,18 +100,18 @@ namespace clockwork {
 
 												   }, 36
 												   );
-				front = Texture2D(utils::Image("res/Images/front.png").load());
-				back = Texture2D(utils::Image("res/Images/back.png").load());
-				top = Texture2D(utils::Image("res/Images/top.png").load());
-				bot = Texture2D(utils::Image("res/Images/bot.png").load());
-				left = Texture2D(utils::Image("res/Images/left.png").load());
-				right = Texture2D(utils::Image("res/Images/right.png").load());
+				front = Texture2D(utils::Image("res/Images/skybox/front.png").load());
+				back = Texture2D(utils::Image("res/Images/skybox/back.png").load());
+				top = Texture2D(utils::Image("res/Images/skybox/top.png").load());
+				bot = Texture2D(utils::Image("res/Images/skybox/bot.png").load());
+				left = Texture2D(utils::Image("res/Images/skybox/left.png").load());
+				right = Texture2D(utils::Image("res/Images/skybox/right.png").load());
 
 				m_vbo.connectToVao<float>(3, false, 8 * sizeof(float));//3d position
 				m_vbo.connectToVao<float>(2, false, 8 * sizeof(float));//2d texture coords
 				m_vbo.connectToVao<float>(3, false, 8 * sizeof(float));//3d vertex normals
 
-				m_modelMatrix = maths::Mat4x4<float>::scaling(100, 100, 100);
+				m_modelMatrix = maths::Mat4x4<float>::scaling(200, 200, 200);
 				m_modelMatrix.translate(0, 0, 0);
 			}
 

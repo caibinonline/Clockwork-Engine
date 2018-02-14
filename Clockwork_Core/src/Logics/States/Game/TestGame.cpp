@@ -41,6 +41,8 @@
 namespace clockwork {
 	namespace logics {
 
+		static bool transparent = false;//global zum test, später weg
+
 		TestGame::TestGame() noexcept
 		{
 
@@ -49,6 +51,12 @@ namespace clockwork {
 		TestGame::~TestGame() noexcept
 		{
 
+		}
+
+		static float getRand() noexcept//global zum test, später weg
+		{
+			float test =  -(float)( rand() % 50000 + 1 ) / 100 + (float)( rand() % 50000 + 1 ) / 100;
+			return test;
 		}
 
 		void TestGame::enter() noexcept
@@ -72,18 +80,20 @@ namespace clockwork {
 			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/red.jpg").load());
 			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/purple.jpg").load());
 
+			m_defaultRenderer->cubeManager.addNormalTexture("res/Images/transparent.png");
+
 
 			std::srand(engine->getWindow()->getTimer() * 10);
 
-			for ( int i = 0; i < 100; ++i )//10000 objects: normal 300fps, instancing 2300fps | 1000objects: normal 2000fps, instancing 5000fps | 100 objects: normal 5500fps, instancing 6100fps | 10 objects: normal 5500fps, instancing 5500fps | 1 object: normal 6300fps, instancing 6100fps
+			for ( int i = 0; i < 25000; ++i )//10000 objects: normal 300fps, instancing 2300fps | 1000objects: normal 2000fps, instancing 5000fps | 100 objects: normal 5500fps, instancing 6100fps | 10 objects: normal 5500fps, instancing 5500fps | 1 object: normal 6300fps, instancing 6100fps
 			{
-				maths::Vec3f pos = maths::Vec3f(-( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10);
+				maths::Vec3f pos = maths::Vec3f(getRand(), getRand(), getRand());
 				logics::InstancedTest* inst = new logics::InstancedTest(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, this, m_defaultRenderer);
 			}
 
 			for ( int i = 0; i < 100; ++i )
 			{
-				maths::Vec3f pos = maths::Vec3f(-( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10, -( rand() % 500 + 1 ) / 10 + ( rand() % 500 + 1 ) / 10);
+				maths::Vec3f pos = maths::Vec3f(getRand(), getRand(), getRand());
 				logics::TransparentTest* inst = new logics::TransparentTest("res/Images/transparent.png", maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, this, m_defaultRenderer);
 			}
 
@@ -162,24 +172,55 @@ namespace clockwork {
 
 		void TestGame::onMousePress(int button, int action, int mods, graphics::Window* window) noexcept
 		{
+			static bool normal = false;
 			if ( action == CLOCKWORK_PRESS )
 			{
 				if ( button == CLOCKWORK_MOUSE_BUTTON_1 )
 				{
-					maths::Vec3f pos1 = m_currentCamera->getPosition() + m_currentCamera->getDirection() * 2;
-					maths::Vec3f pos2 = m_currentCamera->getPosition() + m_currentCamera->getDirection() * 4;
-					maths::Vec3f pos3 = m_currentCamera->getPosition() + m_currentCamera->getDirection() * 6;
-
-					logics::InstancedTest* inst1 = new logics::InstancedTest(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos1, this, m_defaultRenderer);
-					logics::NormalTest* inst2 = new logics::NormalTest(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos2, this, m_defaultRenderer);
-					logics::TransparentTest* inst3 = new logics::TransparentTest(0, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos3, this, m_defaultRenderer);
-
+					if ( transparent )
+					{
+						logics::TransparentTest* inst3 = new logics::TransparentTest(0, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), m_currentCamera->getPosition() + m_currentCamera->getDirection() * 5, this, m_defaultRenderer);
+					}
+					else
+					{
+						if ( normal )
+						{
+							logics::NormalTest* inst2 = new logics::NormalTest(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), m_currentCamera->getPosition() + m_currentCamera->getDirection() * 5, this, m_defaultRenderer);
+							normal = false;
+						}
+						else
+						{
+							logics::InstancedTest* inst1 = new logics::InstancedTest(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), m_currentCamera->getPosition() + m_currentCamera->getDirection() * 5, this, m_defaultRenderer);
+							normal = true;
+						}
+					}
 				}
 				else if ( button == CLOCKWORK_MOUSE_BUTTON_2 )
 				{
-					m_defaultRenderer->cubeManager.removeLastInstancedCube();
-					m_defaultRenderer->cubeManager.removeLastNormalCube();
-					m_defaultRenderer->cubeManager.removeLastTransparentCube();
+					if ( transparent )
+					{
+						m_defaultRenderer->cubeManager.removeLastTransparentCube();
+					}
+					else
+					{
+						if ( normal )
+						{
+							m_defaultRenderer->cubeManager.removeLastInstancedCube();
+							normal = false;
+						}
+						else
+						{
+							m_defaultRenderer->cubeManager.removeLastNormalCube();
+							normal = true;
+						}
+					}
+				}
+				else if ( button == CLOCKWORK_MOUSE_BUTTON_3)
+				{
+					if ( transparent )
+						transparent = false;
+					else
+						transparent = true;
 				}
 			}
 

@@ -423,21 +423,25 @@ namespace clockwork {
 
 		void CubeManager::removeNormalCubesAt(int pos) noexcept
 		{
+			m_normalCubes.at(pos)->m_pos = -1;
 			m_normalCubes.erase(m_normalCubes.begin() + pos);
 		}
 
 		void CubeManager::removeLastNormalCube() noexcept
 		{
+			m_normalCubes.back()->m_pos = -1;
 			m_normalCubes.erase(m_normalCubes.end() - 1);
 		}
 
 		void CubeManager::removeTransparentCubesAt(int pos) noexcept
 		{
+			m_transparentCubes.at(pos)->m_pos = -1;
 			m_transparentCubes.erase(m_transparentCubes.begin() + pos);
 		}
 
 		void CubeManager::removeLastTransparentCube() noexcept
 		{
+			m_transparentCubes.back()->m_pos = -1;
 			m_transparentCubes.erase(m_transparentCubes.end() - 1);
 		}
 
@@ -519,13 +523,16 @@ namespace clockwork {
 #endif
 #if CLOCKWORK_DEBUG
 			if ( image.hasAlpha() )
+			{
 				if ( m_transparentTextures.size() > 0 && m_transparentTextures.at(0).getImage().getSize() != image.getSize() )
 					std::cout << "Error CubeManager::addNormalTexture(): the new image has not the same size as the other images in the texture list" << std::endl;
+			}
 			else
+			{
 				if ( m_normalTextures.size() > 0 && m_normalTextures.at(0).getImage().getSize() != image.getSize() )
 					std::cout << "Error CubeManager::addNormalTexture(): the new image has not the same size as the other images in the texture list" << std::endl;
+			}
 #endif 
-
 			if ( image.hasAlpha() )
 				m_transparentTextures.push_back(Texture2D(image));
 			else
