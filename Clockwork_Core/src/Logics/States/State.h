@@ -64,6 +64,9 @@ namespace clockwork {
 			logics::ChunkSystem& getChunkSystem() noexcept;
 			const logics::ChunkSystem& getChunkSystem() const noexcept;
 
+			graphics::Renderer& getDefaultRenderer() noexcept;
+			const graphics::Renderer& getDefaultRenderer() const noexcept;
+
 			//nicht virtual, sollte zum ändern des camera pointers benutzt werden, da es automatisch updateprojection aufruft 
 			void setCurrentCamera(logics::Camera* camera) noexcept;
 

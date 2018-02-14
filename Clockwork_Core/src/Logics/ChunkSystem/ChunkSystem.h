@@ -23,7 +23,7 @@ namespace clockwork {
 		class ChunkSystem
 		{
 
-		private:
+		public:
 			friend class Chunk;
 			struct RenderAddFunctor
 			{
@@ -38,6 +38,10 @@ namespace clockwork {
 				void function(Chunk& chunk) noexcept;
 			};
 			struct SlowTickFunctor
+			{
+				void function(Chunk& chunk) noexcept;
+			};
+			struct BorderFunctor
 			{
 				void function(Chunk& chunk) noexcept;
 			};
@@ -90,7 +94,8 @@ namespace clockwork {
 			passFunction<SlowTickFunctor>(m_currentChunk->getId()-m_tickDistance, m_currentChunk->getId()+m_tickDistance);
 			*/
 			template<typename functor>void passFunctionToChunks(const maths::Vec3<int>& pos1, const maths::Vec3<int>& pos2) noexcept;
-
+			//fast genau gleich kommentieren
+			template<typename functor>void passFunctionToAll() noexcept;
 		};
 
 	}

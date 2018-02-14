@@ -35,8 +35,7 @@
 
 
 #include "src\Logics\Entities\Test.h"
-#include "src\Logics\ChunkSystem\ChunkSystem.h"
-
+#include "src\Logics\ChunkSystem\ChunkTemplates.h"
 
 namespace clockwork {
 	namespace logics {
@@ -80,8 +79,13 @@ namespace clockwork {
 			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/red.jpg").load());
 			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/purple.jpg").load());
 
-			m_defaultRenderer->cubeManager.addNormalTexture("res/Images/transparent.png");
 
+			m_defaultRenderer->cubeManager.addNormalTexture("res/Images/transparent.png");
+			m_defaultRenderer->cubeManager.addNormalTexture("res/Images/transparent2.png");
+
+#if CHUNK_BORDER
+			m_chunkSystem->passFunctionToAll<ChunkSystem::BorderFunctor>();//nach textures, da sonst das image von chunk erste textureid hätte
+#endif
 
 			std::srand(engine->getWindow()->getTimer() * 10);
 
@@ -94,7 +98,7 @@ namespace clockwork {
 			for ( int i = 0; i < 100; ++i )
 			{
 				maths::Vec3f pos = maths::Vec3f(getRand(), getRand(), getRand());
-				logics::TransparentTest* inst = new logics::TransparentTest("res/Images/transparent.png", maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, this, m_defaultRenderer);
+				logics::TransparentTest* inst = new logics::TransparentTest(rand() % 2, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, this, m_defaultRenderer);
 			}
 
 
@@ -179,7 +183,7 @@ namespace clockwork {
 				{
 					if ( transparent )
 					{
-						logics::TransparentTest* inst3 = new logics::TransparentTest(0, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), m_currentCamera->getPosition() + m_currentCamera->getDirection() * 5, this, m_defaultRenderer);
+						logics::TransparentTest* inst3 = new logics::TransparentTest(rand() % 2, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), m_currentCamera->getPosition() + m_currentCamera->getDirection() * 5, this, m_defaultRenderer);
 					}
 					else
 					{

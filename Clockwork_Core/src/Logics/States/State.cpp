@@ -92,6 +92,14 @@ namespace clockwork {
 			{
 				return *m_chunkSystem;
 			}
+			graphics::Renderer& State::getDefaultRenderer() noexcept
+			{
+				return *m_defaultRenderer;
+			}
+			const graphics::Renderer& State::getDefaultRenderer() const noexcept
+			{
+				return *m_defaultRenderer;
+			}
 
 			void State::setCurrentCamera(logics::Camera* camera) noexcept
 			{

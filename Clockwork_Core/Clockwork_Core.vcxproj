@@ -177,6 +177,7 @@
     <ClInclude Include="src\Graphics\Textures\TextureArray2D.h" />
     <ClInclude Include="src\Logics\Camera\Camera.h" />
     <ClInclude Include="src\Logics\ChunkSystem\Chunk.h" />
+    <ClInclude Include="src\Logics\ChunkSystem\ChunkTemplates.h" />
     <ClInclude Include="src\Logics\Entities\GameObject.h" />
     <ClInclude Include="src\Logics\Entities\Listener\KeyListener.h" />
     <ClInclude Include="src\Logics\Entities\Listener\MouseListener.h" />

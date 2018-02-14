@@ -173,10 +173,6 @@ namespace clockwork {
 			if ( image.getData() == nullptr )
 				std::cout << "Error CubeManager::getNormalTextureId(): Image has no data" << std::endl;
 #endif
-#if CLOCKWORK_DEBUG
-			if ( m_normalTextures.size() > 0 && m_normalTextures.at(0).getImage().getSize() != image.getSize() )
-				std::cout << "Error CubeManager::getNormalTextureId(): the new image has not the same size as the other images in the texture list" << std::endl;
-#endif 
 			for ( unsigned int i = 0; i < m_normalTextures.size(); ++i )
 			{
 				if ( m_normalTextures.at(i).getImage().getFilepath() == image.getFilepath() )
@@ -199,10 +195,6 @@ namespace clockwork {
 			if ( image.getData() == nullptr )
 				std::cout << "Error CubeManager::getNormalTextureId(): Image has no data" << std::endl;
 #endif
-#if CLOCKWORK_DEBUG
-			if ( m_normalTextures.size() > 0 && m_normalTextures.at(0).getImage().getSize() != image.getSize() )
-				std::cout << "Error CubeManager::getNormalTextureId(): the new image has not the same size as the other images in the texture list" << std::endl;
-#endif 
 			m_normalTextures.push_back(Texture2D(image));
 			return m_normalTextures.size() - 1;
 		}
@@ -213,10 +205,6 @@ namespace clockwork {
 			if ( image.getData() == nullptr )
 				std::cout << "Error CubeManager::getNormalTextureId(): Image has no data" << std::endl;
 #endif
-#if CLOCKWORK_DEBUG
-			if ( m_transparentTextures.size() > 0 && m_transparentTextures.at(0).getImage().getSize() != image.getSize() )
-				std::cout << "Error CubeManager::getNormalTextureId(): the new image has not the same size as the other images in the texture list" << std::endl;
-#endif 
 			for ( unsigned int i = 0; i < m_transparentTextures.size(); ++i )
 			{
 				if ( m_transparentTextures.at(i).getImage().getFilepath() == image.getFilepath() )
@@ -239,10 +227,6 @@ namespace clockwork {
 			if ( image.getData() == nullptr )
 				std::cout << "Error CubeManager::getNormalTextureId(): Image has no data" << std::endl;
 #endif
-#if CLOCKWORK_DEBUG
-			if ( m_transparentTextures.size() > 0 && m_transparentTextures.at(0).getImage().getSize() != image.getSize() )
-				std::cout << "Error CubeManager::getNormalTextureId(): the new image has not the same size as the other images in the texture list" << std::endl;
-#endif 
 			m_transparentTextures.push_back(Texture2D(image));
 			return m_transparentTextures.size() - 1;
 		}
@@ -464,8 +448,6 @@ namespace clockwork {
 #if CLOCKWORK_DEBUG
 			if ( image.hasAlpha() )
 			{
-				if ( m_transparentTextures.size() > 0 && m_transparentTextures.at(0).getImage().getSize() != image.getSize() )
-					std::cout << "Error CubeManager::addNormalTexture(): the new image has not the same size as the other images in the texture list" << std::endl;
 				for ( unsigned int i = 0; i < m_transparentTextures.size(); ++i )
 				{
 					if ( m_transparentTextures.at(i).getImage().getFilepath() == image.getFilepath() )
@@ -477,8 +459,6 @@ namespace clockwork {
 			}
 			else
 			{
-				if ( m_normalTextures.size() > 0 && m_normalTextures.at(0).getImage().getSize() != image.getSize() )
-					std::cout << "Error CubeManager::addNormalTexture(): the new image has not the same size as the other images in the texture list" << std::endl;
 				for ( unsigned int i = 0; i < m_normalTextures.size(); ++i )
 				{
 					if ( m_normalTextures.at(i).getImage().getFilepath() == image.getFilepath() )
@@ -521,18 +501,6 @@ namespace clockwork {
 			if ( image.getData() == nullptr )
 				std::cout << "Error CubeManager::addNormalTexture(): Image has no data" << std::endl;
 #endif
-#if CLOCKWORK_DEBUG
-			if ( image.hasAlpha() )
-			{
-				if ( m_transparentTextures.size() > 0 && m_transparentTextures.at(0).getImage().getSize() != image.getSize() )
-					std::cout << "Error CubeManager::addNormalTexture(): the new image has not the same size as the other images in the texture list" << std::endl;
-			}
-			else
-			{
-				if ( m_normalTextures.size() > 0 && m_normalTextures.at(0).getImage().getSize() != image.getSize() )
-					std::cout << "Error CubeManager::addNormalTexture(): the new image has not the same size as the other images in the texture list" << std::endl;
-			}
-#endif 
 			if ( image.hasAlpha() )
 				m_transparentTextures.push_back(Texture2D(image));
 			else

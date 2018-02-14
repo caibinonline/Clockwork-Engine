@@ -11,11 +11,14 @@
 * You can use this software under the following License: https://github.com/Clock-work/Clockwork-Engine/blob/master/LICENSE
 *************************************************************************/
 #include <algorithm>
-#include "ChunkSystem.h"
 #include "src\Logics\Camera\Camera.h"
 #include "src\Logics\States\State.h"
 #include "src\Logics\Entities\Listener\RenderListener.h"
-#include "Chunk.h"
+#include "ChunkTemplates.h"
+
+#if CHUNK_BORDER
+#include "src\Logics\Entities\Test.h"
+#endif
 
 namespace clockwork {
 	namespace logics {
@@ -28,11 +31,22 @@ namespace clockwork {
 			m_id.y = idY;
 			m_id.z = idZ;
 			m_chunkSystem = chunkSystem;
+			m_border = nullptr;
 		}
+
+#if CHUNK_BORDER
+		void Chunk::initBorder() noexcept
+		{
+			m_border = new TransparentTest("res/Images/chunk.png", m_chunkSystem->m_chunkSize*0.5, { 0,0,0 }, m_min + ( m_max - m_min ) / 2, m_chunkSystem->m_state, &m_chunkSystem->m_state->getDefaultRenderer());//nur test | muss auch im destruktor gelöscht werden
+		}
+#endif
 
 		void Chunk::renderAdd() noexcept
 		{
-			//std::cout << "RenderAdd: " << m_id << std::endl;
+#if CHUNK_BORDER
+			if(m_border!=nullptr )
+				m_border->renderAdd();
+#endif
 			if ( !m_renderList.empty() )
 				for ( auto listener : m_renderList )
 					( *listener ).renderAdd();
@@ -40,7 +54,10 @@ namespace clockwork {
 
 		void Chunk::renderRemove() noexcept
 		{
-			//std::cout << "RenderRemove: " << m_id << std::endl;
+#if CHUNK_BORDER
+			if ( m_border != nullptr )
+				m_border->renderRemove();
+#endif
 			if(!m_renderList.empty() )
 				for ( auto listener : m_renderList )
 					( *listener ).renderRemove();
@@ -70,11 +87,6 @@ namespace clockwork {
 #endif
 			m_renderList.erase(iterator);
 
-		}
-
-		template<typename functor>void Chunk::passFunctionToArea() noexcept
-		{
-			m_chunkSystem->passFunctionToChunks<functor>(m_id - 1, m_id + 1);
 		}
 
 		const bool Chunk::inRenderDistance() const noexcept

@@ -14,11 +14,15 @@
 #include "src\Maths\Vec3.h"
 #include "src\Maths\MathFunctions.h"
 
+#define CHUNK_BORDER 1
+
 namespace clockwork {
 	namespace logics {
 
 		class State;
 		class ChunkSystem;
+		class RenderListener;
+		class GameObject;
 		class RenderListener;
 
 		class Chunk
@@ -32,6 +36,10 @@ namespace clockwork {
 			maths::Vec3f m_max;
 			maths::Vec3i m_id;//id is 0 to chunksize-1
 			ChunkSystem* m_chunkSystem;
+#if CHUNK_BORDER
+			RenderListener* m_border;
+#endif
+
 
 			std::vector<RenderListener*> m_renderList;//noch in konstruktor/movekonstruktor/copy/etc einbinden | ggf auch von gameobjects setchunk zum ändern machen und in destruktor von gameobject müssen sie sich auch löschen | die moving sachen können sich auch von chunk zu chunk bewegen(ggf testen ob x höher ist, dann id.x++ und auch so für andere, etc)
 
@@ -43,6 +51,11 @@ namespace clockwork {
 			void init(const maths::Vec3f& min, const maths::Vec3f& max, int idX, int idY, int idZ, ChunkSystem* chunkSystem) noexcept;
 
 		public:
+
+#if CHUNK_BORDER
+			void initBorder() noexcept;
+#endif
+
 			void renderAdd() noexcept;
 			void renderRemove() noexcept;
 			void tick() noexcept;
