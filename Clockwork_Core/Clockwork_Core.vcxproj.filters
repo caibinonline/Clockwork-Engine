@@ -90,6 +90,9 @@
     <ClCompile Include="src\Graphics\Textures\TextureArray2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Logics\Entities\Listener\RenderListener.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Core\Engine.h">

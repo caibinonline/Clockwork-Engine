@@ -1,11 +1,11 @@
 #pragma once
-#include "GameObject.h"
+#include "Listener\RenderListener.h"
 #include "src\Graphics\Renderables\Cube\Cube.h"
 
 namespace clockwork {
 	namespace logics {
 
-		class InstancedTest : public GameObject
+		class InstancedTest : public RenderListener
 		{
 		public:
 			graphics::InstancedCube cube;
@@ -14,7 +14,7 @@ namespace clockwork {
 			InstancedTest(int test, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, State* state, graphics::Renderer* renderer) noexcept
 				:GameObject(size, rotation, position, state), cube(test, this, renderer)
 			{
-				cube.add();
+				RenderListener::init();
 			}
 
 		protected:
@@ -23,9 +23,19 @@ namespace clockwork {
 			{
 				cube.setChanged(true);
 			}
+		public:
+			void renderAdd() noexcept override
+			{
+				cube.add();
+			}
+			void renderRemove() noexcept override
+			{
+				cube.remove();
+			}
+
 		};
 
-		class NormalTest : public GameObject
+		class NormalTest : public RenderListener
 		{
 		public:
 			graphics::NormalCube cube;
@@ -33,7 +43,7 @@ namespace clockwork {
 			NormalTest(int test, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, State* state, graphics::Renderer* renderer) noexcept
 				:GameObject(size, rotation, position, state), cube(test, false, this, renderer)
 			{
-				cube.add();
+				RenderListener::init();
 			}
 		protected:
 
@@ -41,9 +51,18 @@ namespace clockwork {
 			{
 
 			}
+		public:
+			void renderAdd() noexcept override
+			{
+				cube.add();
+			}
+			void renderRemove() noexcept override
+			{
+				cube.remove();
+			}
 		};
 
-		class TransparentTest : public GameObject
+		class TransparentTest : public RenderListener
 		{
 		public:
 			graphics::NormalCube cube;
@@ -51,18 +70,27 @@ namespace clockwork {
 			TransparentTest(const std::string& test, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, State* state, graphics::Renderer* renderer) noexcept
 				:GameObject(size, rotation, position, state), cube(test, this, renderer)
 			{
-				cube.add();
+				RenderListener::init();
 			}
 			TransparentTest(int test, const maths::Vec3f& size, const maths::Vec3f& rotation, const maths::Vec3f& position, State* state, graphics::Renderer* renderer) noexcept
 				: GameObject(size, rotation, position, state), cube(test, true, this, renderer)
 			{
-				cube.add();
+				RenderListener::init();
 			}
 		protected:
 
 			void onMatrixChange() noexcept override
 			{
 
+			}
+		public:
+			void renderAdd() noexcept override
+			{
+				cube.add();
+			}
+			void renderRemove() noexcept override
+			{
+				cube.remove();
 			}
 		};
 

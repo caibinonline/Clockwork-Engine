@@ -1,4 +1,3 @@
-#pragma once
 /*************************************************************************
 * Clockwork-Engine
 * A C++/Opengl/GLFW3 game engine
@@ -11,32 +10,27 @@
 * arising from the use of this software.
 * You can use this software under the following License: https://github.com/Clock-work/Clockwork-Engine/blob/master/LICENSE
 *************************************************************************/
-#include "src\Logics\Entities\GameObject.h"
+#include "RenderListener.h"
+#include "src\Logics\ChunkSystem\Chunk.h"
 
 namespace clockwork {
 	namespace logics {
-		
-		class Chunk;
 
-		class RenderListener 
-			: public virtual GameObject
+		RenderListener::RenderListener() noexcept
 		{
+			m_chunk->addRenderListener(this);
+		}
 
-		public:
-			RenderListener() noexcept;//bei move/copy konstruktor/operator ggf nicht addrenderlistener/etc aufrufen, oder auch schon remove
-			~RenderListener() noexcept;
+		RenderListener::~RenderListener() noexcept
+		{
+			m_chunk->removeRenderListener(this);
+		}
 
-		protected:
-			//muss von allen erbenden klassen im konstruktor aufgerufen werden
-			void init() noexcept;
-
-		public:
-			virtual void renderAdd() noexcept = 0;
-			virtual void renderRemove() noexcept = 0;
-
-
-		};
+		void RenderListener::init() noexcept
+		{
+			if ( m_chunk->inRenderDistance() )
+				renderAdd();
+		}
 
 	}
 }
-

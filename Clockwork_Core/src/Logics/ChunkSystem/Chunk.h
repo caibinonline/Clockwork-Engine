@@ -19,6 +19,7 @@ namespace clockwork {
 
 		class State;
 		class ChunkSystem;
+		class RenderListener;
 
 		class Chunk
 		{
@@ -32,6 +33,8 @@ namespace clockwork {
 			maths::Vec3i m_id;//id is 0 to chunksize-1
 			ChunkSystem* m_chunkSystem;
 
+			std::vector<RenderListener*> m_renderList;//noch in konstruktor/movekonstruktor/copy/etc einbinden | ggf auch von gameobjects setchunk zum ändern machen und in destruktor von gameobject müssen sie sich auch löschen | die moving sachen können sich auch von chunk zu chunk bewegen(ggf testen ob x höher ist, dann id.x++ und auch so für andere, etc)
+
 		public:
 			Chunk() noexcept = default;
 			~Chunk() noexcept = default;//hier später wahrscheinlich alle gameobjects löschen
@@ -44,6 +47,10 @@ namespace clockwork {
 			void renderRemove() noexcept;
 			void tick() noexcept;
 			void slowTick() noexcept;
+
+			void addRenderListener(RenderListener* listener) noexcept;
+			void removeRenderListener(RenderListener* listener) noexcept;
+
 			/*passes a function to the chunk itself and the sorrounding chunks(3x3 cube) | you have to call this method with a functor struct layout like the following
 			the positions can be negative below 0, or above the count and the method will cut it into the range
 			struct SlowTickFunctor
@@ -56,7 +63,8 @@ namespace clockwork {
 			passFunctionToArea<SlowTickFunctor>();
 			*/
 			template<typename functor>void passFunctionToArea() noexcept;
-
+			//in relation zum currentchunk, ob der chunk hier in renderdistance liegt
+			const bool inRenderDistance() const noexcept;
 		public:
 			friend bool operator==(const Chunk& c1, const Chunk& c2) noexcept;
 			friend bool operator!=(const Chunk& c1, const Chunk& c2) noexcept;

@@ -142,6 +142,7 @@
     <ClCompile Include="src\Logics\ChunkSystem\Chunk.cpp" />
     <ClCompile Include="src\Logics\ChunkSystem\ChunkSystem.cpp" />
     <ClCompile Include="src\Logics\Entities\GameObject.cpp" />
+    <ClCompile Include="src\Logics\Entities\Listener\RenderListener.cpp" />
     <ClCompile Include="src\Logics\States\Game\TestGame.cpp" />
     <ClCompile Include="src\Logics\States\Loading\Loading.cpp" />
     <ClCompile Include="src\Logics\States\State.cpp" />

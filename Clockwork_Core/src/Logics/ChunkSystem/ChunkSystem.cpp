@@ -99,6 +99,21 @@ namespace clockwork {
 			return m_chunks[static_cast<int>( maths::floor(( position.x - m_min.x ) / m_chunkSize.x) )][static_cast<int>( maths::floor(( position.y - m_min.y ) / m_chunkSize.y) )][static_cast<int>( maths::floor(( position.z - m_min.z ) / m_chunkSize.z) )];
 		}
 
+		const Chunk& ChunkSystem::getCurrentChunk() const noexcept
+		{
+			return *m_currentChunk;
+		}
+
+		Chunk& ChunkSystem::getCurrentChunk() noexcept
+		{
+			return *m_currentChunk;
+		}
+
+		const maths::Vec3i& ChunkSystem::getRenderDistance() const noexcept
+		{
+			return m_renderDistance;
+		}
+
 		const unsigned int ChunkSystem::getBytes() const noexcept
 		{
 			return m_count.x*m_count.y*m_count.z * sizeof(Chunk);
