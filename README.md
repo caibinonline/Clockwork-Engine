@@ -1,6 +1,8 @@
 # Clockwork-Engine
 A C++/Opengl/GLFW3 game engine
 
+You can download the binaries folder without downloading the whole source code at https://minhaskamal.github.io/DownGit/#/home?url=https://github.com/Clock-work/Clockwork-Engine/tree/master/binaries
+
 This Software is under the GNU General Public License. Check https://github.com/Clock-work/Clockwork-Engine/blob/master/LICENSE for details. 
 
 This software uses the GLFW library. See http://www.glfw.org/license.html for details. 
