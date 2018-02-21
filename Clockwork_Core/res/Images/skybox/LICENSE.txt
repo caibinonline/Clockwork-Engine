@@ -1,8 +1,5 @@
-SkyboxSet by Heiko Irrgang ( http://gamvas.com ) is licensed under
-the Creative Commons Attribution-ShareAlike 3.0 Unported License.
-Based on a work at http://93i.de.
+Created by 'amethyst7' aka Chris Matz. 
+WEB site: http://amethyst7.gotdoofed.com
 
-To view a copy of this license, visit
-http://creativecommons.org/licenses/by-sa/3.0/ or send a letter to
-Creative Commons, 444 Castro Street, Suite 900, Mountain View,
-California, 94041, USA.
+You may use and distribute this sky box under the terms of the
+GNU General Public License version 2.

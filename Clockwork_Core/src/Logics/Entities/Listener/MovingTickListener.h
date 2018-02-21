@@ -11,3 +11,28 @@
 * arising from the use of this software.
 * You can use this software under the following License: https://github.com/Clock-work/Clockwork-Engine/blob/master/LICENSE
 *************************************************************************/
+#include "src\Logics\Entities\GameObject.h"
+
+namespace clockwork {
+	namespace logics {
+
+		class Chunk;
+
+		class MovingTickListener//unterschied zu staticticklistener dazu schreiben | der hier verändert chunk, wenn er sich bewegt
+			: public virtual GameObject
+		{
+
+		public:
+			MovingTickListener() noexcept;
+			~MovingTickListener() noexcept;
+
+		public:
+			virtual void tick() noexcept = 0;
+			virtual void slowTick() noexcept = 0;
+
+
+		};
+
+	}
+}
+

@@ -94,5 +94,9 @@ namespace clockwork {
 			return *m_chunk;
 		}
 
+		void GameObject::setChunk(Chunk* newChunk) noexcept
+		{
+			m_chunk = newChunk;
+		}
 	}
 }

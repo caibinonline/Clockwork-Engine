@@ -10,7 +10,6 @@
 * arising from the use of this software.
 * You can use this software under the following License: https://github.com/Clock-work/Clockwork-Engine/blob/master/LICENSE
 *************************************************************************/
-#pragma once
 #include "glad\glad.h"
 #include "glfw\glfw3.h"
 #include "Engine.h"

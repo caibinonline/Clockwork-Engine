@@ -41,7 +41,7 @@ namespace clockwork {
 			
 
 		protected:
-			//muss überschrieben werden und dann für instancedcubes setchanged(true) aufrufen 
+			//muss überschrieben werden und dann für instancedcubes setchanged(true) aufrufen | auch dazuschreiben, dass es protected und nicht public ist
 			virtual void onMatrixChange() noexcept = 0;
 
 		public:
@@ -51,6 +51,9 @@ namespace clockwork {
 			const Chunk& getChunk() const noexcept;
 			//hier threadsafe machen ohne const kann state verändert werden
 			Chunk& getChunk() noexcept;
+
+			//dont call this method if you dont know what you are doing | it will change the chunk pointer of the gameobject without updating the listeners in the chunk and without changing the position of the gameobject to the new chunk
+			void setChunk(Chunk* newChunk) noexcept;
 
 			inline const maths::Mat4f& getModelMatrix() const noexcept {return m_modelMatrix;}
 			inline const maths::Mat4f* getModelMatrixMemoryLocation() const noexcept {return &m_modelMatrix;}

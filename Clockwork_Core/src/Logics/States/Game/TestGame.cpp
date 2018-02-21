@@ -41,6 +41,8 @@ namespace clockwork {
 	namespace logics {
 
 		static bool transparent = false;//global zum test, später weg
+		static int texturecount = 15;
+		static int transparentTexturecount = 8;
 
 		TestGame::TestGame() noexcept
 		{
@@ -63,7 +65,7 @@ namespace clockwork {
 			using namespace graphics;
 			using namespace utils;
 			setCurrentCamera(m_defaultCamera);//muss aufgerufen werden, nachdem alle renderer erstellt wurden, aber vor chunksystem
-			m_chunkSystem = new ChunkSystem({ -500,-500,-500 }, { 500,500,500 }, { 20,20,20 }, { 1,1,1 }, { 2,2,2 }, this);//chunksystem in erbenden states mit den jeweiligenn größen erstellen | nachdem camera und renderer erstellt wurden, aber bevor gameobjects hinzugefügt werden 
+			m_chunkSystem = new ChunkSystem({ -1000,-1000,-1000 }, { 1000,1000,1000 }, { 25,25,25 }, { 1,1,1 }, { 1,1,1 }, this);//chunksystem in erbenden states mit den jeweiligenn größen erstellen | nachdem camera und renderer erstellt wurden, aber bevor gameobjects hinzugefügt werden 
 			///immoment nur renderdistance 1 zum testen | später auch chunkdistanz erhöhen, da man immoment error bekommt, wenn camerapos ausserhalb des chunks ist | auch gucken wie z is(negativ/nicht) wegen opengl right hand system
 
 
@@ -78,27 +80,35 @@ namespace clockwork {
 			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/blue.jpg").load());
 			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/red.jpg").load());
 			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/purple.jpg").load());
+			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/brick3.jpg").load());
+			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/green.jpg").load());
+			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/abstract.jpg").load());
+			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/ice.jpg").load());
 
 
-			m_defaultRenderer->cubeManager.addNormalTexture("res/Images/transparent.png");
-			m_defaultRenderer->cubeManager.addNormalTexture("res/Images/transparent2.png");
+ 			m_defaultRenderer->cubeManager.addNormalTexture("res/Images/transparent/glass.png");
+			m_defaultRenderer->cubeManager.addNormalTexture("res/Images/transparent/blue.png");
+			m_defaultRenderer->cubeManager.addNormalTexture("res/Images/transparent/diagmonds.png");
+			m_defaultRenderer->cubeManager.addNormalTexture("res/Images/transparent/diamond.png");
+			m_defaultRenderer->cubeManager.addNormalTexture("res/Images/transparent/dust.png");
+			m_defaultRenderer->cubeManager.addNormalTexture("res/Images/transparent/straws.png");
+			m_defaultRenderer->cubeManager.addNormalTexture("res/Images/transparent/wall.png");
+			m_defaultRenderer->cubeManager.addNormalTexture("res/Images/transparent/washi.png");
 
-#if CHUNK_BORDER
-			m_chunkSystem->passFunctionToAll<ChunkSystem::BorderFunctor>();//nach textures, da sonst das image von chunk erste textureid hätte
-#endif
+
 
 			std::srand(engine->getWindow()->getTimer() * 10);
 
 			for ( int i = 0; i < 25000; ++i )//10000 objects: normal 300fps, instancing 2300fps | 1000objects: normal 2000fps, instancing 5000fps | 100 objects: normal 5500fps, instancing 6100fps | 10 objects: normal 5500fps, instancing 5500fps | 1 object: normal 6300fps, instancing 6100fps
 			{
 				maths::Vec3f pos = maths::Vec3f(getRand(), getRand(), getRand());
-				logics::InstancedTest* inst = new logics::InstancedTest(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, this, m_defaultRenderer);
+				logics::InstancedTest* inst = new logics::InstancedTest(rand() % texturecount, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, this, m_defaultRenderer);
 			}
 
 			for ( int i = 0; i < 100; ++i )
 			{
 				maths::Vec3f pos = maths::Vec3f(getRand(), getRand(), getRand());
-				logics::TransparentTest* inst = new logics::TransparentTest(rand() % 2, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, this, m_defaultRenderer);
+				logics::TransparentTest* inst = new logics::TransparentTest(rand() % transparentTexturecount, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, this, m_defaultRenderer);
 			}
 
 
@@ -146,12 +156,13 @@ namespace clockwork {
 		void TestGame::slowTick() noexcept
 		{
 			m_chunkSystem->slowTick();
+			std::cout << m_currentCamera->getPosition() << std::endl;
 		}
 
 		void TestGame::render() noexcept
 		{
 			m_chunkSystem->update();
-			m_defaultRenderer->render();//ggf in state render verschieben
+			m_defaultRenderer->render();//ggf in state render verschieben | gennauso mit allen weiterleitungen ans chunksystem
 			m_defaultRenderer->renderTransparent();
 		}
 
@@ -164,9 +175,9 @@ namespace clockwork {
 		void TestGame::onKeyPress(int key, int scancode, int action, int mods, graphics::Window* window) noexcept
 		{
 			if ( key == CLOCKWORK_KEY_X && action == CLOCKWORK_PRESS )
-				m_currentCamera->movePos({ +50, +50, +50 });
+				m_currentCamera->movePos(m_currentCamera->getDirection() * 50);
 			else if ( key == CLOCKWORK_KEY_C && action == CLOCKWORK_PRESS )
-				m_currentCamera->movePos({ -50, -50, -50 });
+				m_currentCamera->movePos(-m_currentCamera->getDirection() * 50);
 		}
 
 		void TestGame::onCharTyped(unsigned int keycode, int mods, graphics::Window* window) noexcept
@@ -176,27 +187,17 @@ namespace clockwork {
 
 		void TestGame::onMousePress(int button, int action, int mods, graphics::Window* window) noexcept
 		{
-			static bool normal = false;
 			if ( action == CLOCKWORK_PRESS )
 			{
 				if ( button == CLOCKWORK_MOUSE_BUTTON_1 )
 				{
 					if ( transparent )
 					{
-						logics::TransparentTest* inst3 = new logics::TransparentTest(rand() % 2, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), m_currentCamera->getPosition() + m_currentCamera->getDirection() * 5, this, m_defaultRenderer);
+						logics::TransparentTest* inst3 = new logics::TransparentTest(rand() % transparentTexturecount, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), m_currentCamera->getPosition() + m_currentCamera->getDirection() * 5, this, m_defaultRenderer);
 					}
 					else
 					{
-						if ( normal )
-						{
-							logics::NormalTest* inst2 = new logics::NormalTest(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), m_currentCamera->getPosition() + m_currentCamera->getDirection() * 5, this, m_defaultRenderer);
-							normal = false;
-						}
-						else
-						{
-							logics::InstancedTest* inst1 = new logics::InstancedTest(rand() % 11, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), m_currentCamera->getPosition() + m_currentCamera->getDirection() * 5, this, m_defaultRenderer);
-							normal = true;
-						}
+							logics::MovingTest* inst2 = new logics::MovingTest(rand() % texturecount, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), m_currentCamera->getPosition() + m_currentCamera->getDirection() * 5, this, m_defaultRenderer);
 					}
 				}
 				else if ( button == CLOCKWORK_MOUSE_BUTTON_2 )
@@ -207,16 +208,7 @@ namespace clockwork {
 					}
 					else
 					{
-						if ( normal )
-						{
-							m_defaultRenderer->cubeManager.removeLastInstancedCube();
-							normal = false;
-						}
-						else
-						{
-							m_defaultRenderer->cubeManager.removeLastNormalCube();
-							normal = true;
-						}
+						m_defaultRenderer->cubeManager.removeLastInstancedCube();
 					}
 				}
 				else if ( button == CLOCKWORK_MOUSE_BUTTON_3)
