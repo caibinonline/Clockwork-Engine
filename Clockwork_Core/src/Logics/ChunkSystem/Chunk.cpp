@@ -14,14 +14,32 @@
 #include "src\Logics\Camera\Camera.h"
 #include "src\Logics\States\State.h"
 #include "src\Logics\Entities\Listener\RenderListener.h"
+#include "src\Logics\Entities\Listener\MovingTickListener.h"
 #include "ChunkTemplates.h"
-
-#if CHUNK_BORDER 
-#include "src\Logics\Entities\Test.h"
-#endif
+#include "src\Graphics\Renderables\Border\CubeBorder.h"
 
 namespace clockwork {
 	namespace logics {
+
+		Chunk::Chunk() noexcept
+			: m_chunkSystem(nullptr)
+#if CHUNK_BORDER
+			, m_border(nullptr)
+#endif
+		{
+
+		}
+
+		Chunk::~Chunk() noexcept//hier später wahrscheinlich alle gameobjects löschem
+		{
+#if CHUNK_BORDER
+			if ( m_border )
+			{
+				delete m_border;
+				m_border = nullptr;
+			}
+#endif
+		}
 
 		void Chunk::init(const maths::Vec3f& min, const maths::Vec3f& max, int idX, int idY, int idZ, ChunkSystem* chunkSystem) noexcept
 		{
@@ -31,49 +49,76 @@ namespace clockwork {
 			m_id.y = idY;
 			m_id.z = idZ;
 			m_chunkSystem = chunkSystem;
-#if CHUNK_BORDER
-			m_border = nullptr;
-#endif
 		}
-
-#if CHUNK_BORDER
-		void Chunk::initBorder() noexcept
-		{
-			m_border = new TransparentTest("res/Images/chunk.png", m_chunkSystem->m_chunkSize*0.5, { 0,0,0 }, m_min + ( m_max - m_min ) / 2, m_chunkSystem->m_state, &m_chunkSystem->m_state->getDefaultRenderer());//nur test | muss auch im destruktor gelöscht werden
-			//WICHTIG SPÄTER NICHT MEHR CUBES MACHEN, sondern squares, da transparent cubes nicht von einem chunk bis zum nächsten gesehen werden 
-		}
-#endif
 
 		void Chunk::renderAdd() noexcept
 		{
+			for ( unsigned int i = 0; i < m_renderList.size(); ++i )
+			{
+				m_renderList[i]->renderAdd();
+			}
 #if CHUNK_BORDER
-			if(m_border!=nullptr )
-				m_border->renderAdd();
+			if ( !m_border )
+			{
+				maths::Mat4f* modelmatrix = new maths::Mat4f();
+				modelmatrix->scale(m_chunkSystem->m_chunkSize*0.5 - 0.001).translate(m_min + ( m_max - m_min ) / 2);
+				m_border = new graphics::CubeBorder(modelmatrix,true,&m_chunkSystem->getState());
+				m_border->add();
+			}
 #endif
-			if ( !m_renderList.empty() )
-				for ( auto listener : m_renderList )
-					( *listener ).renderAdd();
 		}
 
 		void Chunk::renderRemove() noexcept
 		{
+			for ( unsigned int i = 0; i < m_renderList.size(); ++i )
+			{
+				m_renderList[i]->renderRemove();
+			}
 #if CHUNK_BORDER
-			if ( m_border != nullptr )
-				m_border->renderRemove();
+			if ( m_border )
+			{
+				delete m_border;
+				m_border = nullptr;
+			}
 #endif
-			if(!m_renderList.empty() )
-				for ( auto listener : m_renderList )
-					( *listener ).renderRemove();
 		}
 
 		void Chunk::tick() noexcept
 		{
-
+			for ( unsigned int i = 0; i < m_movingTickList.size(); ++i )
+			{
+				MovingTickListener* listener = m_movingTickList[i];
+				listener->tick();
+				if ( m_chunkSystem->getChunkAt(listener->getPosition()) != *this )
+				{
+					Chunk& newChunk = m_chunkSystem->getChunkAt(listener->getPosition());
+					this->removeMovingTickListener(listener);
+					newChunk.addMovingTickListener(listener);
+					RenderListener* r_listener  = dynamic_cast<RenderListener*>(listener);//WICHTIG AUCH FÜR ALLE ANDEREN LISTENER MACHEN(ausser static tick listener), aber keylistener, etc auch mit dynamic cast überprüfen
+					if ( r_listener != nullptr )
+					{
+						this->removeRenderListener(r_listener);
+						newChunk.addRenderListener(r_listener);
+						if ( this->inRenderDistance()==true && newChunk.inRenderDistance() == false )
+						{
+							r_listener->renderRemove();
+						}
+						else if ( this->inRenderDistance() == false && newChunk.inRenderDistance() == true )
+						{
+							r_listener->renderAdd();
+						}
+					}
+					listener->setChunk(&newChunk);
+				}
+			}
 		}
 
 		void Chunk::slowTick() noexcept
 		{
-
+			for ( unsigned int i = 0; i < m_movingTickList.size(); ++i )
+			{
+				m_movingTickList[i]->slowTick();
+			}
 		}
 
 		void Chunk::addRenderListener(RenderListener* listener) noexcept
@@ -89,7 +134,21 @@ namespace clockwork {
 				std::cout << "Error Chunk::removeRenderListener(): The listener pointer is not in the renderList" << std::endl;
 #endif
 			m_renderList.erase(iterator);
+		}
 
+		void Chunk::addMovingTickListener(MovingTickListener* listener) noexcept
+		{
+			m_movingTickList.push_back(listener);
+		}
+
+		void Chunk::removeMovingTickListener(MovingTickListener* listener) noexcept
+		{
+			auto iterator = std::find(m_movingTickList.begin(), m_movingTickList.end(), listener);
+#if CLOCKWORK_DEBUG
+			if ( iterator == m_movingTickList.end() )
+				std::cout << "Error Chunk::removeMovingTickListener(): The listener pointer is not in the movingTickList" << std::endl;
+#endif
+			m_movingTickList.erase(iterator);
 		}
 
 		const bool Chunk::inRenderDistance() const noexcept
@@ -100,6 +159,16 @@ namespace clockwork {
 				return true;
 			else
 				return false;
+		}
+
+		const ChunkSystem& Chunk::getChunkSystem() const noexcept
+		{
+			return *m_chunkSystem;
+		}
+
+		ChunkSystem& Chunk::getChunkSystem() noexcept
+		{
+			return *m_chunkSystem;
 		}
 
 		bool operator==(const Chunk& c1, const Chunk& c2) noexcept

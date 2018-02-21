@@ -43,31 +43,31 @@ namespace clockwork {
 			m_vertexBuffer = VertexBuffer(//you could also create a local nameless array of vertices, where vertex is a struct with vec2 of float for position and vec2 of float for colour
 				floatarr//floats
 				{//positions          texture coords	 vertex normals
-				 //front
+				    //back
 					-1.0f, -1.0f, 1.0f,		0.0f, 0.0f,		0.0f, 0.0f, 1.0f,//0
 					1.0f, -1.0f, 1.0f,      1.0f, 0.0f,     0.0f, 0.0f, 1.0f,
 					-1.0f, 1.0f, 1.0f,      0.0f, 1.0f,     0.0f, 0.0f, 1.0f,
 					1.0f, 1.0f, 1.0f,		1.0f, 1.0f,		0.0f, 0.0f, 1.0f,
 					//top								
-					-1.0f, 1.0f, 1.0f,		0.0f, 0.0f,		0.0f, 1.0f, 0.0f, //4
-					1.0f, 1.0f, 1.0f,		1.0f, 0.0f,		0.0f, 1.0f, 0.0f,
-					-1.0f, 1.0f, -1.0f,		0.0f, 1.0f,		0.0f, 1.0f, 0.0f,
-					1.0f, 1.0f, -1.0f,		1.0f, 1.0f,		0.0f, 1.0f, 0.0f,
-					//back								
+					-1.0f, 1.0f, 1.0f,		1.0f, 1.0f,		0.0f, 1.0f, 0.0f, //4
+					1.0f, 1.0f, 1.0f,		0.0f, 1.0f,		0.0f, 1.0f, 0.0f,
+					-1.0f, 1.0f, -1.0f,		1.0f, 0.0f,		0.0f, 1.0f, 0.0f,
+					1.0f, 1.0f, -1.0f,		0.0f, 0.0f,		0.0f, 1.0f, 0.0f,
+					//front							
 					-1.0f, 1.0f, -1.0f,		1.0f, 1.0f,		0.0f, 0.0f, -1.0f,//8
 					1.0f, 1.0f, -1.0f,		0.0f, 1.0f,		0.0f, 0.0f, -1.0f,
 					-1.0f, -1.0f, -1.0f,	1.0f, 0.0f,		0.0f, 0.0f, -1.0f,
 					1.0f, -1.0f, -1.0f,		0.0f, 0.0f,		0.0f, 0.0f, -1.0f,
 					//bot								
-					-1.0f, -1.0f, -1.0f,    0.0f, 0.0f,     0.0f, -1.0f, 0.0f,//12
-					1.0f, -1.0f, -1.0f,    1.0f, 0.0f,     0.0f, -1.0f, 0.0f,
-					-1.0f, -1.0f,  1.0f,    0.0f, 1.0f,     0.0f, -1.0f, 0.0f,
-					1.0f, -1.0f,  1.0f,    1.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+					-1.0f, -1.0f, -1.0f,    1.0f, 1.0f,     0.0f, -1.0f, 0.0f,//12
+					1.0f, -1.0f, -1.0f,     0.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+					-1.0f, -1.0f,  1.0f,    1.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+					1.0f, -1.0f,  1.0f,     0.0f, 0.0f,     0.0f, -1.0f, 0.0f,
 					//right			    			    
-					1.0f, -1.0f,  1.0f,    0.0f, 0.0f,     1.0f,  0.0f, 0.0f,//16
-					1.0f, -1.0f, -1.0f,    1.0f, 0.0f,     1.0f,  0.0f, 0.0f,
-					1.0f,  1.0f,  1.0f,    0.0f, 1.0f,     1.0f,  0.0f, 0.0f,
-					1.0f,  1.0f, -1.0f,    1.0f, 1.0f,     1.0f, 0.0f, 0.0f,
+					1.0f, -1.0f,  1.0f,     0.0f, 0.0f,     1.0f,  0.0f, 0.0f,//16
+					1.0f, -1.0f, -1.0f,     1.0f, 0.0f,     1.0f,  0.0f, 0.0f,
+					1.0f,  1.0f,  1.0f,     0.0f, 1.0f,     1.0f,  0.0f, 0.0f,
+					1.0f,  1.0f, -1.0f,     1.0f, 1.0f,     1.0f, 0.0f, 0.0f,
 					//left				    			    
 					-1.0f, -1.0f, -1.0f,    0.0f, 0.0f,     -1.0f, 0.0f, 0.0f,//20
 					-1.0f, -1.0f, 1.0f,	    1.0f, 0.0f,     -1.0f, 0.0f, 0.0f,
@@ -77,9 +77,9 @@ namespace clockwork {
 				);
 			m_modelBuffer = VertexBuffer(nullptr, reserved * ( sizeof(int) + sizeof(maths::Mat4f) ), GL_STREAM_DRAW);
 			m_indexBuffer = IndexBuffer<unsigned char>(uchararr {//unsigned chars
-				0,1,2,		2,1,3,//front
+				0,1,2,		2,1,3,//back
 				4,5,6,		6,5,7,//top
-				8,9,10,		10,9,11,//back
+				8,9,10,		10,9,11,//front
 				12,13,14,	14,13,15,//bot
 				16,17,18,	18,17,19,//right
 				20,21,22,	22,21,23//left

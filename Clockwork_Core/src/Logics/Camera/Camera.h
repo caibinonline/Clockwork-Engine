@@ -50,7 +50,7 @@ namespace clockwork {
 			the direction is not a point to where the camera looking at, but an offset to the position of the camera to calculate the point the camera is looking at
 			@param[up] the y-axis of the camera | should go up to positive(y++) and should be orthogonal to the direction | should be 0,1,0 for a normal not rolled camera | the camera cant be rolled afterwards because of the fixed worldUp vector
 			with the default parameters the camera is at the origin(0,0,0) facing the negative z-axis(into the screen away from you) aligned to the y-axis(for moving upwards) */
-			Camera(State* state, const maths::Vec3f& position = { 0,0,0 }, const maths::Vec3f& direction = { 0,0,-1 }, const maths::Vec3f& up = { 0,1,0 }) noexcept;
+			Camera(State* state, const maths::Vec3f& position = { 0,0,0 }, const maths::Vec3f& direction = { 0,0,1 }, const maths::Vec3f& up = { 0,1,0 }) noexcept;///NEU KOMMENTIEREN LEFT HAND SYSTEm und jetzt in richtung positiv z
 			virtual ~Camera() noexcept = default;//ggf virtual, wenn andere cameras von dieser erben, aber vielleicht auch weg machen
 
 			/*shader has to be enabled first

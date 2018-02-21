@@ -41,10 +41,6 @@ namespace clockwork {
 			{
 				void function(Chunk& chunk) noexcept;
 			};
-			struct BorderFunctor
-			{
-				void function(Chunk& chunk) noexcept;
-			};
 			
 		private:
 			maths::Vec3f m_min;
@@ -74,7 +70,10 @@ namespace clockwork {
 			const maths::Vec3i& getRenderDistance() const noexcept;
 			const unsigned int getBytes() const noexcept;
 			const unsigned int getChunkCount() const noexcept;
-			Chunk*** getChunkPointer() noexcept{return m_chunks;}//nicht wirklich threadsafe, nicht const | kann alles mit gemacht werden | wahrscheinlich nur in passFunction benutzen und dann in passFunction mutex für chunkSystem locken und in den einzelnen chunk.tick/render/etc methoden dann chunks locken
+			Chunk*** getChunkPointer() noexcept;//nicht wirklich threadsafe, nicht const | kann alles mit gemacht werden | wahrscheinlich nur in passFunction benutzen und dann in passFunction mutex für chunkSystem locken und in den einzelnen chunk.tick/render/etc methoden dann chunks locken
+			const State& getState() const noexcept;
+			State& getState() noexcept;
+
 
 		public:
 			void update() noexcept;
@@ -82,6 +81,9 @@ namespace clockwork {
 			void tick() noexcept;
 			void slowTickAll() noexcept;
 			void slowTick() noexcept;
+			//void onKeyPress() noexcept;///auch noch extra onmousepress und onmouseMove machen | auch on Chartyped
+			
+									   
 			/*passes a function to chunks in the given range | you have to call this method with a functor struct layout like the following 
 			the function is passed to the chunks between and at the 2 positions | the positions can be negative below 0, or above the count and the method will cut it into the range
 			struct SlowTickFunctor

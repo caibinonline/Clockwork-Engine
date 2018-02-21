@@ -123,6 +123,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Graphics\Renderables\Border\BorderManager.cpp" />
+    <ClCompile Include="src\Graphics\Renderables\Border\CubeBorder.cpp" />
     <ClCompile Include="src\Graphics\Renderables\Renderable.cpp" />
     <ClCompile Include="src\Core\Engine.cpp" />
     <ClCompile Include="src\Core\ExampleGame.cpp" />
@@ -142,6 +144,7 @@
     <ClCompile Include="src\Logics\ChunkSystem\Chunk.cpp" />
     <ClCompile Include="src\Logics\ChunkSystem\ChunkSystem.cpp" />
     <ClCompile Include="src\Logics\Entities\GameObject.cpp" />
+    <ClCompile Include="src\Logics\Entities\Listener\MovingTickListener.cpp" />
     <ClCompile Include="src\Logics\Entities\Listener\RenderListener.cpp" />
     <ClCompile Include="src\Logics\States\Game\TestGame.cpp" />
     <ClCompile Include="src\Logics\States\Loading\Loading.cpp" />
@@ -152,6 +155,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics\Buffers\FrameBuffer.h" />
+    <ClInclude Include="src\Graphics\Renderables\Border\BorderManager.h" />
+    <ClInclude Include="src\Graphics\Renderables\Border\CubeBorder.h" />
+    <ClInclude Include="src\Graphics\Renderables\Border\SphereBorder.h" />
     <ClInclude Include="src\Graphics\Renderables\Renderable.h" />
     <ClInclude Include="src\Core\Engine.h" />
     <ClInclude Include="src\Core\ExampleGame.h" />
@@ -210,6 +216,8 @@
     <ClInclude Include="src\Utils\Structures\LinkedList.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\Shaders\Default\Border.fs" />
+    <None Include="res\Shaders\Default\Border.vs" />
     <None Include="res\Shaders\Default\Normal.fs" />
     <None Include="res\Shaders\Default\Normal.vs" />
     <None Include="res\Shaders\Default\Instancing.fs" />

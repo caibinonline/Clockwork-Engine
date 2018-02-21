@@ -93,6 +93,15 @@
     <ClCompile Include="src\Logics\Entities\Listener\RenderListener.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Logics\Entities\Listener\MovingTickListener.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Renderables\Border\BorderManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Renderables\Border\CubeBorder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Core\Engine.h">
@@ -266,11 +275,22 @@
     <ClInclude Include="src\Logics\ChunkSystem\ChunkTemplates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\Renderables\Border\BorderManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Renderables\Border\CubeBorder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Renderables\Border\SphereBorder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Shaders\Default\Instancing.fs" />
     <None Include="res\Shaders\Default\Instancing.vs" />
     <None Include="res\Shaders\Default\Normal.fs" />
     <None Include="res\Shaders\Default\Normal.vs" />
+    <None Include="res\Shaders\Default\Border.fs" />
+    <None Include="res\Shaders\Default\Border.vs" />
   </ItemGroup>
 </Project>

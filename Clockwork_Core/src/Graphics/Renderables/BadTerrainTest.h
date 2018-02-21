@@ -52,40 +52,36 @@ namespace clockwork {
 				m_vbo =  VertexBuffer(//you could also create a local nameless array of vertices, where vertex is a struct with vec2 of float for position and vec2 of float for colour
 					floatarr//floats
 					{//positions          texture coords	 vertex normals
-					//front
+				    //back
 					-1.0f, -1.0f, 1.0f,		0.0f, 0.0f,		0.0f, 0.0f, 1.0f,//0
 					1.0f, -1.0f, 1.0f,      1.0f, 0.0f,     0.0f, 0.0f, 1.0f,
-					-1.0f, 1.0f, 1.0f,      0.0f, 1.0f,     0.0f, 0.0f, 1.0f, 
+					-1.0f, 1.0f, 1.0f,      0.0f, 1.0f,     0.0f, 0.0f, 1.0f,
 					1.0f, 1.0f, 1.0f,		1.0f, 1.0f,		0.0f, 0.0f, 1.0f,
 					//top								
-					-1.0f, 1.0f, 1.0f,		0.0f, 0.0f,		0.0f, 1.0f, 0.0f, //4
-					1.0f, 1.0f, 1.0f,		1.0f, 0.0f,		0.0f, 1.0f, 0.0f, 
-					-1.0f, 1.0f, -1.0f,		0.0f, 1.0f,		0.0f, 1.0f, 0.0f, 
-					1.0f, 1.0f, -1.0f,		1.0f, 1.0f,		0.0f, 1.0f, 0.0f, 
-					//back								
+					-1.0f, 1.0f, 1.0f,		1.0f, 1.0f,		0.0f, 1.0f, 0.0f, //4
+					1.0f, 1.0f, 1.0f,		0.0f, 1.0f,		0.0f, 1.0f, 0.0f,
+					-1.0f, 1.0f, -1.0f,		1.0f, 0.0f,		0.0f, 1.0f, 0.0f,
+					1.0f, 1.0f, -1.0f,		0.0f, 0.0f,		0.0f, 1.0f, 0.0f,
+					//front							
 					-1.0f, 1.0f, -1.0f,		1.0f, 1.0f,		0.0f, 0.0f, -1.0f,//8
-					1.0f, 1.0f, -1.0f,		0.0f, 1.0f,		0.0f, 0.0f, -1.0f, 
-					-1.0f, -1.0f, -1.0f,	1.0f, 0.0f,		0.0f, 0.0f, -1.0f, 
+					1.0f, 1.0f, -1.0f,		0.0f, 1.0f,		0.0f, 0.0f, -1.0f,
+					-1.0f, -1.0f, -1.0f,	1.0f, 0.0f,		0.0f, 0.0f, -1.0f,
 					1.0f, -1.0f, -1.0f,		0.0f, 0.0f,		0.0f, 0.0f, -1.0f,
-														
 					//bot								
-					-1.0f, -1.0f, -1.0f,    0.0f, 0.0f,     0.0f, -1.0f, 0.0f,//12
-					 1.0f, -1.0f, -1.0f,    1.0f, 0.0f,     0.0f, -1.0f, 0.0f,
-					-1.0f, -1.0f,  1.0f,    0.0f, 1.0f,     0.0f, -1.0f, 0.0f,
-					 1.0f, -1.0f,  1.0f,    1.0f, 1.0f,     0.0f, -1.0f, 0.0f,
-										    			    
-					 //right			    			    
-					 1.0f, -1.0f,  1.0f,    0.0f, 0.0f,     1.0f,  0.0f, 0.0f,//16
-					 1.0f, -1.0f, -1.0f,    1.0f, 0.0f,     1.0f,  0.0f, 0.0f,
-					 1.0f,  1.0f,  1.0f,    0.0f, 1.0f,     1.0f,  0.0f, 0.0f,									    			 
-					 1.0f,  1.0f, -1.0f,    1.0f, 1.0f,     1.0f, 0.0f, 0.0f,
-										    			    
+					-1.0f, -1.0f, -1.0f,    1.0f, 1.0f,     0.0f, -1.0f, 0.0f,//12
+					1.0f, -1.0f, -1.0f,     0.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+					-1.0f, -1.0f,  1.0f,    1.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+					1.0f, -1.0f,  1.0f,     0.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+					//right			    			    
+					1.0f, -1.0f,  1.0f,     0.0f, 0.0f,     1.0f,  0.0f, 0.0f,//16
+					1.0f, -1.0f, -1.0f,     1.0f, 0.0f,     1.0f,  0.0f, 0.0f,
+					1.0f,  1.0f,  1.0f,     0.0f, 1.0f,     1.0f,  0.0f, 0.0f,
+					1.0f,  1.0f, -1.0f,     1.0f, 1.0f,     1.0f, 0.0f, 0.0f,
 					//left				    			    
 					-1.0f, -1.0f, -1.0f,    0.0f, 0.0f,     -1.0f, 0.0f, 0.0f,//20
 					-1.0f, -1.0f, 1.0f,	    1.0f, 0.0f,     -1.0f, 0.0f, 0.0f,
 					-1.0f, 1.0f, -1.0f,	    0.0f, 1.0f,     -1.0f, 0.0f, 0.0f,
-					-1.0f, 1.0f, 1.0f,	    1.0f, 1.0f,     -1.0f, 0.0f, 0.0f,
-
+					-1.0f, 1.0f, 1.0f,	    1.0f, 1.0f,     -1.0f, 0.0f, 0.0f
 					}, 8 * 4 * 6 * sizeof(float)
 					);
 
@@ -96,10 +92,10 @@ namespace clockwork {
 					14,13,12,	15,13,14,
 					18,17,16,	19,17,18,
 					22,21,20,	23,21,22
-
-
 												   }, 36
 												   );
+
+
 				front = Texture2D(utils::Image("res/Images/skybox/front.png").load());
 				back = Texture2D(utils::Image("res/Images/skybox/back.png").load());
 				top = Texture2D(utils::Image("res/Images/skybox/top.png").load());
@@ -121,7 +117,7 @@ namespace clockwork {
 				shader->setUniform("u_model", m_modelMatrix);
 				m_vao.bind();
 
-				front.bind();
+				front.bind();//reverse order, because camera is inside the cube
 				m_ibo.drawParts(0, 6);
 
 				top.bind();
@@ -133,10 +129,10 @@ namespace clockwork {
 				bot.bind();
 				m_ibo.drawParts(18, 6);
 
-				right.bind();
+				left.bind();
 				m_ibo.drawParts(24, 6);
 
-				left.bind();
+				right.bind();
 				m_ibo.drawParts(30, 6);
 			}
 

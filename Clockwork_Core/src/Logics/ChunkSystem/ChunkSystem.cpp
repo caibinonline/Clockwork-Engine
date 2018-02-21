@@ -121,6 +121,18 @@ namespace clockwork {
 		{
 			return m_count.x*m_count.y*m_count.z;
 		}
+		Chunk*** ChunkSystem::getChunkPointer() noexcept
+		{
+			return m_chunks;
+		}
+		const State& ChunkSystem::getState() const noexcept
+		{
+			return *m_state;
+		}
+		State& ChunkSystem::getState() noexcept
+		{
+			return *m_state;
+		}
 
 		void  ChunkSystem::update() noexcept
 		{
@@ -306,13 +318,6 @@ namespace clockwork {
 		void ChunkSystem::SlowTickFunctor::function(Chunk& chunk) noexcept
 		{
 			chunk.slowTick();
-		}
-
-		void ChunkSystem::BorderFunctor::function(Chunk& chunk) noexcept
-		{
-#if CHUNK_BORDER
-			chunk.initBorder();
-#endif
 		}
 
 	}
