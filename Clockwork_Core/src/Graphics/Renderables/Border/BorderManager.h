@@ -32,6 +32,10 @@ namespace clockwork {
 			friend class Renderer;
 			friend class CubeBorder;
 			friend class SphereBorder;
+			using floatarr = float[8*3];
+			using uchararr = unsigned  char[24];
+
+		private:
 			std::vector<CubeBorder*> m_cubeBorders;
 			Renderer* m_renderer;
 			VertexArray m_vao;

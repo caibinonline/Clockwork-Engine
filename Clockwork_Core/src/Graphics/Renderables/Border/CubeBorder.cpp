@@ -35,7 +35,7 @@ namespace clockwork {
 		void CubeBorder::add() noexcept
 		{
 			auto iterator = std::find(m_manager->m_cubeBorders.begin(), m_manager->m_cubeBorders.end(), this);
-			if ( iterator == m_manager->m_cubeBorders.end() )
+			if ( iterator != m_manager->m_cubeBorders.end() )
 				return;
 			m_manager->m_cubeBorders.push_back(this);
 

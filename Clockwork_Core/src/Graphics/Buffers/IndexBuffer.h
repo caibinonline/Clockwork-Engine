@@ -104,6 +104,12 @@ namespace clockwork {
 				glDrawElements(GL_TRIANGLES, m_count, OpenglType<type>::gltype, nullptr);//gldrawelements to specify that its drawing an indexbuffer | 1. draw kind(everything is drawn of ttriangles), 2. count of indices to draw, 3. type of the indices, 4. offset in the indexbuffer, or index array(for using when not using index buffeR)
 			}
 
+			/*its the same as the normal draw method, but the vertices will be drawn as lines*/
+			void drawLine() const noexcept
+			{
+				glDrawElements(GL_LINES, m_count, OpenglType<type>::gltype, nullptr);
+			}
+
 			/*draws all the vertices(as triangles) of the currently bound vertexarray with the order of the indices of the currently bound indexbuffer | the shader has to be bound first, then a texture should be bound and after that the vertexarray has to be bound before calling the method
 			vertexarray.bind() saves the vbos bound while the vao was bound and also saves the last ibo bound while the vao was bound (but just one) | CAREFUL it does not bind the vbos, or the ibo, but they dont have to be bound before drawing if the vao is bound
 			if more than 1 indexbuffer is used to render the vertexbuffers of an vertexarray you have to call indexbuffer.bind() before indexbuffer.render() for each indexbuffer independently
