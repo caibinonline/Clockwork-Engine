@@ -649,6 +649,11 @@ namespace clockwork {
 			friend Vec2<type>&& operator/<type>( Vec2<type>&& v1, const Vec4<type>& v2 ) noexcept;
 			//divide a lvalue vec4 object from a lvalue vec2 object
 			friend Vec2<type> operator/<type>( const Vec2<type>& v1, const Vec4<type>& v2 ) noexcept;
+			//modulo a vec2 with a number(only works with int and will take int values)
+			friend Vec2<type> operator%(const Vec2<type>& vec, int val) noexcept
+			{
+				return Vec2<type>(static_cast<int>( vec.x ) % val, static_cast<int>( vec.y ) % val);
+			}
 
 		public:
 			//const read-only position access x=0, y=1

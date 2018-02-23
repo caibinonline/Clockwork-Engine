@@ -56,7 +56,7 @@ namespace clockwork {
 
 		static float getRand() noexcept//global zum test, später weg
 		{
-			float test =  -(float)( rand() % 50000 + 1 ) / 100 + (float)( rand() % 50000 + 1 ) / 100;
+			float test =  -(float)( rand() % 100000 + 1 ) / 100 + (float)( rand() % 100000 + 1 ) / 100;
 			return test;
 		}
 
@@ -65,7 +65,7 @@ namespace clockwork {
 			using namespace graphics;
 			using namespace utils;
 			setCurrentCamera(m_defaultCamera);//muss aufgerufen werden, nachdem alle renderer erstellt wurden, aber vor chunksystem
-			m_chunkSystem = new ChunkSystem({ -1000,-1000,-1000 }, { 1000,1000,1000 }, { 25,25,25 }, { 1,1,1 }, { 1,1,1 }, this);//chunksystem in erbenden states mit den jeweiligenn größen erstellen | nachdem camera und renderer erstellt wurden, aber bevor gameobjects hinzugefügt werden 
+			m_chunkSystem = new ChunkSystem({ -800,-800,-800 }, { 800,800,800 }, { 10,10,10 }, { 4,4,4 }, { 4,4,4 }, this);//chunksystem in erbenden states mit den jeweiligenn größen erstellen | nachdem camera und renderer erstellt wurden, aber bevor gameobjects hinzugefügt werden 
 			///immoment nur renderdistance 1 zum testen | später auch chunkdistanz erhöhen, da man immoment error bekommt, wenn camerapos ausserhalb des chunks ist | auch gucken wie z is(negativ/nicht) wegen opengl right hand system
 
 
@@ -196,7 +196,10 @@ namespace clockwork {
 					}
 					else
 					{
-						logics::MovingBlock* inst2 = new logics::MovingBlock(rand() % texturecount, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), m_currentCamera->getPosition() + m_currentCamera->getDirection() * 5, this, m_defaultRenderer);
+						for ( unsigned int i = 0; i < 11; ++i )
+						{
+							logics::MovingBlock* inst2 = new logics::MovingBlock(rand() % texturecount, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), m_currentCamera->getPosition() + m_currentCamera->getDirection() * 5*i, this, m_defaultRenderer);
+						}
 					}
 				}
 				else if ( button == CLOCKWORK_MOUSE_BUTTON_2 )

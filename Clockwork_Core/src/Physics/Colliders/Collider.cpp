@@ -11,12 +11,15 @@
 * You can use this software under the following License: https://github.com/Clock-work/Clockwork-Engine/blob/master/LICENSE
 *************************************************************************/
 #include "Collider.h"
+#include "src\Logics\Entities\GameObject.h"
+
 namespace clockwork {
 	namespace physics {
 
-		bool Collider::collides(const Collider* other) const noexcept
+		Collider::Collider(logics::GameObject* gameObject) noexcept
+			: m_gameObject(gameObject)
 		{
-			return false;
+
 		}
 
 	}

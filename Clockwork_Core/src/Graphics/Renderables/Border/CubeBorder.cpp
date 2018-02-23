@@ -21,7 +21,7 @@ namespace clockwork {
 
 
 
-		CubeBorder::CubeBorder(maths::Mat4f* modelMatrixPointer, bool deleteModelMatrixPointer, logics::State* state) noexcept
+		CubeBorder::CubeBorder(maths::Mat4f* modelMatrixPointer, bool deleteModelMatrixPointer, logics::State* state) noexcept//ggf updatemodelmatrix, setmodelmatrix, oder so machen 
 			: m_modelMatrixPointer(modelMatrixPointer), m_deleteModelMatrixPointer(deleteModelMatrixPointer), m_manager(&state->getDefaultRenderer().m_borderManager)
 		{}
 

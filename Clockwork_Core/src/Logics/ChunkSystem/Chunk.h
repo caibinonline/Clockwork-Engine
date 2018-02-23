@@ -63,6 +63,7 @@ namespace clockwork {
 			void renderRemove() noexcept;
 			void tick() noexcept;
 			void slowTick() noexcept;
+			void updateCollision() noexcept;
 
 			void addRenderListener(RenderListener* listener) noexcept;
 			void removeRenderListener(RenderListener* listener) noexcept;
@@ -85,6 +86,7 @@ namespace clockwork {
 			template<typename functor>void passFunctionToArea() noexcept;
 			//in relation zum currentchunk, ob der chunk hier in renderdistance liegt
 			const bool inRenderDistance() const noexcept;
+			const bool inTickDistance() const noexcept;
 		public:
 			friend bool operator==(const Chunk& c1, const Chunk& c2) noexcept;
 			friend bool operator!=(const Chunk& c1, const Chunk& c2) noexcept;

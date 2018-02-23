@@ -215,6 +215,7 @@
     <ClInclude Include="src\Physics\Colliders\Collider.h" />
     <ClInclude Include="src\Physics\Colliders\CubeCollider.h" />
     <ClInclude Include="src\Physics\Colliders\Hitbox.h" />
+    <ClInclude Include="src\Physics\Colliders\SphereCollider.h" />
     <ClInclude Include="src\Utils\File.h" />
     <ClInclude Include="src\Utils\Helper.h" />
     <ClInclude Include="src\Utils\Image.h" />

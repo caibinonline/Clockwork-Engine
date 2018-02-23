@@ -54,9 +54,9 @@ namespace clockwork {
 						*otherColliderNumber = ot;
 						return true;
 					}
-
 				}
 			}
+			return false;
 		}
 
 	}

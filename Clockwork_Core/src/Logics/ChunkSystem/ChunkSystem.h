@@ -68,6 +68,7 @@ namespace clockwork {
 			const Chunk& getCurrentChunk() const noexcept;
 			Chunk& getCurrentChunk() noexcept;
 			const maths::Vec3i& getRenderDistance() const noexcept;
+			const maths::Vec3i& getTickDistance() const noexcept;
 			const unsigned int getBytes() const noexcept;
 			const unsigned int getChunkCount() const noexcept;
 			Chunk*** getChunkPointer() noexcept;//nicht wirklich threadsafe, nicht const | kann alles mit gemacht werden | wahrscheinlich nur in passFunction benutzen und dann in passFunction mutex für chunkSystem locken und in den einzelnen chunk.tick/render/etc methoden dann chunks locken

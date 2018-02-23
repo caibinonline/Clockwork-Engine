@@ -112,6 +112,10 @@ namespace clockwork {
 		{
 			return m_renderDistance;
 		}
+		const maths::Vec3i& ChunkSystem::getTickDistance() const noexcept
+		{
+			return m_tickDistance;
+		}
 
 		const unsigned int ChunkSystem::getBytes() const noexcept
 		{

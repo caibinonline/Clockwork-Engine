@@ -21,6 +21,7 @@
 
 #include "src\Physics\Colliders\Hitbox.h"
 
+
 namespace clockwork {
 	namespace logics {
 
@@ -120,11 +121,28 @@ namespace clockwork {
 				m_staticTickList[i]->tick();
 			}
 
-			//collisions | könnte ggf noch effizienter gemacht werden, indem zuerst position/richtung verglichen werden
+			updateCollision();
+		}
+
+		void Chunk::slowTick() noexcept
+		{
+			for ( unsigned int i = 0; i < m_movingTickList.size(); ++i )
+			{
+				m_movingTickList[i]->slowTick();
+			}
+
+			for ( unsigned int i = 0; i < m_staticTickList.size(); ++i )
+			{
+				m_staticTickList[i]->slowTick();
+			}
+		}
+
+		void Chunk::updateCollision() noexcept//collisions | könnte ggf noch effizienter gemacht werden, indem zuerst position/richtung verglichen werden
+		{
 			int outerCollider { -1 }, innerCollider { -1 };
 			for ( unsigned int outer = 0; outer < m_movingTickList.size(); ++outer )
 			{
-				for ( unsigned int inner = outer+1; inner < m_movingTickList.size(); ++inner )
+				for ( unsigned int inner = outer + 1; inner < m_movingTickList.size(); ++inner )
 				{
 					MovingTickListener* outerListener = m_movingTickList[outer];
 					MovingTickListener* innerListener = m_movingTickList[inner];
@@ -145,19 +163,58 @@ namespace clockwork {
 					}
 				}
 			}
-		}
 
-		void Chunk::slowTick() noexcept
-		{
-			for ( unsigned int i = 0; i < m_movingTickList.size(); ++i )
+			for ( unsigned int chunkX = m_id.x - 1; chunkX <= m_id.x; ++chunkX )
 			{
-				m_movingTickList[i]->slowTick();
+				for ( unsigned int chunkY = m_id.y - 1; chunkY <= m_id.y; ++chunkY )
+				{
+					for ( unsigned int chunkZ = m_id.z - 1; chunkZ <= m_id.z; ++chunkZ )
+					{
+						const Chunk& otherChunk = m_chunkSystem->getChunk(chunkX, chunkY, chunkZ);
+						if ( otherChunk != *this && otherChunk.inTickDistance()  )
+						{
+							int outerCollider { -1 }, innerCollider { -1 };
+							for ( unsigned int outer = 0; outer < m_movingTickList.size(); ++outer )
+							{
+								for ( unsigned int inner = 0; inner < otherChunk.m_movingTickList.size(); ++inner )
+								{
+									MovingTickListener* outerListener = m_movingTickList[outer];
+									MovingTickListener* innerListener = otherChunk.m_movingTickList[inner];
+									if ( outerListener->getHitbox().collides(innerListener->getHitbox(), &outerCollider, &innerCollider) )
+									{
+										outerListener->onCollision(innerListener, outerCollider, innerCollider);
+										innerListener->onCollision(outerListener, innerCollider, outerCollider);
+									}
+								}
+								for ( unsigned int inner = 0; inner < otherChunk.m_staticTickList.size(); ++inner )
+								{
+									MovingTickListener* outerListener = m_movingTickList[outer];
+									StaticTickListener* innerListener = otherChunk.m_staticTickList[inner];
+									if ( outerListener->getHitbox().collides(innerListener->getHitbox(), &outerCollider, &innerCollider) )
+									{
+										outerListener->onCollision(innerListener, outerCollider, innerCollider);
+										innerListener->onCollision(outerListener, innerCollider, outerCollider);
+									}
+								}
+							}
+							for ( unsigned int outer = 0; outer < m_staticTickList.size(); ++outer )
+							{
+								for ( unsigned int inner = 0; inner < otherChunk.m_movingTickList.size(); ++inner )
+								{
+									StaticTickListener* outerListener = m_staticTickList[outer];
+									MovingTickListener* innerListener = otherChunk.m_movingTickList[inner];
+									if ( outerListener->getHitbox().collides(innerListener->getHitbox(), &outerCollider, &innerCollider) )
+									{
+										outerListener->onCollision(innerListener, outerCollider, innerCollider);
+										innerListener->onCollision(outerListener, innerCollider, outerCollider);
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 
-			for ( unsigned int i = 0; i < m_staticTickList.size(); ++i )
-			{
-				m_staticTickList[i]->slowTick();
-			}
 		}
 
 		void Chunk::addRenderListener(RenderListener* listener) noexcept
@@ -210,6 +267,16 @@ namespace clockwork {
 			const maths::Vec3i& otherId = m_chunkSystem->getCurrentChunk().getId();
 			const maths::Vec3i& renderDistance = m_chunkSystem->getRenderDistance();
 			if ( m_id.x >= otherId.x - renderDistance.x && m_id.x <= otherId.x + renderDistance.x && m_id.y >= otherId.y - renderDistance.y&& m_id.y <= otherId.y + renderDistance.y && m_id.z >= otherId.z - renderDistance.z && m_id.z <= otherId.z + renderDistance.z )
+				return true;
+			else
+				return false;
+		}
+
+		const bool Chunk::inTickDistance() const noexcept
+		{
+			const maths::Vec3i& otherId = m_chunkSystem->getCurrentChunk().getId();
+			const maths::Vec3i& tickDistance = m_chunkSystem->getTickDistance();
+			if ( m_id.x >= otherId.x - tickDistance.x && m_id.x <= otherId.x + tickDistance.x && m_id.y >= otherId.y - tickDistance.y&& m_id.y <= otherId.y + tickDistance.y && m_id.z >= otherId.z - tickDistance.z && m_id.z <= otherId.z + tickDistance.z )
 				return true;
 			else
 				return false;
