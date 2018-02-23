@@ -15,8 +15,11 @@
 #include "src\Logics\States\State.h"
 #include "src\Logics\Entities\Listener\RenderListener.h"
 #include "src\Logics\Entities\Listener\MovingTickListener.h"
+#include "src\Logics\Entities\Listener\StaticTickListener.h"
 #include "ChunkTemplates.h"
 #include "src\Graphics\Renderables\Border\CubeBorder.h"
+
+#include "src\Physics\Colliders\Hitbox.h"
 
 namespace clockwork {
 	namespace logics {
@@ -111,6 +114,37 @@ namespace clockwork {
 					listener->setChunk(&newChunk);
 				}
 			}
+
+			for ( unsigned int i = 0; i < m_staticTickList.size(); ++i )
+			{
+				m_staticTickList[i]->tick();
+			}
+
+			//collisions | könnte ggf noch effizienter gemacht werden, indem zuerst position/richtung verglichen werden
+			int outerCollider { -1 }, innerCollider { -1 };
+			for ( unsigned int outer = 0; outer < m_movingTickList.size(); ++outer )
+			{
+				for ( unsigned int inner = outer+1; inner < m_movingTickList.size(); ++inner )
+				{
+					MovingTickListener* outerListener = m_movingTickList[outer];
+					MovingTickListener* innerListener = m_movingTickList[inner];
+					if ( outerListener->getHitbox().collides(innerListener->getHitbox(), &outerCollider, &innerCollider) )
+					{
+						outerListener->onCollision(innerListener, outerCollider, innerCollider);
+						innerListener->onCollision(outerListener, innerCollider, outerCollider);
+					}
+				}
+				for ( unsigned int inner = 0; inner < m_staticTickList.size(); ++inner )
+				{
+					MovingTickListener* outerListener = m_movingTickList[outer];
+					StaticTickListener* innerListener = m_staticTickList[inner];
+					if ( outerListener->getHitbox().collides(innerListener->getHitbox(), &outerCollider, &innerCollider) )
+					{
+						outerListener->onCollision(innerListener, outerCollider, innerCollider);
+						innerListener->onCollision(outerListener, innerCollider, outerCollider);
+					}
+				}
+			}
 		}
 
 		void Chunk::slowTick() noexcept
@@ -118,6 +152,11 @@ namespace clockwork {
 			for ( unsigned int i = 0; i < m_movingTickList.size(); ++i )
 			{
 				m_movingTickList[i]->slowTick();
+			}
+
+			for ( unsigned int i = 0; i < m_staticTickList.size(); ++i )
+			{
+				m_staticTickList[i]->slowTick();
 			}
 		}
 
@@ -149,6 +188,21 @@ namespace clockwork {
 				std::cout << "Error Chunk::removeMovingTickListener(): The listener pointer is not in the movingTickList" << std::endl;
 #endif
 			m_movingTickList.erase(iterator);
+		}
+
+		void Chunk::addStaticTickListener(StaticTickListener* listener) noexcept
+		{
+			m_staticTickList.push_back(listener);
+		}
+
+		void Chunk::removeStaticTickListener(StaticTickListener* listener) noexcept
+		{
+			auto iterator = std::find(m_staticTickList.begin(), m_staticTickList.end(), listener);
+#if CLOCKWORK_DEBUG
+			if ( iterator == m_staticTickList.end() )
+				std::cout << "Error Chunk::removeStaticTickListener(): The listener pointer is not in the staticTickList" << std::endl;
+#endif
+			m_staticTickList.erase(iterator);
 		}
 
 		const bool Chunk::inRenderDistance() const noexcept

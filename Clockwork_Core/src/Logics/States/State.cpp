@@ -60,7 +60,7 @@ namespace clockwork {
 
 			}
 
-			void State::updateProjection2() noexcept
+			void State::onProjectionUpdate() noexcept
 			{
 
 			}
@@ -73,7 +73,7 @@ namespace clockwork {
 					//auch noch orthographic updaten
 					m_defaultRenderer->updateProjection();
 				}
-				updateProjection2();
+				onProjectionUpdate();
 			}
 
 			logics::Camera& State::getCurrentCamera() noexcept

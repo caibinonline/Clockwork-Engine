@@ -146,10 +146,14 @@
     <ClCompile Include="src\Logics\Entities\GameObject.cpp" />
     <ClCompile Include="src\Logics\Entities\Listener\MovingTickListener.cpp" />
     <ClCompile Include="src\Logics\Entities\Listener\RenderListener.cpp" />
+    <ClCompile Include="src\Logics\Entities\Listener\StaticTickListener.cpp" />
     <ClCompile Include="src\Logics\States\Game\TestGame.cpp" />
     <ClCompile Include="src\Logics\States\Loading\Loading.cpp" />
     <ClCompile Include="src\Logics\States\State.cpp" />
     <ClCompile Include="src\Maths\MathFunctions.cpp" />
+    <ClCompile Include="src\Physics\Colliders\Collider.cpp" />
+    <ClCompile Include="src\Physics\Colliders\CubeCollider.cpp" />
+    <ClCompile Include="src\Physics\Colliders\Hitbox.cpp" />
     <ClCompile Include="src\Utils\File.cpp" />
     <ClCompile Include="src\Utils\Image.cpp" />
   </ItemGroup>
@@ -209,6 +213,8 @@
     <ClInclude Include="src\Maths\Vec3.h" />
     <ClInclude Include="src\Maths\Vec4.h" />
     <ClInclude Include="src\Physics\Colliders\Collider.h" />
+    <ClInclude Include="src\Physics\Colliders\CubeCollider.h" />
+    <ClInclude Include="src\Physics\Colliders\Hitbox.h" />
     <ClInclude Include="src\Utils\File.h" />
     <ClInclude Include="src\Utils\Helper.h" />
     <ClInclude Include="src\Utils\Image.h" />

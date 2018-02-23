@@ -11,3 +11,37 @@
 * arising from the use of this software.
 * You can use this software under the following License: https://github.com/Clock-work/Clockwork-Engine/blob/master/LICENSE
 *************************************************************************/
+#include "src\Logics\Entities\GameObject.h"
+#include "src\Physics\Colliders\Hitbox.h"
+
+namespace clockwork {
+	namespace logics {
+
+		class Chunk;
+		class MovingTickListener;
+
+		class StaticTickListener//unterschied zu staticticklistener dazu schreiben | der hier verändert chunk, wenn er sich bewegt
+			: public virtual GameObject
+		{
+
+		protected:
+			float m_mass;
+			maths::Vec3f m_direction;
+			physics::Hitbox m_hitbox;
+
+		public:
+			StaticTickListener() noexcept;
+			~StaticTickListener() noexcept;
+
+		public:
+			virtual void tick() noexcept = 0;
+			virtual void slowTick() noexcept = 0;
+			virtual void onCollision(MovingTickListener* otherMoving, int ownColliderNumber, int otherColliderNumber) noexcept = 0;
+
+			const physics::Hitbox& getHitbox() const {return m_hitbox;}//ggf auch noch nicht const getter, wenn benötigt
+
+		};
+
+	}
+}
+

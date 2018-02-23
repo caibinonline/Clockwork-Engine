@@ -41,7 +41,7 @@ namespace clockwork {
 	namespace logics {
 
 		static bool transparent = false;//global zum test, später weg
-		static int texturecount = 15;
+		static int texturecount = 15;//anzahl texturen temporär | geht auch einfach m_defaultRenderer->cubeManager.getTextureCount()
 		static int transparentTexturecount = 8;
 
 		TestGame::TestGame() noexcept
@@ -96,19 +96,18 @@ namespace clockwork {
 			m_defaultRenderer->cubeManager.addNormalTexture("res/Images/transparent/washi.png");
 
 
-
 			std::srand(engine->getWindow()->getTimer() * 10);
 
 			for ( int i = 0; i < 25000; ++i )//10000 objects: normal 300fps, instancing 2300fps | 1000objects: normal 2000fps, instancing 5000fps | 100 objects: normal 5500fps, instancing 6100fps | 10 objects: normal 5500fps, instancing 5500fps | 1 object: normal 6300fps, instancing 6100fps
 			{
 				maths::Vec3f pos = maths::Vec3f(getRand(), getRand(), getRand());
-				logics::InstancedTest* inst = new logics::InstancedTest(rand() % texturecount, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, this, m_defaultRenderer);
+				logics::Block* inst = new logics::Block(rand() % texturecount, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, this, m_defaultRenderer);
 			}
 
 			for ( int i = 0; i < 100; ++i )
 			{
 				maths::Vec3f pos = maths::Vec3f(getRand(), getRand(), getRand());
-				logics::TransparentTest* inst = new logics::TransparentTest(rand() % transparentTexturecount, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, this, m_defaultRenderer);
+				logics::TransparentBlock* inst = new logics::TransparentBlock(rand() % transparentTexturecount, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, this, m_defaultRenderer);
 			}
 
 
@@ -193,11 +192,11 @@ namespace clockwork {
 				{
 					if ( transparent )
 					{
-						logics::TransparentTest* inst3 = new logics::TransparentTest(rand() % transparentTexturecount, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), m_currentCamera->getPosition() + m_currentCamera->getDirection() * 5, this, m_defaultRenderer);
+						logics::TransparentBlock* inst3 = new logics::TransparentBlock(rand() % transparentTexturecount, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), m_currentCamera->getPosition() + m_currentCamera->getDirection() * 5, this, m_defaultRenderer);
 					}
 					else
 					{
-							logics::MovingTest* inst2 = new logics::MovingTest(rand() % texturecount, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), m_currentCamera->getPosition() + m_currentCamera->getDirection() * 5, this, m_defaultRenderer);
+						logics::MovingBlock* inst2 = new logics::MovingBlock(rand() % texturecount, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), m_currentCamera->getPosition() + m_currentCamera->getDirection() * 5, this, m_defaultRenderer);
 					}
 				}
 				else if ( button == CLOCKWORK_MOUSE_BUTTON_2 )

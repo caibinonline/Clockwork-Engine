@@ -43,7 +43,7 @@ namespace clockwork {
 
 		protected:
 			//sollte überschrieben werden, wenn es weitere renderer gibt| immer dazu kommentieren was virtual ist und was nicht 
-			virtual void updateProjection2() noexcept;
+			virtual void onProjectionUpdate() noexcept;
 
 		public:
 			virtual void enter() noexcept = 0;

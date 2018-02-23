@@ -29,6 +29,7 @@ namespace clockwork {
 		class GameObject;
 		class RenderListener;
 		class MovingTickListener;
+		class StaticTickListener;
 
 		class Chunk
 		{
@@ -48,6 +49,7 @@ namespace clockwork {
 
 			std::vector<RenderListener*> m_renderList;//noch in konstruktor/movekonstruktor/copy/etc einbinden | ggf auch von gameobjects setchunk zum ändern machen und in destruktor von gameobject müssen sie sich auch löschen | die moving sachen können sich auch von chunk zu chunk bewegen(ggf testen ob x höher ist, dann id.x++ und auch so für andere, etc)
 			std::vector<MovingTickListener*> m_movingTickList;
+			std::vector<StaticTickListener*> m_staticTickList;
 
 		public:
 			Chunk() noexcept;
@@ -66,6 +68,8 @@ namespace clockwork {
 			void removeRenderListener(RenderListener* listener) noexcept;
 			void addMovingTickListener(MovingTickListener* listener) noexcept;
 			void removeMovingTickListener(MovingTickListener* listener) noexcept;
+			void addStaticTickListener(StaticTickListener* listener) noexcept;
+			void removeStaticTickListener(StaticTickListener* listener) noexcept;
 
 			/*passes a function to the chunk itself and the sorrounding chunks(3x3 cube) | you have to call this method with a functor struct layout like the following
 			the positions can be negative below 0, or above the count and the method will cut it into the range

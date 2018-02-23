@@ -10,23 +10,9 @@
 * arising from the use of this software.
 * You can use this software under the following License: https://github.com/Clock-work/Clockwork-Engine/blob/master/LICENSE
 *************************************************************************/
-#include "MovingTickListener.h"
-#include "src\Logics\ChunkSystem\Chunk.h"
-
+#include "CubeCollider.h"
 namespace clockwork {
-	namespace logics {
-
-		MovingTickListener::MovingTickListener() noexcept
-			: m_mass(0)
-		{
-			m_chunk->addMovingTickListener(this);
-		}
-
-		MovingTickListener::~MovingTickListener() noexcept
-		{
-			m_chunk->removeMovingTickListener(this);
-		}
-
+	namespace physics {
 
 	}
 }
