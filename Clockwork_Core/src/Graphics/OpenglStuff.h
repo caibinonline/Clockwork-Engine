@@ -72,8 +72,9 @@ namespace clockwork {
 
 		Face Culling: back side of models/textures are not rendered(only those that face the viewer) 50% more performance for the fragment shader | for example: from a cube not more than 3 faces can face viewer at the same time
 		@param[cullFace] the faces to cull(not draw) | GL_FRONT = 1028 GL_BACK = 1029 GL_FRONT_AND_BACK = 1032 | the default is GL_BACK to only render the front facing faces and culling the faces that are not facing the viewer | GL_FRONT would render the insides of a model
-		@param[windingOrder] the drawing order of the vertices to identify the faces that are facing the viewer(front facing) | GL_CW = 2304 GL_CCW = 2305 | the default is ccw to render the front faces as counter clockwise order of the vertices
-		the vertices of a model should be in (default counter clockwise) the order from the viewers perspective when directly looking at them(the viewer has to move around the model for the other sides) | when looking at a model, the vertices on the other side facing the inside of the model will not be rendered, because they will automaticly be in a diffrent order
+		@param[windingOrder] the drawing order of the vertices to identify the faces that are facing the viewer(front facing) | GL_CW = 2304 GL_CCW = 2305 | the default is cw to render the front faces as clockwise order of the vertices
+		the vertices of a model should be in (default clockwise) the order from the viewers perspective when directly looking at them(the viewer has to move around the model for the other sides) | when looking at a model, the vertices on the other side facing the inside of the model will not be rendered, because they will automaticly be in a diffrent order
+		counter clockwise order is for right coordinate hand system and clockwise order for left hand coordinate system
 
 		Depth testing: only draw the closest fragments to the viewer and discard fragments further away at the same screen position(is done in screen space after fragment shader has run and stencil testing has run but before the projection matrix is applied) | also early depth testing before the fragment shader is possible if you dont write to the fragments depth value in the shader
 		the fragment position will be accessed in the range -1 to 1 with the z component being the depth value | can be accessed in the shader via gl_FragCoord.xyz | the depth value is from 0.0 to 1.0 and its the distance from the model to the viewer (1/z-1/near)/(far-near)
@@ -96,7 +97,7 @@ namespace clockwork {
 		GL_SRC_ONE_MINUS_SRC_ALPHA = 771 factor is 1 minus the alpha component of the source colour | GL_ONE_MINUS_DST_ALPHA = 773
 		GL_CONSTANT_COLOR = 32769 factor is the constant colour vector | GL_ONE_MINUS_CONSTANT_COLOR = 32770 | GL_CONSTANT_ALPHA = 32771 | GL_ONE_MINUS_CONSTANT_ALPHA = 32772
 		@param[blendFunc] the kind of function used to calculate the colour | default is GL_FUNC_ADD = 32774 | GL_FUNC_SUBSTRACT = 32778 | GL_FUNC_REVERSE_SUBSTRACT = 32779*/
-		void openglParams(int cullFace = 1029, int windingOrder = 2305, int depthCompare = 515, int blendSourceFactor = 770, int blendDestinationFactor= 771, int blendFunc = 32774) noexcept;
+		void openglParams(int cullFace = 1029, int windingOrder = 2304, int depthCompare = 515, int blendSourceFactor = 770, int blendDestinationFactor= 771, int blendFunc = 32774) noexcept;
 
 		/*kommentieren | erstellt immoment nur framebuffers in texturearray2d | auch in texturearray2d bei friend deklaration kommentieren*/
 		void initTextures();

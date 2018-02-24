@@ -48,6 +48,9 @@ namespace clockwork {
 			//updated modelmatrix und ruft onMatrixChange auf | immer nach verändern der vektoren irgendwann updatemodelmatrix aufrufen
 			void updateModelMatrix() noexcept;
 
+			//updatet chunk anhand von position | MUSS NUR AUFGERUFEN, wenn der aktuelle chunk nicht in tickdistance ist und die position zu dem bereich eines chunks in renderdistance verändert wird
+			void updateChunk() noexcept;
+
 			const Chunk& getChunk() const noexcept;
 			//hier threadsafe machen ohne const kann state verändert werden
 			Chunk& getChunk() noexcept;

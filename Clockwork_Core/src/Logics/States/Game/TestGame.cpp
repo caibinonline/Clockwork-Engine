@@ -110,6 +110,7 @@ namespace clockwork {
 				logics::TransparentBlock* inst = new logics::TransparentBlock(rand() % transparentTexturecount, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, this, m_defaultRenderer);
 			}
 
+			logics::Player* player = new logics::Player(this, m_defaultRenderer);
 
 		}
 
@@ -118,7 +119,7 @@ namespace clockwork {
 
 		}
 
-		void TestGame::tick() noexcept
+		void TestGame::fastTick() noexcept
 		{
 			double time = engine->getTimeFactor();//time scaling factor 
 
@@ -148,14 +149,19 @@ namespace clockwork {
 				m_currentCamera->moveY(5 * time);
 			}
 
-			m_chunkSystem->tick();
+			m_chunkSystem->fastTick();
 
+		}
+
+		void TestGame::mediumTick() noexcept
+		{
+			m_chunkSystem->mediumTick();
 		}
 
 		void TestGame::slowTick() noexcept
 		{
 			m_chunkSystem->slowTick();
-			std::cout << m_currentCamera->getPosition() << std::endl;
+			std::cout << "CameraPos: " << m_currentCamera->getPosition() << " Direction: " << m_currentCamera->getDirection() << std::endl;
 		}
 
 		void TestGame::render() noexcept

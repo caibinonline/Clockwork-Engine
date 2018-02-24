@@ -34,14 +34,16 @@ namespace clockwork {
 			~MovingTickListener() noexcept;
 
 		public:
-			virtual void tick() noexcept = 0;
+			virtual void fastTick() noexcept = 0;
+			virtual void mediumTick() noexcept = 0;
 			virtual void slowTick() noexcept = 0;
 			//mit dynamic cast in unterklassen umcasten und dann testen mit != nullptr, ob das objekt von einer gegebenen klasse ist
 			virtual void onCollision(MovingTickListener* otherMoving, int ownColliderNumber, int otherColliderNumber) noexcept = 0;
 			virtual void onCollision(StaticTickListener* otherStatic, int ownColliderNumber, int otherColliderNumber) noexcept = 0;
 
-			const physics::Hitbox& getHitbox() const {return m_hitbox;}//ggf auch noch nicht const getter, wenn benötigt
-
+			inline const physics::Hitbox& getHitbox() const {return m_hitbox;}//ggf auch noch nicht const getter, wenn benötigt
+			inline const maths::Vec3f& getDirection() const noexcept {return m_direction;}
+			inline maths::Vec3f& getDirection() noexcept{return m_direction;}
 		};
 
 	}

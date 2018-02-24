@@ -30,7 +30,7 @@ namespace clockwork {
 
 		public:
 			virtual void changeState(State* prevState, State* newState, State** statePointer) noexcept;
-			virtual void tick() noexcept override;
+			virtual void fastTick() noexcept override;
 			virtual void render() noexcept override;
 
 

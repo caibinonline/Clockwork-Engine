@@ -89,13 +89,16 @@ namespace clockwork {
 			timer += m_passedTime;///timefactor ist später im thread, der die threadgruppe steuert(und window updated/input updated) und dann wartet bis alle threads fertig sind, dann aktualisiert er den timefactor | vielleicht ai, etc nicht so oft we movement, etc kalkulieren | renderthread hat dann gleichen gameloop, ausser m_passedtime
 			lastTime = newTime;
 
-			tick();///hier physics sachen adden, wie movement, etc, aber noch zweite funktion ai, oder so und davon nur jede sekunde sachen zu den threadworkern adden und nicht jeden tick | das dann ggf im timer >= 1 if machen und dann mehrere update funktionen in objekten haben, einmal pro tick, einmal pro sekunde | ggf auch für network benutzen
-			render();
-			m_window->updateWindow();
-			m_window->updateInput();
-#if CLOCKWORK_DEBUG
-			m_window->checkError();
-#endif
+			fastTick();///hier physics sachen adden, wie movement, etc, aber noch zweite funktion ai, oder so und davon nur jede sekunde sachen zu den threadworkern adden und nicht jeden tick | das dann ggf im timer >= 1 if machen und dann mehrere update funktionen in objekten haben, einmal pro tick, einmal pro sekunde | ggf auch für network benutzen
+			
+			static int counter = 0;
+			++counter;
+			if ( counter == 2 )
+			{
+				mediumTick();
+				counter = 0;
+			}
+
 			++steps;
 			if ( timer >= 1 )
 			{
@@ -108,6 +111,13 @@ namespace clockwork {
 				slowTick();
 			}
 
+			render();
+			m_window->updateWindow();
+			m_window->updateInput();
+#if CLOCKWORK_DEBUG
+			m_window->checkError();
+#endif
+
 			if ( performanceMode )
 				std::this_thread::sleep_for(std::chrono::duration<double>(maths::max(0.0, 1.0 / static_cast<double>( targetFps ) - ( m_window->getTimer() - newTime + 0.00076 ))));//ggf auch als double in sekunden später boost für sleep benutzen und gucken, dass es nicht interuppted?
 		
@@ -116,10 +126,15 @@ namespace clockwork {
 
 	}
 
-	void Engine::tick() noexcept
+	void Engine::fastTick() noexcept
 	{
-		m_currentState->State::tick();
-		m_currentState->tick();
+		m_currentState->State::fastTick();
+		m_currentState->fastTick();
+	}
+	void Engine::mediumTick() noexcept
+	{
+		m_currentState->State::mediumTick();
+		m_currentState->mediumTick();
 	}
 	void Engine::slowTick() noexcept
 	{

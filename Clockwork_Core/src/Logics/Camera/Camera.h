@@ -102,7 +102,7 @@ namespace clockwork {
 			the view matrix has to be recalculated after this and send to the shader again by calling update(shader);*/
 			void rotate(float xoffset, float yoffset) noexcept
 			{
-				m_yaw += xoffset;//xoffset for y-axis rotation
+				m_yaw -= xoffset;//xoffset for y-axis rotation  | vielleicht falsch wegen left handed coordinate system nochmal neu(temporär hier einfach negative x-offset)
 				m_pitch += yoffset;//yoffset for x-axis rotation
 				if ( m_pitch > 89.0f )
 					m_pitch = 89.0f;
@@ -115,9 +115,8 @@ namespace clockwork {
 					maths::sinR(maths::toRadians(m_pitch)),
 					maths::cosR(maths::toRadians(m_pitch)) * maths::sinR(maths::toRadians(m_yaw))
 				}.normalizeSelf();
-
-				m_right = m_direction.crossproduct(m_worldUp).normalizeSelf();
-				m_up = m_right.crossproduct(m_direction).normalizeSelf();
+				m_right = m_worldUp.crossproduct(m_direction).normalizeSelf();
+				m_up = m_direction.crossproduct(m_right).normalizeSelf();
 			}
 
 

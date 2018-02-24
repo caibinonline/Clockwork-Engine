@@ -61,7 +61,8 @@ namespace clockwork {
 		public:
 			void renderAdd() noexcept;
 			void renderRemove() noexcept;
-			void tick() noexcept;
+			void fastTick() noexcept;
+			void mediumTick() noexcept;
 			void slowTick() noexcept;
 			void updateCollision() noexcept;
 

@@ -45,7 +45,12 @@ namespace clockwork {
 				//sachen/texturen löschen
 			}
 
-			void State::tick() noexcept
+			void State::fastTick() noexcept
+			{
+
+			}
+
+			void State::mediumTick() noexcept
 			{
 
 			}

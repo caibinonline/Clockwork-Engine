@@ -40,7 +40,8 @@ namespace clockwork {
 
 	public:
 		virtual void start() noexcept;
-		virtual void tick() noexcept;
+		virtual void fastTick() noexcept;
+		virtual void mediumTick() noexcept;
 		virtual void slowTick() noexcept;
 		virtual void render() noexcept;
 

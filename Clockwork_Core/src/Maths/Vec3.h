@@ -587,12 +587,9 @@ namespace clockwork {
 				return std::move(v1);
 			}
 			//substract a rvalue Vec3 object from a lvalue Vec3 object 
-			friend Vec3<type>&& operator-(const Vec3<type>& v1, Vec3<type>&& v2) noexcept
+			friend Vec3<type> operator-(const Vec3<type>& v1, Vec3<type>&& v2) noexcept
 			{
-				v2.x -= v1.x;
-				v2.y -= v1.y;
-				v2.z -= v1.z;
-				return std::move(v2);
+				return Vec3<type>(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
 			}
 			//substract a lvalue Vec3 object from a rvalue Vec3 object
 			friend Vec3<type>&& operator-(Vec3<type>&& v1, const Vec3<type>& v2) noexcept
@@ -684,12 +681,9 @@ namespace clockwork {
 				return std::move(v1);
 			}
 			//divide a rvalue Vec3 object to a lvalue Vec3 object 
-			friend Vec3<type>&& operator/(const Vec3<type>& v1, Vec3<type>&& v2) noexcept
+			friend Vec3<type> operator/(const Vec3<type>& v1, Vec3<type>&& v2) noexcept
 			{
-				v2.x /= v1.x;
-				v2.y /= v1.y;
-				v2.z /= v1.z;
-				return std::move(v2);
+				return Vec3<type>(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z);
 			}
 			//divide a lvalue Vec3 object to a rvalue Vec3 object
 			friend Vec3<type>&& operator/(Vec3<type>&& v1, const Vec3<type>& v2) noexcept
@@ -743,6 +737,24 @@ namespace clockwork {
 			{
 				return std::sqrt(x * x + y * y + z * z);
 			}
+			//|vec| returns the lenght of the vec/direct distance from origin vec(0,0,0,0) | the fast method
+			type fastLenght() const noexcept
+			{
+				type result = 0;
+				if ( x < 0 )
+					result += -x;
+				else
+					result += x;
+				if ( y < 0 )
+					result += -y;
+				else
+					result += y;
+				if ( z < 0 )
+					result += -z;
+				else
+					result += z;
+				return result;
+			}
 			//std::sqrt(vec*vec) returns the not negative value of the vec as a copie of the vec
 			Vec3<type> abs() const noexcept
 			{
@@ -775,10 +787,25 @@ namespace clockwork {
 			{
 				return std::sqrt(( x - other.x ) * ( x - other.x ) + ( y - other.y ) * ( y - other.y ) + ( z - other.z ) * ( z - other.z ));
 			}
-			//|vec1-vec2| returns the direct distance to another vec | std::sqrt(( x - other.x ) * ( x - other.x ) + ( y - other.y ) * ( y - other.y ) + ( z - other.z ) * ( z - other.z ))
-			type distance(Vec3<type>&& other) const noexcept
+			//|vec1-vec2| can be used to compare distances, will return the non negative value of the components added together 
+			type distanceFast(const Vec3<type>& other) const noexcept
 			{
-				return std::sqrt(( x - other.x ) * ( x - other.x ) + ( y - other.y ) * ( y - other.y ) + ( z - other.z ) * ( z - other.z ));
+				type tempx;
+				if ( other.x < x )
+					tempx = x - other.x;
+				else
+					tempx = other.x - x;
+				type tempy;
+				if ( other.y < y )
+					tempy = y - other.y;
+				else
+					tempy = other.y - y;
+				type tempz;
+				if ( other.z < z )
+					tempz = z - other.z;
+				else
+					tempz = other.z - z;
+				return tempx + tempy + tempz;
 			}
 			/*vec1*vec2 = |vec1|*|vec2|*cos(vec1,vec2) returns the dotproduct of 2 vecs, vecs are orthogonal(_|_) if the result is 0 and vecs are parallel if the result is 1(||) | x * other.x + y * other.y + z * other.z | not the normal multiply method 
 			its more efficient than comparing the vecs with the magnitude method*/

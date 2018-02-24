@@ -48,7 +48,8 @@ namespace clockwork {
 		public:
 			virtual void enter() noexcept = 0;
 			virtual void leave() noexcept = 0;
-			virtual void tick() noexcept = 0;
+			virtual void fastTick() noexcept = 0;
+			virtual void mediumTick() noexcept = 0;//nicht jeden tick
 			//nur jede sekunde, nicht jeden tick
 			virtual void slowTick() noexcept = 0;
 			virtual void render() noexcept = 0;

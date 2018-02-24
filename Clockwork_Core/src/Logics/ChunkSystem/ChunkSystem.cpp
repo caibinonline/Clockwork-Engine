@@ -266,7 +266,24 @@ namespace clockwork {
 			}
 		}
 
-		void ChunkSystem::tickAll() noexcept
+
+		void ChunkSystem::fastTick() noexcept
+		{
+			passFunctionToChunks<FastTickFunctor>(m_currentChunk->getId() - m_tickDistance, m_currentChunk->getId() + m_tickDistance);
+		}
+
+		void ChunkSystem::mediumTick() noexcept
+		{
+			passFunctionToChunks<MediumTickFunctor>(m_currentChunk->getId() - m_tickDistance, m_currentChunk->getId() + m_tickDistance);
+			passFunctionToChunks<CollisionFunctor>(m_currentChunk->getId() - m_tickDistance, m_currentChunk->getId() + m_tickDistance);
+		}
+
+		void ChunkSystem::slowTick() noexcept
+		{
+			passFunctionToChunks<SlowTickFunctor>(m_currentChunk->getId() - m_tickDistance, m_currentChunk->getId() + m_tickDistance);
+		}
+
+		void ChunkSystem::fastTickAll() noexcept
 		{
 			for ( int x = 0; x < m_count.x; ++x )
 			{
@@ -274,15 +291,24 @@ namespace clockwork {
 				{
 					for ( int z = 0; z < m_count.x; ++z )
 					{
-						m_chunks[x][y][z].tick();
+						m_chunks[x][y][z].fastTick();
 					}
 				}
 			}
 		}
 
-		void ChunkSystem::tick() noexcept
+		void ChunkSystem::mediumTickAll() noexcept
 		{
-			passFunctionToChunks<TickFunctor>(m_currentChunk->getId() - m_tickDistance, m_currentChunk->getId() + m_tickDistance);
+			for ( int x = 0; x < m_count.x; ++x )
+			{
+				for ( int y = 0; y < m_count.x; ++y )
+				{
+					for ( int z = 0; z < m_count.x; ++z )
+					{
+						m_chunks[x][y][z].mediumTick();
+					}
+				}
+			}
 		}
 
 		void ChunkSystem::slowTickAll() noexcept
@@ -299,11 +325,6 @@ namespace clockwork {
 			}
 		}
 
-		void ChunkSystem::slowTick() noexcept
-		{
-			passFunctionToChunks<SlowTickFunctor>(m_currentChunk->getId() - m_tickDistance, m_currentChunk->getId() + m_tickDistance);
-		}
-
 		void ChunkSystem::RenderAddFunctor::function(Chunk& chunk) noexcept
 		{
 			chunk.renderAdd();
@@ -314,14 +335,24 @@ namespace clockwork {
 			chunk.renderRemove();
 		}
 		
-		void ChunkSystem::TickFunctor::function(Chunk& chunk) noexcept
+		void ChunkSystem::FastTickFunctor::function(Chunk& chunk) noexcept
 		{
-			chunk.tick();
+			chunk.fastTick();
+		}
+
+		void ChunkSystem::MediumTickFunctor::function(Chunk& chunk) noexcept
+		{
+			chunk.mediumTick();
 		}
 
 		void ChunkSystem::SlowTickFunctor::function(Chunk& chunk) noexcept
 		{
 			chunk.slowTick();
+		}
+
+		void ChunkSystem::CollisionFunctor::function(Chunk& chunk) noexcept
+		{
+			chunk.updateCollision();
 		}
 
 	}

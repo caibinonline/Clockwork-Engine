@@ -597,13 +597,9 @@ namespace clockwork {
 				return std::move(v1);
 			}
 			//substract a rvalue Vec4 object from a lvalue Vec4 object 
-			friend Vec4<type>&& operator-(const Vec4<type>& v1, Vec4<type>&& v2) noexcept
+			friend Vec4<type> operator-(const Vec4<type>& v1, Vec4<type>&& v2) noexcept
 			{
-				v2.x -= v1.x;
-				v2.y -= v1.y;
-				v2.z -= v1.z;
-				v2.w -= v1.w;
-				return std::move(v2);
+				return Vec4<type>(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z, v1.w - v2.w);
 			}
 			//substract a lvalue Vec4 object from a rvalue Vec4 object
 			friend Vec4<type>&& operator-(Vec4<type>&& v1, const Vec4<type>& v2) noexcept
@@ -700,13 +696,9 @@ namespace clockwork {
 				return std::move(v1);
 			}
 			//divide a rvalue Vec4 object to a lvalue Vec4 object 
-			friend Vec4<type>&& operator/(const Vec4<type>& v1, Vec4<type>&& v2) noexcept
+			friend Vec4<type> operator/(const Vec4<type>& v1, Vec4<type>&& v2) noexcept
 			{
-				v2.x /= v1.x;
-				v2.y /= v1.y;
-				v2.z /= v1.z;
-				v2.w /= v1.w;
-				return std::move(v2);
+				return Vec4<type>(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z, v1.w / v2.w);
 			}
 			//divide a lvalue Vec4 object to a rvalue Vec4 object
 			friend Vec4<type>&& operator/(Vec4<type>&& v1, const Vec4<type>& v2) noexcept
@@ -761,6 +753,28 @@ namespace clockwork {
 			{
 				return std::sqrt(x * x + y * y + z * z + w * w);
 			}
+			//|vec| returns the lenght of the vec/direct distance from origin vec(0,0,0,0) | the fast method
+			type fastLenght() const noexcept
+			{
+				type result = 0;
+				if ( x < 0 )
+					result += -x;
+				else
+					result += x;
+				if ( y < 0 )
+					result += -y;
+				else
+					result += y;
+				if ( z < 0 )
+					result += -z;
+				else
+					result += z;
+				if ( w < 0 )
+					result += -w;
+				else
+					result += w;
+				return result;
+			}
 			//std::sqrt(vec*vec) returns the not negative value of the vec as a copie of the vec
 			Vec3<type> abs() const noexcept
 			{
@@ -795,10 +809,30 @@ namespace clockwork {
 			{
 				return std::sqrt(( x - other.x ) * ( x - other.x ) + ( y - other.y ) * ( y - other.y ) + ( z - other.z ) * ( z - other.z ) + ( w - other.w ) * ( w - other.w ));
 			}
-			//|vec1-vec2| returns the direct distance to another vec | std::sqrt(( x - other.x ) * ( x - other.x ) + ( y - other.y ) * ( y - other.y ) + ( z - other.z ) * ( z - other.z ) + ( w - other.w ) * ( w - other.w ))
-			type distance(Vec4<type>&& other) const noexcept
+			//|vec1-vec2| can be used to compare distances, will return the non negative value of the components added together 
+			type fastDistance(const Vec4<type>& other) const noexcept
 			{
-				return std::sqrt(( x - other.x ) * ( x - other.x ) + ( y - other.y ) * ( y - other.y ) + ( z - other.z ) * ( z - other.z ) + ( w - other.w ) * ( w - other.w ));
+				type tempx;
+				if ( other.x < x )
+					tempx = x - other.x;
+				else
+					tempx = other.x - x;
+				type tempy;
+				if ( other.y < y )
+					tempy = y - other.y;
+				else
+					tempy = other.y - y;
+				type tempz;
+				if ( other.z < z )
+					tempz = z - other.z;
+				else
+					tempz = other.z - z;
+				type tempw;
+				if ( other.w < w )
+					tempw = w - other.w;
+				else
+					tempw = other.w - w;
+				return tempx + tempy + tempz + tempw;
 			}
 			/*vec1*vec2 = |vec1|*|vec2|*cos(vec1,vec2) returns the dotproduct of 2 vecs, vecs are orthogonal(_|_) if the result is 0 and vecs are parallel if the result is 1(||) | x * other.x + y * other.y + z * other.z + w * other.w | not the normal multiply method 
 			its more efficient than comparing the vecs with the magnitude method*/

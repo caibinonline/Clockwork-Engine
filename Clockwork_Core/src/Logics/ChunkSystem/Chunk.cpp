@@ -87,18 +87,18 @@ namespace clockwork {
 #endif
 		}
 
-		void Chunk::tick() noexcept
+		void Chunk::fastTick() noexcept
 		{
 			for ( unsigned int i = 0; i < m_movingTickList.size(); ++i )
 			{
 				MovingTickListener* listener = m_movingTickList[i];
-				listener->tick();
+				listener->fastTick();
 				if ( m_chunkSystem->getChunkAt(listener->getPosition()) != *this )
 				{
 					Chunk& newChunk = m_chunkSystem->getChunkAt(listener->getPosition());
 					this->removeMovingTickListener(listener);
 					newChunk.addMovingTickListener(listener);
-					RenderListener* r_listener  = dynamic_cast<RenderListener*>(listener);//WICHTIG AUCH FÜR ALLE ANDEREN LISTENER MACHEN(ausser static tick listener), aber keylistener, etc auch mit dynamic cast überprüfen
+					RenderListener* r_listener  = dynamic_cast<RenderListener*>(listener);//WICHTIG AUCH FÜR ALLE ANDEREN LISTENER MACHEN(ausser static tick listener), aber keylistener, etc auch mit dynamic cast überprüfen | vielleicht auch in mediumtick verschrieben
 					if ( r_listener != nullptr )
 					{
 						this->removeRenderListener(r_listener);
@@ -118,10 +118,22 @@ namespace clockwork {
 
 			for ( unsigned int i = 0; i < m_staticTickList.size(); ++i )
 			{
-				m_staticTickList[i]->tick();
+				m_staticTickList[i]->fastTick();
 			}
 
-			updateCollision();
+		}
+
+		void Chunk::mediumTick() noexcept
+		{
+			for ( unsigned int i = 0; i < m_movingTickList.size(); ++i )
+			{
+				m_movingTickList[i]->mediumTick();
+			}
+
+			for ( unsigned int i = 0; i < m_staticTickList.size(); ++i )
+			{
+				m_staticTickList[i]->mediumTick();
+			}
 		}
 
 		void Chunk::slowTick() noexcept
@@ -180,7 +192,8 @@ namespace clockwork {
 								{
 									MovingTickListener* outerListener = m_movingTickList[outer];
 									MovingTickListener* innerListener = otherChunk.m_movingTickList[inner];
-									if ( outerListener->getHitbox().collides(innerListener->getHitbox(), &outerCollider, &innerCollider) )
+									if ( ( outerListener->getPosition().distance(innerListener->getPosition())< ( ( outerListener->getSize() + innerListener->getSize() ) * 2 ).fastLenght() )&&//noch überprüfen ob es geht mit der zusätzlichen bedingung für bessere performance und NICHT für big objekte/listener benutzen(die über mehrere chunks gehen können) und auch nur zwischen verschiedenen chunks benutzen
+										outerListener->getHitbox().collides(innerListener->getHitbox(), &outerCollider, &innerCollider) )
 									{
 										outerListener->onCollision(innerListener, outerCollider, innerCollider);
 										innerListener->onCollision(outerListener, innerCollider, outerCollider);
@@ -190,7 +203,8 @@ namespace clockwork {
 								{
 									MovingTickListener* outerListener = m_movingTickList[outer];
 									StaticTickListener* innerListener = otherChunk.m_staticTickList[inner];
-									if ( outerListener->getHitbox().collides(innerListener->getHitbox(), &outerCollider, &innerCollider) )
+									if ( ( outerListener->getPosition().distance(innerListener->getPosition())< ( ( outerListener->getSize() + innerListener->getSize() ) * 2 ).fastLenght() ) &&
+										outerListener->getHitbox().collides(innerListener->getHitbox(), &outerCollider, &innerCollider) )
 									{
 										outerListener->onCollision(innerListener, outerCollider, innerCollider);
 										innerListener->onCollision(outerListener, innerCollider, outerCollider);
@@ -203,7 +217,8 @@ namespace clockwork {
 								{
 									StaticTickListener* outerListener = m_staticTickList[outer];
 									MovingTickListener* innerListener = otherChunk.m_movingTickList[inner];
-									if ( outerListener->getHitbox().collides(innerListener->getHitbox(), &outerCollider, &innerCollider) )
+									if ( ( outerListener->getPosition().distance(innerListener->getPosition())< ( ( outerListener->getSize() + innerListener->getSize() ) * 2 ).fastLenght() ) &&
+										outerListener->getHitbox().collides(innerListener->getHitbox(), &outerCollider, &innerCollider) )
 									{
 										outerListener->onCollision(innerListener, outerCollider, innerCollider);
 										innerListener->onCollision(outerListener, innerCollider, outerCollider);

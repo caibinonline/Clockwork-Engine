@@ -822,7 +822,7 @@ namespace clockwork {
 				return Mat4x4<type>{
 						static_cast<type>( 2 ) / ( right - left ), 0, 0, -( right + left ) / ( right - left ),
 						0, static_cast<type>( 2 ) / ( top - bottom ), 0, -( top + bottom ) / ( top - bottom ),
-						0, 0, -static_cast<type>( 2 ) / ( far1 - near1 ), -( far1 + near1 ) / ( far1 - near1 ),
+						0, 0, static_cast<type>( 2 ) / ( far1 - near1 ), -( far1 + near1 ) / ( far1 - near1 ),
 						0, 0, 0, 1
 				};
 			}
@@ -852,8 +852,8 @@ namespace clockwork {
 				return Mat4x4<type>{
 						static_cast<type>( 1 ) / ( aspect * tan ), 0, 0, 0,
 						0, static_cast<type>( 1 ) / ( tan ), 0, 0,
-						0, 0, -( far1 + near1 ) / ( far1 - near1 ), -( static_cast<type>( 2 ) * far1 * near1 ) / ( far1 - near1 ),
-						0, 0, -static_cast<type>( 1 ), 0
+						0, 0, ( far1 + near1 ) / ( far1 - near1 ), -( static_cast<type>( 2 ) * far1 * near1 ) / ( far1 - near1 ),
+						0, 0, static_cast<type>( 1 ), 0
 				};
 			}
 
@@ -867,12 +867,12 @@ namespace clockwork {
 			{
 				Vec3<type> direction { ( target - camera ).normalizeSelf() };//z 
 				//will be treated as normalized direction vector in positive z-axis(position-target) because of opengls right hand coordinate system | its the reverse direction of the distance to the target(not from camera to target, but from target to camera) | so it will be negated
-				Vec3<type> right { ( direction.crossproduct(up) ).normalizeSelf() };//x 
-				Vec3<type> newUP { right.crossproduct(direction) };//y | y-axis of the camera
+				Vec3<type> right { ( up.crossproduct(direction) ).normalizeSelf() };//x 
+				Vec3<type> newUP { direction.crossproduct(right) };//y | y-axis of the camera
 				return Mat4x4<type>{
 						right.x, right.y, right.z, -right.dotproduct(camera),
 						newUP.x, newUP.y, newUP.z, -newUP.dotproduct(camera),
-						-direction.x, -direction.y, -direction.z, direction.dotproduct(camera),
+						direction.x, direction.y, direction.z, -direction.dotproduct(camera),
 						0,0,0,1
 				};
 

@@ -35,7 +35,7 @@ namespace clockwork {
 			newState->enter();//hier auch wie oben und natürlich texturen, etc zur renderwarteschlange adden
 		}
 
-		void Loading::tick() noexcept
+		void Loading::fastTick() noexcept
 		{
 			//irgendwie testen wie lange es noch loaden muss 
 			//es muss auch mit dem server ausgetauscht werden, ob eine welt, oder ähnliches geladen werden muss und loadingscreen darf ja erst 
