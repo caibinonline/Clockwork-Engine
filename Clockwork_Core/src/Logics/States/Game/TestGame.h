@@ -31,7 +31,6 @@ namespace clockwork {
 			virtual void enter() noexcept override;
 			virtual void leave() noexcept override;
 			virtual void fastTick() noexcept override;
-			virtual void mediumTick() noexcept override;
 			virtual void slowTick() noexcept override;
 			virtual void render() noexcept override;
 

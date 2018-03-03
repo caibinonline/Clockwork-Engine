@@ -57,14 +57,14 @@ namespace clockwork {
 
 		private:
 			void init(const maths::Vec3f& min, const maths::Vec3f& max, int idX, int idY, int idZ, ChunkSystem* chunkSystem) noexcept;
+			void collisionTest(const Chunk& otherChunk) const noexcept;
 
 		public:
 			void renderAdd() noexcept;
 			void renderRemove() noexcept;
 			void fastTick() noexcept;
-			void mediumTick() noexcept;
 			void slowTick() noexcept;
-			void updateCollision() noexcept;
+			void updateCollision() const noexcept;
 
 			void addRenderListener(RenderListener* listener) noexcept;
 			void removeRenderListener(RenderListener* listener) noexcept;

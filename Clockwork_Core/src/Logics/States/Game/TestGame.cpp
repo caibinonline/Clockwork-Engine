@@ -68,22 +68,21 @@ namespace clockwork {
 			m_chunkSystem = new ChunkSystem({ -800,-800,-800 }, { 800,800,800 }, { 10,10,10 }, { 4,4,4 }, { 4,4,4 }, this);//chunksystem in erbenden states mit den jeweiligenn größen erstellen | nachdem camera und renderer erstellt wurden, aber bevor gameobjects hinzugefügt werden 
 			///immoment nur renderdistance 1 zum testen | später auch chunkdistanz erhöhen, da man immoment error bekommt, wenn camerapos ausserhalb des chunks ist | auch gucken wie z is(negativ/nicht) wegen opengl right hand system
 
-
-			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/brick.jpg").load());
-			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/stone.jpg").load());
-			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/granite.jpg").load());
-			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/moss.jpg").load());
-			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/brick2.jpg").load());
-			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/granite2.jpg").load());
-			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/wood.jpg").load());
-			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/grass.jpg").load());
-			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/blue.jpg").load());
-			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/red.jpg").load());
-			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/purple.jpg").load());
-			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/brick3.jpg").load());
-			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/green.jpg").load());
-			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/abstract.jpg").load());
-			m_defaultRenderer->cubeManager.addTextureBoth(utils::Image("res/Images/ice.jpg").load());
+			m_defaultRenderer->cubeManager.addInstancedTexture(utils::Image("res/Images/brick.jpg").load());
+			m_defaultRenderer->cubeManager.addInstancedTexture(utils::Image("res/Images/stone.jpg").load());
+			m_defaultRenderer->cubeManager.addInstancedTexture(utils::Image("res/Images/granite.jpg").load());
+			m_defaultRenderer->cubeManager.addInstancedTexture(utils::Image("res/Images/moss.jpg").load());
+			m_defaultRenderer->cubeManager.addInstancedTexture(utils::Image("res/Images/brick2.jpg").load());
+			m_defaultRenderer->cubeManager.addInstancedTexture(utils::Image("res/Images/granite2.jpg").load());
+			m_defaultRenderer->cubeManager.addInstancedTexture(utils::Image("res/Images/wood.jpg").load());
+			m_defaultRenderer->cubeManager.addInstancedTexture(utils::Image("res/Images/grass.jpg").load());
+			m_defaultRenderer->cubeManager.addInstancedTexture(utils::Image("res/Images/blue.jpg").load());
+			m_defaultRenderer->cubeManager.addInstancedTexture(utils::Image("res/Images/red.jpg").load());
+			m_defaultRenderer->cubeManager.addInstancedTexture(utils::Image("res/Images/purple.jpg").load());
+			m_defaultRenderer->cubeManager.addInstancedTexture(utils::Image("res/Images/brick3.jpg").load());
+			m_defaultRenderer->cubeManager.addInstancedTexture(utils::Image("res/Images/green.jpg").load());
+			m_defaultRenderer->cubeManager.addInstancedTexture(utils::Image("res/Images/abstract.jpg").load());
+			m_defaultRenderer->cubeManager.addInstancedTexture(utils::Image("res/Images/ice.jpg").load());
 
 
  			m_defaultRenderer->cubeManager.addNormalTexture("res/Images/transparent/glass.png");
@@ -95,6 +94,8 @@ namespace clockwork {
 			m_defaultRenderer->cubeManager.addNormalTexture("res/Images/transparent/wall.png");
 			m_defaultRenderer->cubeManager.addNormalTexture("res/Images/transparent/washi.png");
 
+			m_defaultRenderer->cubeManager.addNormalTexture("res/Images/player1.png");
+			m_defaultRenderer->cubeManager.addNormalTexture("res/Images/player2.png");
 
 			std::srand(engine->getWindow()->getTimer() * 10);
 
@@ -124,38 +125,33 @@ namespace clockwork {
 			double time = engine->getTimeFactor();//time scaling factor 
 
 			//camera movement
-			if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_W) )
-			{
-				m_currentCamera->moveZ(5 * time);
-			}
-			else if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_S) )
-			{
-				m_currentCamera->moveZ(-5 * time);
-			}
-			if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_A) )
-			{
-				m_currentCamera->moveX(-5 * time);
-			}
-			else if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_D) )
-			{
-				m_currentCamera->moveX(5 * time);
-			}
-			if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_LEFT_CONTROL) )
-			{
-				m_currentCamera->moveY(-5 * time);
-			}
-			else if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_SPACE) )
-			{
-				m_currentCamera->moveY(5 * time);
-			}
+// 			if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_W) )
+// 			{
+// 				m_currentCamera->moveZ(5 * time);
+// 			}
+// 			else if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_S) )
+// 			{
+// 				m_currentCamera->moveZ(-5 * time);
+// 			}
+// 			if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_A) )
+// 			{
+// 				m_currentCamera->moveX(-5 * time);
+// 			}
+// 			else if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_D) )
+// 			{
+// 				m_currentCamera->moveX(5 * time);
+// 			}
+// 			if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_LEFT_CONTROL) )
+// 			{
+// 				m_currentCamera->moveY(-5 * time);
+// 			}
+// 			else if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_SPACE) )
+// 			{
+// 				m_currentCamera->moveY(5 * time);
+// 			}
 
 			m_chunkSystem->fastTick();
 
-		}
-
-		void TestGame::mediumTick() noexcept
-		{
-			m_chunkSystem->mediumTick();
 		}
 
 		void TestGame::slowTick() noexcept
@@ -202,10 +198,10 @@ namespace clockwork {
 					}
 					else
 					{
-						for ( unsigned int i = 0; i < 11; ++i )
-						{
-							logics::MovingBlock* inst2 = new logics::MovingBlock(rand() % texturecount, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), m_currentCamera->getPosition() + m_currentCamera->getDirection() * 5*i, this, m_defaultRenderer);
-						}
+// 						for ( unsigned int i = 0; i < 11; ++i )
+// 						{
+// 							logics::MovingBlock* inst2 = new logics::MovingBlock(rand() % texturecount, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), m_currentCamera->getPosition() + m_currentCamera->getDirection() * 5*i, this, m_defaultRenderer);
+// 						}
 					}
 				}
 				else if ( button == CLOCKWORK_MOUSE_BUTTON_2 )
@@ -216,7 +212,7 @@ namespace clockwork {
 					}
 					else
 					{
-						m_defaultRenderer->cubeManager.removeLastInstancedCube();
+/*						m_defaultRenderer->cubeManager.removeLastInstancedCube();*/
 					}
 				}
 				else if ( button == CLOCKWORK_MOUSE_BUTTON_3)

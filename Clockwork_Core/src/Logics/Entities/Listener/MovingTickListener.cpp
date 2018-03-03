@@ -17,7 +17,7 @@ namespace clockwork {
 	namespace logics {
 
 		MovingTickListener::MovingTickListener() noexcept
-			: m_mass(0)
+			: m_mass(0), m_hitbox(this)
 		{
 			m_chunk->addMovingTickListener(this);
 		}

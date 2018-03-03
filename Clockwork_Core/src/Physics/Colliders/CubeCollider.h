@@ -19,6 +19,10 @@ namespace clockwork {
 
 		class CubeCollider : public Collider
 		{
+
+		private:
+			friend class Hitbox;
+		
 		protected:
 			maths::Vec3f m_frontBotLeft;
 			maths::Vec3f m_backTopRight;//range of cube collision box(size compared to model)

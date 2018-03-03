@@ -22,12 +22,12 @@ namespace clockwork {
 		{
 
 		protected:
-			logics::GameObject * m_gameObject;
+			logics::GameObject* m_gameObject;
 
 		public:
 			Collider(logics::GameObject* gameObject) noexcept;
 			virtual bool collides(const Collider* other) const noexcept = 0;
-
+			logics::GameObject* const getGameObject() const noexcept {return m_gameObject;}
 		};
 
 	}

@@ -85,28 +85,6 @@ namespace clockwork {
 			this->onMatrixChange();
 		}
 
-		void GameObject::updateChunk() noexcept
-		{
-			Chunk* newChunk = &m_chunk->getChunkSystem().getChunkAt(m_position);
-			if ( m_chunk != newChunk )
-			{
-				RenderListener* renderListener = dynamic_cast<RenderListener*>( this );
-				if ( renderListener )
-				{
-					if ( m_chunk->inRenderDistance() == true && newChunk->inRenderDistance() == false )
-					{
-						renderListener->renderRemove();
-						m_chunk = newChunk;
-					}
-					else if ( m_chunk->inRenderDistance() == false && newChunk->inRenderDistance() == true )
-					{
-						m_chunk = newChunk;
-						renderListener->renderAdd();
-					}
-				}
-			}
-		}
-
 		const Chunk& GameObject::getChunk() const noexcept
 		{
 			return *m_chunk;

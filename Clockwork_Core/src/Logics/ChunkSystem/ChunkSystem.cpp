@@ -269,13 +269,8 @@ namespace clockwork {
 
 		void ChunkSystem::fastTick() noexcept
 		{
-			passFunctionToChunks<FastTickFunctor>(m_currentChunk->getId() - m_tickDistance, m_currentChunk->getId() + m_tickDistance);
-		}
-
-		void ChunkSystem::mediumTick() noexcept
-		{
-			passFunctionToChunks<MediumTickFunctor>(m_currentChunk->getId() - m_tickDistance, m_currentChunk->getId() + m_tickDistance);
 			passFunctionToChunks<CollisionFunctor>(m_currentChunk->getId() - m_tickDistance, m_currentChunk->getId() + m_tickDistance);
+			passFunctionToChunks<FastTickFunctor>(m_currentChunk->getId() - m_tickDistance, m_currentChunk->getId() + m_tickDistance);
 		}
 
 		void ChunkSystem::slowTick() noexcept
@@ -292,20 +287,6 @@ namespace clockwork {
 					for ( int z = 0; z < m_count.x; ++z )
 					{
 						m_chunks[x][y][z].fastTick();
-					}
-				}
-			}
-		}
-
-		void ChunkSystem::mediumTickAll() noexcept
-		{
-			for ( int x = 0; x < m_count.x; ++x )
-			{
-				for ( int y = 0; y < m_count.x; ++y )
-				{
-					for ( int z = 0; z < m_count.x; ++z )
-					{
-						m_chunks[x][y][z].mediumTick();
 					}
 				}
 			}
@@ -338,11 +319,6 @@ namespace clockwork {
 		void ChunkSystem::FastTickFunctor::function(Chunk& chunk) noexcept
 		{
 			chunk.fastTick();
-		}
-
-		void ChunkSystem::MediumTickFunctor::function(Chunk& chunk) noexcept
-		{
-			chunk.mediumTick();
 		}
 
 		void ChunkSystem::SlowTickFunctor::function(Chunk& chunk) noexcept

@@ -36,6 +36,7 @@ namespace clockwork {
 			void fastTick() noexcept override
 			{
 				double time = engine->getTimeFactor();//time scaling factor 
+				this->GameObject::updateModelMatrix();
 				if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_RIGHT) )
 					m_rotation.y += 60 * time;
 				else if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_LEFT) )
@@ -48,11 +49,6 @@ namespace clockwork {
 					m_rotation.x += 360;
 				if ( m_rotation.y < 0 )
 					m_rotation.y += 360;
-				this->GameObject::updateModelMatrix();
-			}
-			void mediumTick() noexcept override
-			{
-
 			}
 			void slowTick() noexcept override
 			{
@@ -79,9 +75,9 @@ namespace clockwork {
 			{
 				RenderListener::init();
 				m_hitbox.addCollider(&cubeCollider);
-				m_direction.x = -(float) ( rand() % 6000 + 1 ) / 1000 + (float) ( rand() % 6000 + 1 ) / 1000;
-				m_direction.y = -(float) ( rand() % 6000 + 1 ) / 1000 + (float) ( rand() % 6000 + 1 ) / 1000;
-				m_direction.z = -(float) ( rand() % 6000 + 1 ) / 1000 + (float) ( rand() % 6000 + 1 ) / 1000;
+				m_velocity.x = -(float) ( rand() % 6000 + 1 ) / 1000 + (float) ( rand() % 6000 + 1 ) / 1000;
+				m_velocity.y = -(float) ( rand() % 6000 + 1 ) / 1000 + (float) ( rand() % 6000 + 1 ) / 1000;
+				m_velocity.z = -(float) ( rand() % 6000 + 1 ) / 1000 + (float) ( rand() % 6000 + 1 ) / 1000;
 			}
 		public:
 			virtual void renderAdd() noexcept override
@@ -95,7 +91,9 @@ namespace clockwork {
 			virtual void fastTick() noexcept override
 			{
 				double time = engine->getTimeFactor();//time scaling factor 
-				m_position += m_direction * time;
+				m_position += m_velocity * time;//WICHTIG in fastTick immer am anfang zuerst position neu kalkulieren anhand direction und modelmatrix updaten, dann ggf direction verändert und danach wird automatisch mit ggf collision direction wieder verändert
+				this->GameObject::updateModelMatrix();
+
 				if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_RIGHT) )
 					m_rotation.y += 60 * time;
 				else if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_LEFT) )
@@ -109,46 +107,36 @@ namespace clockwork {
 				if ( m_rotation.y < 0 )
 					m_rotation.y += 360;
 
-				if ( m_position.distance(m_chunk->getChunkSystem().getState().getCurrentCamera().getPosition()) > 40 )
-				{
-					m_direction = (m_chunk->getChunkSystem().getState().getCurrentCamera().getPosition() - m_position)/2;
-				}
-
-				this->GameObject::updateModelMatrix();
-			}
-			virtual void mediumTick() noexcept override
-			{
+				// 				if ( m_position.distance(m_chunk->getChunkSystem().getState().getCurrentCamera().getPosition()) > 25 )
+				// 				{
+				// 					m_velocity = (m_chunk->getChunkSystem().getState().getCurrentCamera().getPosition() - m_position)/2;
+				// 				}
 
 			}
 			virtual void slowTick() noexcept override
 			{
-// 				m_direction.x = -(float) ( rand() % 6000 + 1 ) / 1000 + (float) ( rand() % 6000 + 1 ) / 1000;
-// 				m_direction.y = -(float) ( rand() % 6000 + 1 ) / 1000 + (float) ( rand() % 6000 + 1 ) / 1000;
-// 				m_direction.z = -(float) ( rand() % 6000 + 1 ) / 1000 + (float) ( rand() % 6000 + 1 ) / 1000;
+				// 				m_direction.x = -(float) ( rand() % 6000 + 1 ) / 1000 + (float) ( rand() % 6000 + 1 ) / 1000;
+				// 				m_direction.y = -(float) ( rand() % 6000 + 1 ) / 1000 + (float) ( rand() % 6000 + 1 ) / 1000;
+				// 				m_direction.z = -(float) ( rand() % 6000 + 1 ) / 1000 + (float) ( rand() % 6000 + 1 ) / 1000;
 			}
 			virtual void onCollision(MovingTickListener* otherMoving, int ownColliderNumber, int otherColliderNumber) noexcept override
 			{
 				double time = engine->getTimeFactor();//time scaling factor 
-				MovingBlock* block = dynamic_cast<MovingBlock*>( otherMoving );//eigentlich noch nullptr test
+				const MovingBlock* block = dynamic_cast<const MovingBlock*>( otherMoving );//eigentlich noch nullptr test
 				if ( block != nullptr )//ggf noch mass und winkel berücksichtigen | reflektieren und ggf noch speed variable einbauen 
 				{
-				m_direction = m_position - block->getPosition();;//other direction
-				m_direction *= 4;
-				m_position += m_direction * time;//offset, damit collision nicht mehrmals triggert
+					m_velocity = ( m_position - block->getPosition() ) * 2;//other direction
 				}
-				this->GameObject::updateModelMatrix();
+
 			}
-			virtual void onCollision(StaticTickListener* otherStatic, int ownColliderNumber, int otherColliderNumber) noexcept override
+			virtual void onCollision(StaticTickListener* otherStatic, int ownColliderNumber, int otherColliderNumber) noexcept override//in collision sollten nur eigene sachen geregelt werden, aber eine kugel z.b. kann sich selbst löschen und dem anderen schaden machen, wenn es ein player/entity ist | nur das dann halt nicht in der anderen collision methode auch machen | es werden also keine const pointer übergeben
 			{
 				double time = engine->getTimeFactor();//time scaling factor 
-				Block* block = dynamic_cast<Block*>( otherStatic );
+				const Block* block = dynamic_cast<const Block*>( otherStatic );
 				if ( block != nullptr )
 				{
-				m_direction = m_position - block->getPosition();//other direction
-				m_direction *= 4;
-				m_position += m_direction * time;//offset, damit collision nicht mehrmals triggert | muss aber bei nur einer direction eigentlich nicht, da es im nächsten tick verarbeitet wird mit der neuen direction | nur bei 2 moving objekten ist es schwer, da sich beide ineinander bewegen könnten
+					m_velocity = ( m_position - block->getPosition() ) * 2;//other direction
 				}
-				this->GameObject::updateModelMatrix();
 			}
 		protected:
 			void onMatrixChange() noexcept override
@@ -159,10 +147,12 @@ namespace clockwork {
 
 		struct Player : public RenderListener, public MovingTickListener
 		{
-			graphics::InstancedCube cube;
+			graphics::NormalCube cube;
 			physics::CubeCollider cubeCollider;
+			bool alive = true;
+			std::vector<MovingBlock*> enemys;
 			Player(State* state, graphics::Renderer* renderer) noexcept
-				:GameObject({1.0f,2.0f,1.0f}, {0,0,0}, {0,0,0}, state), cube(1, this, renderer), cubeCollider(this)
+				:GameObject({ 0.3f,0.5f,0.3f }, { 0,0,0 }, { 0,0,0 }, state), cube(0, false, this, renderer), cubeCollider(this)
 			{
 				RenderListener::init();
 				m_hitbox.addCollider(&cubeCollider);
@@ -179,94 +169,109 @@ namespace clockwork {
 			virtual void fastTick() noexcept override
 			{
 				double time = engine->getTimeFactor();//time scaling factor 
-
-
-				if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_I) )//lieber später mit onkeypress machen und dann direction umschalten, aber noch mit boolean und onrelease wieder direction auf 0
-				{
-					m_direction.z = 1;
-				}
-				else if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_K) )
-				{
-					m_direction.z = -1;
-				}
-				else
-				{
-					m_direction.z = 0;
-				}
-				if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_J) )
-				{
-					m_direction.x = -1;
-				}
-				else if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_L) )
-				{
-					m_direction.x = 1;
-				}
-				else
-				{
-					m_direction.x = 0;
-				}
-				if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_U) )
-				{
-					m_direction.y = -1;
-				}
-				else if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_O) )
-				{
-					m_direction.y = 1;
-				}
-				else
-				{
-					m_direction.y = 0;
-				}
-
-
-				m_position += m_direction * time;
+				m_position += m_velocity * time;//WICHTIG in fastTick immer am anfang zuerst position neu kalkulieren anhand direction und modelmatrix updaten, dann ggf direction verändert und danach wird automatisch mit ggf collision direction wieder verändert
 				this->GameObject::updateModelMatrix();
-			}
-			virtual void mediumTick() noexcept override
-			{
+				const maths::Vec3f& camDir = m_chunk->getChunkSystem().getState().getCurrentCamera().getDirection() * 5;
+				const maths::Vec3f& camRight = m_chunk->getChunkSystem().getState().getCurrentCamera().getRight() * 5;
+				const maths::Vec3f& camUp = m_chunk->getChunkSystem().getState().getCurrentCamera().getUp() * 5;
+				m_chunk->getChunkSystem().getState().getCurrentCamera().setPosition(m_position - camDir / 3);
 
+				m_velocity = maths::Vec3f { 0,0,0 };
+				if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_W) )//lieber später mit onkeypress machen und dann direction umschalten, aber noch mit boolean und onrelease wieder direction auf 0 | dann von keylistener erben 
+				{
+					m_velocity += camDir;
+				}
+				else if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_S) )
+				{
+					m_velocity += -camDir;
+				}
+				if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_A) )
+				{
+					m_velocity += -camRight;
+				}
+				else if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_D) )
+				{
+					m_velocity += camRight;
+				}
+				if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_LEFT_CONTROL) )
+				{
+					m_velocity += -camUp;
+				}
+				else if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_SPACE) )
+				{
+					m_velocity += camUp;
+				}
+				if ( engine->getWindow()->isKeyPressed(CLOCKWORK_KEY_P) )
+				{
+					cube.setTexture(0, false);
+					alive = true;
+				}
 			}
 			virtual void slowTick() noexcept override
 			{
-				std::cout << "Player: " << m_position << std::endl;
+				static int rounds = 0;
+				static int record = 0;
+				if ( !alive )
+				{
+					if ( rounds != 0 )
+						record = rounds;
+					std::cout << "You Lost, but survived " << record << " Rounds!" << std::endl;
+					rounds = 0;
+					for ( unsigned int i = 0; i < enemys.size(); ++i )
+					{
+						delete enemys.at(i);
+					}
+					enemys.clear();
+				}
+				else
+				{
+					for ( unsigned int i = 0; i < rounds; ++i )
+					{
+						float rx = ( -150.0f + ( rand() % 301 ) ) / 10;
+						float ry = ( -150.0f + ( rand() % 301 ) ) / 10;
+						float rz = ( -150.0f + ( rand() % 301 ) ) / 10;
+						if ( rx < 0 )
+							rx -= 5;
+						else
+							rx += 5;
+						if ( ry < 0 )
+							ry -= 5;
+						else
+							ry += 5;
+						if ( rz < 0 )
+							rz -= 5;
+						else
+							rz += 5;
+						int textureid = rand() % engine->getCurrentState()->getDefaultRenderer().cubeManager.getInstancedTextureCount();
+						maths::Vec3f pos = m_position + maths::Vec3f { rx,ry,rz };
+						logics::MovingBlock* inst = new logics::MovingBlock(textureid, maths::Vec3f(1, 1, 1), maths::Vec3f(0, 0, 0), pos, engine->getCurrentState(), &engine->getCurrentState()->getDefaultRenderer());
+						enemys.push_back(inst);
+					}
+					rounds++;
+				}
 			}
-			virtual void onCollision(MovingTickListener* otherMoving, int ownColliderNumber, int otherColliderNumber) noexcept override
+			virtual void onCollision(MovingTickListener* otherMoving, int ownColliderNumber, int otherColliderNumber) noexcept override//dazu kommentieren wichtig: in der oncollision methode sollte man am besten nur das eigene objekt verändern und keine anderen objekte | man kann das eigene objekt auch löschen(dann sollte man aber auch das andere objekt verändern, da die on collision methode nicht mehr unbedingt für das andere objekt aufgerufen wird, wenn diese hier zuerst aufgerufen wird und das eigene objekt somit gelöscht ist)
+																																	   //MAN DARF NICHT andere objekte löschen, da es leicht zu fehlern kommen kann
 			{
-				double time = engine->getTimeFactor();//time scaling factor 
-				MovingBlock* block = dynamic_cast<MovingBlock*>( otherMoving );//eigentlich noch nullptr test
-				m_direction = m_position - block->getPosition();//other direction
-				m_position += m_direction * time;
-				this->GameObject::updateModelMatrix();
+				cube.setTexture(1, false);
+				alive = false;
 			}
 			virtual void onCollision(StaticTickListener* otherStatic, int ownColliderNumber, int otherColliderNumber) noexcept override
 			{
-				double time = engine->getTimeFactor();//time scaling factor 
-				Block* block = dynamic_cast<Block*>( otherStatic );
-				//m_position += ( m_position - block->getPosition() ).normalizeSelf()*time;
-
-				maths::Vec3f temp = ( ( m_size / 2 + block->getSize() / 2 ) - ( block->getPosition() - m_position ) );//guter ansatz, position so verschieben, je nachdem wie weit die blöcke ineinander sind 
-				//velocity muss ja ggf nur bei moving blocks noch verändert werden abhängig von beiden velocitys 
-
-
-				if ( temp.x > 0 )
-					m_position.x -= temp.x;
-				if ( temp.y > 0 )
-					m_position.y -= temp.y;
-				if ( temp.z > 0 )
-					m_position.z -= temp.z;
-// 				maths::Vec3f temp = ( ( block->getPosition() - block->getSize()/2 ) - ( m_position + m_size/2 ) );
-// 				if ( temp.x <= 0 )
-// 					m_position.x = temp.x;
-// 				if ( temp.y <= 0 )
-// 					m_position.y = temp.y;
-// 				if ( temp.z <= 0 )
-// 					m_position.z = temp.z;
-				this->GameObject::updateModelMatrix();
+				maths::Vec3f dist = m_position - otherStatic->getPosition();
+				dist.absSelf();
+				dist -= m_size + otherStatic->getSize();
+				if ( dist.x > dist.y&&dist.x > dist.z )
+					m_velocity.x = 0;
+				else if ( dist.y > dist.z )
+					m_velocity.y = 0;
+				else
+					m_velocity.z = 0;
 			}
 		protected:
 			void onMatrixChange() noexcept override
 			{
-				cube.setChanged(true);//wenn instanced
+
 			}
 		};
 

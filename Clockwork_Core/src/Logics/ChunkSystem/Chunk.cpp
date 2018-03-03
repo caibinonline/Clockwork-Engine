@@ -11,6 +11,7 @@
 * You can use this software under the following License: https://github.com/Clock-work/Clockwork-Engine/blob/master/LICENSE
 *************************************************************************/
 #include <algorithm>
+#include "src\Core\Engine.h"
 #include "src\Logics\Camera\Camera.h"
 #include "src\Logics\States\State.h"
 #include "src\Logics\Entities\Listener\RenderListener.h"
@@ -20,7 +21,6 @@
 #include "src\Graphics\Renderables\Border\CubeBorder.h"
 
 #include "src\Physics\Colliders\Hitbox.h"
-
 
 namespace clockwork {
 	namespace logics {
@@ -92,13 +92,12 @@ namespace clockwork {
 			for ( unsigned int i = 0; i < m_movingTickList.size(); ++i )
 			{
 				MovingTickListener* listener = m_movingTickList[i];
-				listener->fastTick();
-				if ( m_chunkSystem->getChunkAt(listener->getPosition()) != *this )
+				Chunk& newChunk = m_chunkSystem->getChunkAt(listener->getPosition());
+				if ( newChunk != *this )
 				{
-					Chunk& newChunk = m_chunkSystem->getChunkAt(listener->getPosition());
 					this->removeMovingTickListener(listener);
 					newChunk.addMovingTickListener(listener);
-					RenderListener* r_listener  = dynamic_cast<RenderListener*>(listener);//WICHTIG AUCH FÜR ALLE ANDEREN LISTENER MACHEN(ausser static tick listener), aber keylistener, etc auch mit dynamic cast überprüfen | vielleicht auch in mediumtick verschrieben
+					RenderListener* r_listener  = dynamic_cast<RenderListener*>(listener);//WICHTIG AUCH FÜR ALLE ANDEREN LISTENER MACHEN(ausser static tick listener), aber keylistener, etc auch mit dynamic cast überprüfen | vielleicht auch in mediumtick verschrieben | THREAD_SAFE: ist wahrscheinlich nicht threadsafe
 					if ( r_listener != nullptr )
 					{
 						this->removeRenderListener(r_listener);
@@ -113,6 +112,28 @@ namespace clockwork {
 						}
 					}
 					listener->setChunk(&newChunk);
+					const maths::Vec3i& ownId = this->getId();
+					const maths::Vec3i& otherId = newChunk.getId();
+
+					if ( newChunk.inTickDistance() )
+					{
+						if ( otherId.x < ownId.x )
+							listener->fastTick();
+						else if ( otherId.x == ownId.x )
+						{
+							if ( otherId.y < ownId.y )
+								listener->fastTick();
+							else if ( otherId.y == ownId.y )
+							{
+								if ( otherId.z < ownId.z )
+									listener->fastTick();
+							}
+						}
+					}
+				}
+				else
+				{
+					listener->fastTick();
 				}
 			}
 
@@ -121,19 +142,6 @@ namespace clockwork {
 				m_staticTickList[i]->fastTick();
 			}
 
-		}
-
-		void Chunk::mediumTick() noexcept
-		{
-			for ( unsigned int i = 0; i < m_movingTickList.size(); ++i )
-			{
-				m_movingTickList[i]->mediumTick();
-			}
-
-			for ( unsigned int i = 0; i < m_staticTickList.size(); ++i )
-			{
-				m_staticTickList[i]->mediumTick();
-			}
 		}
 
 		void Chunk::slowTick() noexcept
@@ -149,87 +157,116 @@ namespace clockwork {
 			}
 		}
 
-		void Chunk::updateCollision() noexcept//collisions | könnte ggf noch effizienter gemacht werden, indem zuerst position/richtung verglichen werden
+		void Chunk::collisionTest(const Chunk& otherChunk) const noexcept
 		{
+			double time = engine->getTimeFactor();
+			if ( otherChunk.inTickDistance() )
+			{
+				int outerCollider { -1 }, innerCollider { -1 };
+				for ( unsigned int outer = 0; outer < m_movingTickList.size(); ++outer )
+				{
+					MovingTickListener* outerListener = m_movingTickList[outer];
+					for ( unsigned int inner = 0; inner < otherChunk.m_movingTickList.size(); ++inner )
+					{
+						MovingTickListener* innerListener = otherChunk.m_movingTickList[inner];
+						if ( 
+							outerListener->getHitbox().fastCollides(innerListener->getHitbox(), outerListener->getPosition() + outerListener->getVelocity()*time, innerListener->getPosition() + innerListener->getVelocity()*time) &&
+							outerListener->getHitbox().slowCollides(innerListener->getHitbox(), &outerCollider, &innerCollider) )
+						{
+							outerListener->onCollision(innerListener, outerCollider, innerCollider);
+							if ( outerListener != m_movingTickList[outer] )
+							{
+								break;
+							}
+							innerListener->onCollision(outerListener, innerCollider, outerCollider);
+						}
+					}
+					for ( unsigned int inner = 0; inner < otherChunk.m_staticTickList.size(); ++inner )
+					{
+						StaticTickListener* innerListener = otherChunk.m_staticTickList[inner];
+						if (
+							outerListener->getHitbox().fastCollides(innerListener->getHitbox(), outerListener->getPosition() + outerListener->getVelocity()*time, innerListener->getPosition()) &&
+							outerListener->getHitbox().slowCollides(innerListener->getHitbox(), &outerCollider, &innerCollider) )
+						{
+							outerListener->onCollision(innerListener, outerCollider, innerCollider);
+							if ( outerListener != m_movingTickList[outer] )
+							{
+								break;
+							}
+							innerListener->onCollision(outerListener, innerCollider, outerCollider);
+						}
+					}
+				}
+				for ( unsigned int outer = 0; outer < otherChunk.m_movingTickList.size(); ++outer )
+				{
+					MovingTickListener* outerListener = otherChunk.m_movingTickList[outer];
+					for ( unsigned int inner = 0; inner < m_staticTickList.size(); ++inner )
+					{
+						StaticTickListener* innerListener = m_staticTickList[inner];
+						if (
+							outerListener->getHitbox().fastCollides(innerListener->getHitbox(), outerListener->getPosition() + outerListener->getVelocity()*time, innerListener->getPosition()) &&
+							outerListener->getHitbox().slowCollides(innerListener->getHitbox(), &outerCollider, &innerCollider) )
+						{
+							outerListener->onCollision(innerListener, outerCollider, innerCollider);
+							if ( outerListener != otherChunk.m_movingTickList[outer] )
+							{
+								break;
+							}
+							innerListener->onCollision(outerListener, innerCollider, outerCollider);
+						}
+					}
+				}
+			}
+		}
+
+		void Chunk::updateCollision() const noexcept
+		{
+			double time = engine->getTimeFactor();
 			int outerCollider { -1 }, innerCollider { -1 };
 			for ( unsigned int outer = 0; outer < m_movingTickList.size(); ++outer )
 			{
+				MovingTickListener* outerListener = m_movingTickList[outer];
 				for ( unsigned int inner = outer + 1; inner < m_movingTickList.size(); ++inner )
 				{
-					MovingTickListener* outerListener = m_movingTickList[outer];
 					MovingTickListener* innerListener = m_movingTickList[inner];
-					if ( outerListener->getHitbox().collides(innerListener->getHitbox(), &outerCollider, &innerCollider) )
+					if (
+						outerListener->getHitbox().fastCollides(innerListener->getHitbox(), outerListener->getPosition() + outerListener->getVelocity()*time, innerListener->getPosition() + innerListener->getVelocity()*time) &&
+						outerListener->getHitbox().slowCollides(innerListener->getHitbox(), &outerCollider, &innerCollider) )
 					{
 						outerListener->onCollision(innerListener, outerCollider, innerCollider);
+						if ( outerListener != m_movingTickList[outer] )
+						{
+							break;
+						}
 						innerListener->onCollision(outerListener, innerCollider, outerCollider);
 					}
 				}
 				for ( unsigned int inner = 0; inner < m_staticTickList.size(); ++inner )
 				{
-					MovingTickListener* outerListener = m_movingTickList[outer];
 					StaticTickListener* innerListener = m_staticTickList[inner];
-					if ( outerListener->getHitbox().collides(innerListener->getHitbox(), &outerCollider, &innerCollider) )
+					if (
+						outerListener->getHitbox().fastCollides(innerListener->getHitbox(), outerListener->getPosition() + outerListener->getVelocity()*time, innerListener->getPosition()) &&
+						outerListener->getHitbox().slowCollides(innerListener->getHitbox(), &outerCollider, &innerCollider) )
 					{
 						outerListener->onCollision(innerListener, outerCollider, innerCollider);
+						if ( outerListener != m_movingTickList[outer] )
+						{
+							break;
+						}
 						innerListener->onCollision(outerListener, innerCollider, outerCollider);
 					}
 				}
 			}
 
-			for ( unsigned int chunkX = m_id.x - 1; chunkX <= m_id.x; ++chunkX )
+			collisionTest(m_chunkSystem->getChunk(m_id.x - 1, m_id.y, m_id.z));
+			for ( unsigned int chunkX = m_id.x - 1; chunkX <= m_id.x + 1; ++chunkX )
 			{
-				for ( unsigned int chunkY = m_id.y - 1; chunkY <= m_id.y; ++chunkY )
+				collisionTest(m_chunkSystem->getChunk(chunkX, m_id.y - 1, m_id.z));
+				for ( unsigned int chunkY = m_id.y - 1; chunkY <= m_id.y + 1; ++chunkY )
 				{
-					for ( unsigned int chunkZ = m_id.z - 1; chunkZ <= m_id.z; ++chunkZ )
-					{
-						const Chunk& otherChunk = m_chunkSystem->getChunk(chunkX, chunkY, chunkZ);
-						if ( otherChunk != *this && otherChunk.inTickDistance()  )
-						{
-							int outerCollider { -1 }, innerCollider { -1 };
-							for ( unsigned int outer = 0; outer < m_movingTickList.size(); ++outer )
-							{
-								for ( unsigned int inner = 0; inner < otherChunk.m_movingTickList.size(); ++inner )
-								{
-									MovingTickListener* outerListener = m_movingTickList[outer];
-									MovingTickListener* innerListener = otherChunk.m_movingTickList[inner];
-									if ( ( outerListener->getPosition().distance(innerListener->getPosition())< ( ( outerListener->getSize() + innerListener->getSize() ) * 2 ).fastLenght() )&&//noch überprüfen ob es geht mit der zusätzlichen bedingung für bessere performance und NICHT für big objekte/listener benutzen(die über mehrere chunks gehen können) und auch nur zwischen verschiedenen chunks benutzen
-										outerListener->getHitbox().collides(innerListener->getHitbox(), &outerCollider, &innerCollider) )
-									{
-										outerListener->onCollision(innerListener, outerCollider, innerCollider);
-										innerListener->onCollision(outerListener, innerCollider, outerCollider);
-									}
-								}
-								for ( unsigned int inner = 0; inner < otherChunk.m_staticTickList.size(); ++inner )
-								{
-									MovingTickListener* outerListener = m_movingTickList[outer];
-									StaticTickListener* innerListener = otherChunk.m_staticTickList[inner];
-									if ( ( outerListener->getPosition().distance(innerListener->getPosition())< ( ( outerListener->getSize() + innerListener->getSize() ) * 2 ).fastLenght() ) &&
-										outerListener->getHitbox().collides(innerListener->getHitbox(), &outerCollider, &innerCollider) )
-									{
-										outerListener->onCollision(innerListener, outerCollider, innerCollider);
-										innerListener->onCollision(outerListener, innerCollider, outerCollider);
-									}
-								}
-							}
-							for ( unsigned int outer = 0; outer < m_staticTickList.size(); ++outer )
-							{
-								for ( unsigned int inner = 0; inner < otherChunk.m_movingTickList.size(); ++inner )
-								{
-									StaticTickListener* outerListener = m_staticTickList[outer];
-									MovingTickListener* innerListener = otherChunk.m_movingTickList[inner];
-									if ( ( outerListener->getPosition().distance(innerListener->getPosition())< ( ( outerListener->getSize() + innerListener->getSize() ) * 2 ).fastLenght() ) &&
-										outerListener->getHitbox().collides(innerListener->getHitbox(), &outerCollider, &innerCollider) )
-									{
-										outerListener->onCollision(innerListener, outerCollider, innerCollider);
-										innerListener->onCollision(outerListener, innerCollider, outerCollider);
-									}
-								}
-							}
-						}
-					}
+					collisionTest(m_chunkSystem->getChunk(chunkX, chunkY, m_id.z - 1));
 				}
 			}
-
 		}
 
 		void Chunk::addRenderListener(RenderListener* listener) noexcept

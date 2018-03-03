@@ -26,7 +26,7 @@ namespace clockwork {
 
 		protected:
 			float m_mass;
-			maths::Vec3f m_direction;
+			maths::Vec3f m_velocity;
 			physics::Hitbox m_hitbox;
 
 		public:
@@ -35,15 +35,14 @@ namespace clockwork {
 
 		public:
 			virtual void fastTick() noexcept = 0;
-			virtual void mediumTick() noexcept = 0;
 			virtual void slowTick() noexcept = 0;
 			//mit dynamic cast in unterklassen umcasten und dann testen mit != nullptr, ob das objekt von einer gegebenen klasse ist
 			virtual void onCollision(MovingTickListener* otherMoving, int ownColliderNumber, int otherColliderNumber) noexcept = 0;
 			virtual void onCollision(StaticTickListener* otherStatic, int ownColliderNumber, int otherColliderNumber) noexcept = 0;
 
 			inline const physics::Hitbox& getHitbox() const {return m_hitbox;}//ggf auch noch nicht const getter, wenn benötigt
-			inline const maths::Vec3f& getDirection() const noexcept {return m_direction;}
-			inline maths::Vec3f& getDirection() noexcept{return m_direction;}
+			inline const maths::Vec3f& getVelocity() const noexcept {return m_velocity;}
+			inline maths::Vec3f& getVelocity() noexcept{return m_velocity;}
 		};
 
 	}

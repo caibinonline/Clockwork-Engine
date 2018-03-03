@@ -131,6 +131,17 @@ namespace clockwork {
 			{
 				return m_direction;
 			}
+
+			const maths::Vec3f& getRight() const noexcept
+			{
+				return m_right;
+			}
+
+			const maths::Vec3f& getUp() const noexcept
+			{
+				return m_up;
+			}
+
 			/*resets the position of the camera in world space | also automaticly resets the point the camera is looking at by adding the direction offset to the new camera position
 			its like moving the camera around | the view matrix has to be recalculated after this and send to the shader again by calling update(shader);*/
 			void setPosition(const maths::Vec3f& position) noexcept

@@ -50,11 +50,6 @@ namespace clockwork {
 
 			}
 
-			void State::mediumTick() noexcept
-			{
-
-			}
-
 			void State::slowTick() noexcept
 			{
 

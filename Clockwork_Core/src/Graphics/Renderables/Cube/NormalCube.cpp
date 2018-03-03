@@ -23,11 +23,15 @@ namespace clockwork {
 		{
 #if CLOCKWORK_DEBUG
 			if ( m_transparent )
-					if ( m_manager->m_transparentTextures.size() <= textureId )
-						std::cout << "Error NormalCube::NormalCube(): TextureId is not in the transparent texture list of the cubemanager" << std::endl;
-				else
-					if ( m_manager->m_normalTextures.size() <= textureId )
-						std::cout << "Error NormalCube::NormalCube(): TextureId is not in the texture list of the cubemanager" << std::endl;
+			{
+				if ( m_manager->m_transparentTextures.size() <= textureId )
+					std::cout << "Error NormalCube::NormalCube(): TextureId is not in the transparent texture list of the cubemanager" << std::endl;
+			}
+			else
+			{
+				if ( m_manager->m_normalTextures.size() <= textureId )
+					std::cout << "Error NormalCube::NormalCube(): TextureId is not in the texture list of the cubemanager" << std::endl;
+			}
 #endif
 		}
 

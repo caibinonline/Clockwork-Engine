@@ -737,28 +737,42 @@ namespace clockwork {
 			{
 				return std::sqrt(x * x + y * y + z * z);
 			}
-			//|vec| returns the lenght of the vec/direct distance from origin vec(0,0,0,0) | the fast method
+			//|vec| returns the lenght of the vec/direct distance from origin vec(0,0,0) | std::sqrt(x * x + y * y + z * z)
+			type slowLenght() const noexcept
+			{
+				return std::sqrt(x * x + y * y + z * z);
+			}
+			//|vec| returns the lenght of the vec/direct distance from origin vec(0,0,0,0) | the fast method to compare without the sqrt | its not the actual distance
 			type fastLenght() const noexcept
 			{
-				type result = 0;
-				if ( x < 0 )
-					result += -x;
-				else
-					result += x;
-				if ( y < 0 )
-					result += -y;
-				else
-					result += y;
-				if ( z < 0 )
-					result += -z;
-				else
-					result += z;
-				return result;
+				return x * x + y * y + z * z;
 			}
 			//std::sqrt(vec*vec) returns the not negative value of the vec as a copie of the vec
 			Vec3<type> abs() const noexcept
 			{
 				return Vec3<type>(std::sqrt(x*x), std::sqrt(y*y), std::sqrt(z*z));
+			}
+			//std::sqrt(vec*vec) returns the not negative value of the vec as a copie of the vec | its the fast method without the sqrt
+			Vec3<type> fastAbs() const noexcept
+			{
+				type tempx;
+				if ( x < 0 )
+					tempx = -x;
+				else
+					tempx = x;
+
+				type tempy;
+				if ( y < 0 )
+					tempy = -y;
+				else
+					tempy = y;
+
+				type tempz;
+				if ( z < 0 )
+					tempz = -z;
+				else
+					tempz = z;
+				return Vec3<type>(tempx, tempy, tempz);
 			}
 			//std::sqrt(vec*vec) converts the vec itself to its not negative value
 			Vec3<type>& absSelf() noexcept
@@ -766,6 +780,17 @@ namespace clockwork {
 				x = std::sqrt(x*x);
 				y = std::sqrt(y*y);
 				z = std::sqrt(z*z);
+				return *this;
+			}
+			//std::sqrt(vec*vec) converts the vec itself to its not negative value | its the fast method without the sqrt
+			Vec3<type>& fastAbsSelf() noexcept
+			{
+				if ( x < 0 )
+					x = -x;
+				if ( y < 0 )
+					y = -y;
+				if ( z < 0 )
+					z = -z;
 				return *this;
 			}
 			//vec(x/magnitude(), y/magnitude(), z/magnitude()) returns a normalized copy of the vec relative to the lenght of the vec  | also called called unit vector, because the magnitude/lenght of the vector is always one 
@@ -787,25 +812,10 @@ namespace clockwork {
 			{
 				return std::sqrt(( x - other.x ) * ( x - other.x ) + ( y - other.y ) * ( y - other.y ) + ( z - other.z ) * ( z - other.z ));
 			}
-			//|vec1-vec2| can be used to compare distances, will return the non negative value of the components added together 
-			type distanceFast(const Vec3<type>& other) const noexcept
+			//|vec1-vec2| can be used to compare distances, will return the non negative value of the components added together | its the fast method and not the actual distance | its without the sqrt
+			type fastDistance(const Vec3<type>& other) const noexcept
 			{
-				type tempx;
-				if ( other.x < x )
-					tempx = x - other.x;
-				else
-					tempx = other.x - x;
-				type tempy;
-				if ( other.y < y )
-					tempy = y - other.y;
-				else
-					tempy = other.y - y;
-				type tempz;
-				if ( other.z < z )
-					tempz = z - other.z;
-				else
-					tempz = other.z - z;
-				return tempx + tempy + tempz;
+				return ( x - other.x ) * ( x - other.x ) + ( y - other.y ) * ( y - other.y ) + ( z - other.z ) * ( z - other.z );
 			}
 			/*vec1*vec2 = |vec1|*|vec2|*cos(vec1,vec2) returns the dotproduct of 2 vecs, vecs are orthogonal(_|_) if the result is 0 and vecs are parallel if the result is 1(||) | x * other.x + y * other.y + z * other.z | not the normal multiply method 
 			its more efficient than comparing the vecs with the magnitude method*/

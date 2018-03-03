@@ -37,10 +37,6 @@ namespace clockwork {
 			{
 				void function(Chunk& chunk) noexcept;
 			};
-			struct MediumTickFunctor
-			{
-				void function(Chunk& chunk) noexcept;
-			};
 			struct SlowTickFunctor
 			{
 				void function(Chunk& chunk) noexcept;
@@ -87,10 +83,8 @@ namespace clockwork {
 		public:
 			void update() noexcept;
 			void fastTick() noexcept;
-			void mediumTick() noexcept;
 			void slowTick() noexcept;
 			void fastTickAll() noexcept;
-			void mediumTickAll() noexcept;
 			void slowTickAll() noexcept;
 			//void onKeyPress() noexcept;///auch noch extra onmousepress und onmouseMove machen | auch on Chartyped
 			
