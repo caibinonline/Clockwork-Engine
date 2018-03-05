@@ -10,7 +10,6 @@
 * arising from the use of this software.
 * You can use this software under the following License: https://github.com/Clock-work/Clockwork-Engine/blob/master/LICENSE
 *************************************************************************/
-#pragma once
 #include "glad\glad.h"
 #include "glfw\glfw3.h"
 #include "Window.h"
@@ -38,7 +37,7 @@ namespace clockwork {
 
 			if ( !m_window )
 			{
-				LOG("Window creation failed \n");
+				std::cout << "Window creation failed" << std::endl;
 			}
 
 			makeCurrent();
@@ -83,12 +82,10 @@ namespace clockwork {
 #endif
 			if ( !glfwInit() )
 			{
-				LOG("GLFW init failed \n")
+				std::cout << "GLFW init failed" << std::endl;
 			}
-			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+			std::cout << "TEST" << std::endl;
+			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
 			glfwWindowHint(GLFW_SAMPLES, 4);
 			glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 			glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
@@ -206,19 +203,19 @@ namespace clockwork {
 			glfwMakeContextCurrent(m_window);
 			if ( !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress) )
 			{
-				LOG("GLAD init failed\n")
+				std::cout << "GLAD init failed" << std::endl;
 			}
-#if CLOCKWORK_DEBUG
 			std::cout << "Opengl Version: " << glGetString(GL_VERSION) << std::endl;
-/*			if ( glDebugMessageCallback )
+/*#if CLOCKWORK_DEBUG
+			if ( glDebugMessageCallback )
 			{
 				std::cout << "Register OpenGL debug callback " << std::endl;
 				glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 				glDebugMessageCallback(graphics::Window::opengl_error_callback, nullptr);
 			}
 			else
-				std::cout << "glDebugMessageCallback not available" << std::endl;*/
-#endif
+				std::cout << "glDebugMessageCallback not available" << std::endl;
+#endif*/
 		}
 
 		void Window::updateWindow() const noexcept
