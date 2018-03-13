@@ -939,76 +939,14 @@ namespace clockwork {
 			*/
 			Mat4x4<type> pow(unsigned int count) noexcept
 			{
-				Mat4x4<type> temp(
-					x1 * x1 + x2 * y1 + x3 * z1 + x4 * w1,//new x1: first row of left mat times first column of right mat
-					y1 * x1 + y2 * y1 + y3 * z1 + y4 * w1,//new y1: second row of left mat times first column of right mat   
-					z1 * x1 + z2 * y1 + z3 * z1 + z4 * w1,//new z1: third row of left mat times first column of right mat   
-					w1 * x1 + w2 * y1 + w3 * z1 + w4 * w1,//new w1: fourth row of left mat times first column of right mat   
-														 
-					x1 * x2 + x2 * y2 + x3 * z2 + x4 * w2,//new x2: first row of left mat times second column of right mat
-					y1 * x2 + y2 * y2 + y3 * z2 + y4 * w2,//new y2: second row of left mat times second column of right mat   
-					z1 * x2 + z2 * y2 + z3 * z2 + z4 * w2,//new z2: third row of left mat times second column of right mat   
-					w1 * x2 + w2 * y2 + w3 * z2 + w4 * w2,//new w2: fourth row of left mat times second column of right mat   
-														 
-					x1 * x3 + x2 * y3 + x3 * z3 + x4 * w3,//new x3: first row of left mat times third column of right mat
-					y1 * x3 + y2 * y3 + y3 * z3 + y4 * w3,//new y3: second row of left mat times third column of right mat   
-					z1 * x3 + z2 * y3 + z3 * z3 + z4 * w3,//new z3: third row of left mat times third column of right mat   
-					w1 * x3 + w2 * y3 + w3 * z3 + w4 * w3,//new w3: fourth row of left mat times third column of right mat   
-														 
-					x1 * x4 + x2 * y4 + x3 * z4 + x4 * w4,//new x4: first row of left mat times fourth column of right mat
-					y1 * x4 + y2 * y4 + y3 * z4 + y4 * w4,//new y4: second row of left mat times fourth column of right mat  
-					z1 * x4 + z2 * y4 + z3 * z4 + z4 * w4,//new z4: third row of left mat times fourth column of right mat   
-					w1 * x4 + w2 * y4 + w3 * z4 + w4 * w4//new w4: fourth row of left mat times fourth column of right mat   
-				);
-
+				if ( count == 0 )
+					return identity();
+				Mat4x4<type> temp(*this);
 				for ( unsigned int i = 1; i < count; ++i )
 				{
-					if ( i % 2 == 1 )
-					{
-						x1 = temp.x1 * temp.x1 + temp.x2 * temp.y1 + temp.x3 * temp.z1 + temp.x4 * temp.w1;//new x1: first row of left mat times first column of right mat
-						y1 = temp.y1 * temp.x1 + temp.y2 * temp.y1 + temp.y3 * temp.z1 + temp.y4 * temp.w1;//new y1: second row of left mat times first column of right mat   
-						z1 = temp.z1 * temp.x1 + temp.z2 * temp.y1 + temp.z3 * temp.z1 + temp.z4 * temp.w1;//new z1: third row of left mat times first column of right mat   
-						w1 = temp.w1 * temp.x1 + temp.w2 * temp.y1 + temp.w3 * temp.z1 + temp.w4 * temp.w1;//new w1: fourth row of left mat times first column of right mat   
-						x2 = temp.x1 * temp.x2 + temp.x2 * temp.y2 + temp.x3 * temp.z2 + temp.x4 * temp.w2;//new x2: first row of left mat times second column of right mat
-						y2 = temp.y1 * temp.x2 + temp.y2 * temp.y2 + temp.y3 * temp.z2 + temp.y4 * temp.w2;//new y2: second row of left mat times second column of right mat  
-						z2 = temp.z1 * temp.x2 + temp.z2 * temp.y2 + temp.z3 * temp.z2 + temp.z4 * temp.w2;//new z2: third row of left mat times second column of right mat   
-						w2 = temp.w1 * temp.x2 + temp.w2 * temp.y2 + temp.w3 * temp.z2 + temp.w4 * temp.w2;//new w2: fourth row of left mat times second column of right mat  
-						x3 = temp.x1 * temp.x3 + temp.x2 * temp.y3 + temp.x3 * temp.z3 + temp.x4 * temp.w3;//new x3: first row of left mat times third column of right mat
-						y3 = temp.y1 * temp.x3 + temp.y2 * temp.y3 + temp.y3 * temp.z3 + temp.y4 * temp.w3;//new y3: second row of left mat times third column of right mat   
-						z3 = temp.z1 * temp.x3 + temp.z2 * temp.y3 + temp.z3 * temp.z3 + temp.z4 * temp.w3;//new z3: third row of left mat times third column of right mat   
-						w3 = temp.w1 * temp.x3 + temp.w2 * temp.y3 + temp.w3 * temp.z3 + temp.w4 * temp.w3;//new w3: fourth row of left mat times third column of right mat   
-						x4 = temp.x1 * temp.x4 + temp.x2 * temp.y4 + temp.x3 * temp.z4 + temp.x4 * temp.w4;//new x4: first row of left mat times fourth column of right mat
-						y4 = temp.y1 * temp.x4 + temp.y2 * temp.y4 + temp.y3 * temp.z4 + temp.y4 * temp.w4;//new y4: second row of left mat times fourth column of right mat  
-						z4 = temp.z1 * temp.x4 + temp.z2 * temp.y4 + temp.z3 * temp.z4 + temp.z4 * temp.w4;//new z4: third row of left mat times fourth column of right mat   
-						w4 = temp.w1 * temp.x4 + temp.w2 * temp.y4 + temp.w3 * temp.z4 + temp.w4 * temp.w4;//new w4: fourth row of left mat times fourth column of right mat  
-					}
-					else
-					{
-						temp.x1 = x1 * x1 + x2 * y1 + x3 * z1 + x4 * w1;//new x1: first row of left mat times first column of right mat
-						temp.y1 = y1 * x1 + y2 * y1 + y3 * z1 + y4 * w1;//new y1: second row of left mat times first column of right mat   
-						temp.z1 = z1 * x1 + z2 * y1 + z3 * z1 + z4 * w1;//new z1: third row of left mat times first column of right mat   
-						temp.w1 = w1 * x1 + w2 * y1 + w3 * z1 + w4 * w1;//new w1: fourth row of left mat times first column of right mat   
-							
-						temp.x2 = x1 * x2 + x2 * y2 + x3 * z2 + x4 * w2;//new x2: first row of left mat times second column of right mat
-						temp.y2 = y1 * x2 + y2 * y2 + y3 * z2 + y4 * w2;//new y2: second row of left mat times second column of right mat   
-						temp.z2 = z1 * x2 + z2 * y2 + z3 * z2 + z4 * w2;//new z2: third row of left mat times second column of right mat   
-						temp.w2 = w1 * x2 + w2 * y2 + w3 * z2 + w4 * w2;//new w2: fourth row of left mat times second column of right mat   
-							
-						temp.x3 = x1 * x3 + x2 * y3 + x3 * z3 + x4 * w3;//new x3: first row of left mat times third column of right mat
-						temp.y3 = y1 * x3 + y2 * y3 + y3 * z3 + y4 * w3;//new y3: second row of left mat times third column of right mat   
-						temp.z3 = z1 * x3 + z2 * y3 + z3 * z3 + z4 * w3;//new z3: third row of left mat times third column of right mat   
-						temp.w3 = w1 * x3 + w2 * y3 + w3 * z3 + w4 * w3;//new w3: fourth row of left mat times third column of right mat   
-							
-						temp.x4 = x1 * x4 + x2 * y4 + x3 * z4 + x4 * w4;//new x4: first row of left mat times fourth column of right mat
-						temp.y4 = y1 * x4 + y2 * y4 + y3 * z4 + y4 * w4;//new y4: second row of left mat times fourth column of right mat  
-						temp.z4 = z1 * x4 + z2 * y4 + z3 * z4 + z4 * w4;//new z4: third row of left mat times fourth column of right mat   
-						temp.w4 = w1 * x4 + w2 * y4 + w3 * z4 + w4 * w4;//new w4: fourth row of left mat times fourth column of right mat   
-					}
+					temp *= *this;
 				}
-				if ( count % 2 == 1 )
-					return temp;
-				else
-					return *this;
+				return temp;
 			}
 
 			/*multiplies the matrix n times with itself | use this method instead of this*=this; | scalar product matrix-matrix multiplication, not elementwise multiplication | use the multiply method for the elementwise multiplication
@@ -1018,74 +956,11 @@ namespace clockwork {
 			*/
 			Mat4x4<type>& powSelf(unsigned int count) noexcept
 			{
-				Mat4x4<type> temp(
-					x1 * x1 + x2 * y1 + x3 * z1 + x4 * w1,//new x1: first row of left mat times first column of right mat
-					y1 * x1 + y2 * y1 + y3 * z1 + y4 * w1,//new y1: second row of left mat times first column of right mat   
-					z1 * x1 + z2 * y1 + z3 * z1 + z4 * w1,//new z1: third row of left mat times first column of right mat   
-					w1 * x1 + w2 * y1 + w3 * z1 + w4 * w1,//new w1: fourth row of left mat times first column of right mat   
-					
-					x1 * x2 + x2 * y2 + x3 * z2 + x4 * w2,//new x2: first row of left mat times second column of right mat
-					y1 * x2 + y2 * y2 + y3 * z2 + y4 * w2,//new y2: second row of left mat times second column of right mat   
-					z1 * x2 + z2 * y2 + z3 * z2 + z4 * w2,//new z2: third row of left mat times second column of right mat   
-					w1 * x2 + w2 * y2 + w3 * z2 + w4 * w2,//new w2: fourth row of left mat times second column of right mat   
-					
-					x1 * x3 + x2 * y3 + x3 * z3 + x4 * w3,//new x3: first row of left mat times third column of right mat
-					y1 * x3 + y2 * y3 + y3 * z3 + y4 * w3,//new y3: second row of left mat times third column of right mat   
-					z1 * x3 + z2 * y3 + z3 * z3 + z4 * w3,//new z3: third row of left mat times third column of right mat   
-					w1 * x3 + w2 * y3 + w3 * z3 + w4 * w3,//new w3: fourth row of left mat times third column of right mat   
-					
-					x1 * x4 + x2 * y4 + x3 * z4 + x4 * w4,//new x4: first row of left mat times fourth column of right mat
-					y1 * x4 + y2 * y4 + y3 * z4 + y4 * w4,//new y4: second row of left mat times fourth column of right mat  
-					z1 * x4 + z2 * y4 + z3 * z4 + z4 * w4,//new z4: third row of left mat times fourth column of right mat   
-					w1 * x4 + w2 * y4 + w3 * z4 + w4 * w4//new w4: fourth row of left mat times fourth column of right mat   
-				);
-
+				Mat4x4<type> temp(*this);
 				for ( unsigned int i = 1; i < count; ++i )
 				{
-					if ( i % 2 == 1 )
-					{
-						x1 = temp.x1 * temp.x1 + temp.x2 * temp.y1 + temp.x3 * temp.z1 + temp.x4 * temp.w1;//new x1: first row of left mat times first column of right mat
-						y1 = temp.y1 * temp.x1 + temp.y2 * temp.y1 + temp.y3 * temp.z1 + temp.y4 * temp.w1;//new y1: second row of left mat times first column of right mat   
-						z1 = temp.z1 * temp.x1 + temp.z2 * temp.y1 + temp.z3 * temp.z1 + temp.z4 * temp.w1;//new z1: third row of left mat times first column of right mat   
-						w1 = temp.w1 * temp.x1 + temp.w2 * temp.y1 + temp.w3 * temp.z1 + temp.w4 * temp.w1;//new w1: fourth row of left mat times first column of right mat   
-						x2 = temp.x1 * temp.x2 + temp.x2 * temp.y2 + temp.x3 * temp.z2 + temp.x4 * temp.w2;//new x2: first row of left mat times second column of right mat
-						y2 = temp.y1 * temp.x2 + temp.y2 * temp.y2 + temp.y3 * temp.z2 + temp.y4 * temp.w2;//new y2: second row of left mat times second column of right mat  
-						z2 = temp.z1 * temp.x2 + temp.z2 * temp.y2 + temp.z3 * temp.z2 + temp.z4 * temp.w2;//new z2: third row of left mat times second column of right mat   
-						w2 = temp.w1 * temp.x2 + temp.w2 * temp.y2 + temp.w3 * temp.z2 + temp.w4 * temp.w2;//new w2: fourth row of left mat times second column of right mat  
-						x3 = temp.x1 * temp.x3 + temp.x2 * temp.y3 + temp.x3 * temp.z3 + temp.x4 * temp.w3;//new x3: first row of left mat times third column of right mat
-						y3 = temp.y1 * temp.x3 + temp.y2 * temp.y3 + temp.y3 * temp.z3 + temp.y4 * temp.w3;//new y3: second row of left mat times third column of right mat   
-						z3 = temp.z1 * temp.x3 + temp.z2 * temp.y3 + temp.z3 * temp.z3 + temp.z4 * temp.w3;//new z3: third row of left mat times third column of right mat   
-						w3 = temp.w1 * temp.x3 + temp.w2 * temp.y3 + temp.w3 * temp.z3 + temp.w4 * temp.w3;//new w3: fourth row of left mat times third column of right mat   
-						x4 = temp.x1 * temp.x4 + temp.x2 * temp.y4 + temp.x3 * temp.z4 + temp.x4 * temp.w4;//new x4: first row of left mat times fourth column of right mat
-						y4 = temp.y1 * temp.x4 + temp.y2 * temp.y4 + temp.y3 * temp.z4 + temp.y4 * temp.w4;//new y4: second row of left mat times fourth column of right mat  
-						z4 = temp.z1 * temp.x4 + temp.z2 * temp.y4 + temp.z3 * temp.z4 + temp.z4 * temp.w4;//new z4: third row of left mat times fourth column of right mat   
-						w4 = temp.w1 * temp.x4 + temp.w2 * temp.y4 + temp.w3 * temp.z4 + temp.w4 * temp.w4;//new w4: fourth row of left mat times fourth column of right mat  
-					}
-					else
-					{
-						temp.x1 = x1 * x1 + x2 * y1 + x3 * z1 + x4 * w1;//new x1: first row of left mat times first column of right mat
-						temp.y1 = y1 * x1 + y2 * y1 + y3 * z1 + y4 * w1;//new y1: second row of left mat times first column of right mat   
-						temp.z1 = z1 * x1 + z2 * y1 + z3 * z1 + z4 * w1;//new z1: third row of left mat times first column of right mat   
-						temp.w1 = w1 * x1 + w2 * y1 + w3 * z1 + w4 * w1;//new w1: fourth row of left mat times first column of right mat   
-
-						temp.x2 = x1 * x2 + x2 * y2 + x3 * z2 + x4 * w2;//new x2: first row of left mat times second column of right mat
-						temp.y2 = y1 * x2 + y2 * y2 + y3 * z2 + y4 * w2;//new y2: second row of left mat times second column of right mat   
-						temp.z2 = z1 * x2 + z2 * y2 + z3 * z2 + z4 * w2;//new z2: third row of left mat times second column of right mat   
-						temp.w2 = w1 * x2 + w2 * y2 + w3 * z2 + w4 * w2;//new w2: fourth row of left mat times second column of right mat   
-
-						temp.x3 = x1 * x3 + x2 * y3 + x3 * z3 + x4 * w3;//new x3: first row of left mat times third column of right mat
-						temp.y3 = y1 * x3 + y2 * y3 + y3 * z3 + y4 * w3;//new y3: second row of left mat times third column of right mat   
-						temp.z3 = z1 * x3 + z2 * y3 + z3 * z3 + z4 * w3;//new z3: third row of left mat times third column of right mat   
-						temp.w3 = w1 * x3 + w2 * y3 + w3 * z3 + w4 * w3;//new w3: fourth row of left mat times third column of right mat   
-
-						temp.x4 = x1 * x4 + x2 * y4 + x3 * z4 + x4 * w4;//new x4: first row of left mat times fourth column of right mat
-						temp.y4 = y1 * x4 + y2 * y4 + y3 * z4 + y4 * w4;//new y4: second row of left mat times fourth column of right mat  
-						temp.z4 = z1 * x4 + z2 * y4 + z3 * z4 + z4 * w4;//new z4: third row of left mat times fourth column of right mat   
-						temp.w4 = w1 * x4 + w2 * y4 + w3 * z4 + w4 * w4;//new w4: fourth row of left mat times fourth column of right mat   
-					}
+					*this *= temp;
 				}
-				if ( count % 2 == 1 )
-					*this = temp;
 				return *this;
 			}
 

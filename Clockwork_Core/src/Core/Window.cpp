@@ -84,7 +84,7 @@ namespace clockwork {
 			{
 				std::cout << "GLFW init failed" << std::endl;
 			}
-			std::cout << "TEST" << std::endl;
+
 			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
 			glfwWindowHint(GLFW_SAMPLES, 4);
 			glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
