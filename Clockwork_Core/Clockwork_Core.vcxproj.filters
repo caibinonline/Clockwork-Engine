@@ -287,9 +287,6 @@
     <ClInclude Include="src\Logics\Entities\Listener\MouseListener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Logics\ChunkSystem\ChunkTemplates.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Graphics\Renderables\Border\BorderManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>

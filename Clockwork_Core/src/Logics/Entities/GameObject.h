@@ -64,6 +64,18 @@ namespace clockwork {
 			inline maths::Vec3f& getRotation() noexcept{return m_rotation;}
 			inline maths::Vec3f& getPosition() noexcept{return m_position;}
 
+			//setzt position x anders und updated es automatisch in der modelmatrix | dies auch für changeX machen und auch für andere position, size, translation,etc machen (wegen lars)
+			inline void setX(float x) noexcept
+			{
+				m_position.x = x;
+				m_modelMatrix.x4 = x;
+			}
+			inline void changeX(float x) noexcept
+			{
+				m_position.x += x;
+				m_modelMatrix.x4 += x;
+			}
+
 		};
 
 	}

@@ -100,3 +100,16 @@ namespace clockwork {
 
 	}
 }
+
+#include "ChunkSystem.h"
+
+namespace clockwork {
+	namespace logics {
+
+		template<typename functor>void Chunk::passFunctionToArea() noexcept
+		{
+			m_chunkSystem->passFunctionToChunks<functor>(m_id - 1, m_id + 1);
+		}
+
+	}
+}

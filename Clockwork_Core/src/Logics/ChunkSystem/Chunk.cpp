@@ -17,7 +17,7 @@
 #include "src\Logics\Entities\Listener\RenderListener.h"
 #include "src\Logics\Entities\Listener\MovingTickListener.h"
 #include "src\Logics\Entities\Listener\StaticTickListener.h"
-#include "ChunkTemplates.h"
+#include "Chunk.h"
 #include "src\Graphics\Renderables\Border\CubeBorder.h"
 
 #include "src\Physics\Colliders\Hitbox.h"

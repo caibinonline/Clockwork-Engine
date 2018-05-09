@@ -12,7 +12,7 @@
 *************************************************************************/
 #include "src\Logics\Camera\Camera.h"
 #include "src\Logics\States\State.h"
-#include "ChunkTemplates.h"
+#include "ChunkSystem.h"
 
 
 namespace clockwork {

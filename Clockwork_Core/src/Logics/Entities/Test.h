@@ -6,7 +6,7 @@
 #include "src\Core\Engine.h"
 #include "src\Core\Window.h"
 
-#include "src\Logics\ChunkSystem\ChunkTemplates.h"
+#include "src\Logics\ChunkSystem\ChunkSystem.h"
 #include "src\Logics\States\State.h"
 #include "src\Logics\Camera\Camera.h"
 #include "src\Physics\Colliders\CubeCollider.h"

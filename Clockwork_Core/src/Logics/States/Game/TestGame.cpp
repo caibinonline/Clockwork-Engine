@@ -35,7 +35,7 @@
 
 
 #include "src\Logics\Entities\Test.h"
-#include "src\Logics\ChunkSystem\ChunkTemplates.h"
+#include "src\Logics\ChunkSystem\ChunkSystem.h"
 
 namespace clockwork {
 	namespace logics {
