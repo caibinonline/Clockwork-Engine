@@ -305,6 +305,9 @@
     <ClInclude Include="src\Physics\Colliders\SphereCollider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Utils\ThreadPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Shaders\Default\Instancing.fs" />

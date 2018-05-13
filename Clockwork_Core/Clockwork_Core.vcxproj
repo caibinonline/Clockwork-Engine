@@ -221,6 +221,7 @@
     <ClInclude Include="src\Utils\Image.h" />
     <ClInclude Include="src\Logics\ChunkSystem\ChunkSystem.h" />
     <ClInclude Include="src\Utils\Structures\LinkedList.h" />
+    <ClInclude Include="src\Utils\ThreadPool.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Shaders\Default\Border.fs" />
